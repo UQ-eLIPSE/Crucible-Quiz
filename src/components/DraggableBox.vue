@@ -1,24 +1,15 @@
 <template>
     <div>
+        <!-- Initial D&D Quiz options -->
         <div class="drop-zone" @drop="onDrop($event, 1)" @dragover.prevent @dragenter.prevent>
             <DragItems :item-list="listOne" @start-drag="startDrag" @end-drag="endDrag" />
-            <!-- <div v-for="item in listOne" :key="item.id" class="drag-el"
-                :style="{ top: item.position.y + 'px', left: item.position.x + 'px' }" draggable="true"
-                @dragstart="startDrag($event, item)" @dragend="endDrag(item)">
-                {{ item.title }}
-            </div> -->
         </div>
+        <!-- Drop Options in the picture Zone -->
         <div class="dropped-item-area">
-
             <div class="drop-zone" @drop="onDrop($event, 2)" @dragover.prevent @dragenter.prevent>
                 <DragItems :item-list="listTwo" @start-drag="startDrag" @end-drag="endDrag" />
-                <!-- <div v-for="item in listTwo" :key="item.id" class="drag-el"
-                    :style="{ top: item.position.y + 'px', left: item.position.x + 'px' }" draggable="true"
-                    @dragstart="startDrag($event, item)" @dragend="endDrag(item)">
-                    {{ item.title }}
-                </div> -->
             </div>
-
+            <!-- Collection Result and todo: add submit data form -->
             <div>Item Position In Drop Zone 2
                 <table>
                     <tr>
@@ -43,7 +34,7 @@ import { ref, computed } from 'vue';
 import DragItems from "./DragItems.vue";
 import { Item } from '../type';
 
-
+// Todo: these Data should come from quiz database as options
 const items = ref<Item[]>([
     { id: 0, title: 'Item A', list: 1, position: { x: 0, y: 0 } },
     { id: 1, title: 'Item B', list: 1, position: { x: 100, y: 0 } },
@@ -53,8 +44,6 @@ const items = ref<Item[]>([
 const listOne = computed(() => items.value.filter(item => item.list === 1));
 const listTwo = computed(() => items.value.filter(item => item.list === 2));
 
-// Store the item being dragged
-// let draggedItem: Item | null = null;
 const draggedItem = ref<Item | null>(null);
 
 function startDrag({ event, item }: { event: DragEvent; item: Item }) {
