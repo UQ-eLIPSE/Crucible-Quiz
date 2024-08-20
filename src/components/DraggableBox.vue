@@ -1,12 +1,15 @@
 <template>
     <div>
         <!-- Initial D&D Quiz options -->
+        <h3>Select Zone</h3>
         <div class="drop-zone" @drop="onDrop($event, 1)" @dragover.prevent @dragenter.prevent>
             <DragItems :item-list="listOne" @start-drag="startDrag" @end-drag="endDrag" />
         </div>
         <!-- Drop Options in the picture Zone -->
+        <h3>Drop Zone</h3>
         <div class="dropped-item-area">
             <div class="drop-zone" @drop="onDrop($event, 2)" @dragover.prevent @dragenter.prevent>
+                <img :src="imageUrl" alt="">
                 <DragItems :item-list="listTwo" @start-drag="startDrag" @end-drag="endDrag" />
             </div>
             <!-- Collection Result and todo: add submit data form -->
@@ -33,7 +36,8 @@
 import { ref, computed } from 'vue';
 import DragItems from "./DragItems.vue";
 import { Item } from '../type';
-
+import fallbackImg from '../assets/TestDD.png'
+const imageUrl = fallbackImg
 // Todo: these Data should come from quiz database as options
 const items = ref<Item[]>([
     { id: 0, title: 'Item A', list: 1, position: { x: 0, y: 0 } },
@@ -83,9 +87,12 @@ function onDrop(evt: DragEvent, list: number) {
     background-color: #eee;
     margin-bottom: 10px;
     padding: 10px;
-    height: 500px;
-    width: 500px;
+    min-height: 300px;
+    min-width: 300px;
     position: relative;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 
 }
 
@@ -99,16 +106,17 @@ function onDrop(evt: DragEvent, list: number) {
 
 .dropped-item-area {
     display: flex;
+    flex-wrap: wrap;
     border: 2px solid purple;
-    min-width: 1000px;
+    width: fit-content;
     color: #6c6868
 }
 
 table {
     border-collapse: collapse;
-    width: 400px;
+    width: fit-content;
     color: #6c6868;
-    margin: 5px;
+    padding: 5px;
     border: 2px solid #6c6868;
 }
 

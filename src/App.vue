@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import DraggableBox from "./components/DraggableBox.vue"
+import QuizCreator from "./components/QuizCreator.vue"
 </script>
 
 <template>
   <div>
     <DraggableBox />
+  </div>
+  <div>
+    Create Drag & Drop Picture here
+    <QuizCreator />
   </div>
 </template>
 
@@ -23,4 +28,4 @@ import DraggableBox from "./components/DraggableBox.vue"
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #42b883aa);
 }
-</style>
+</style>./components/QuizCreator.vue
