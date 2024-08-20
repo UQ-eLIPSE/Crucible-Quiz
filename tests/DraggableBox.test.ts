@@ -1,12 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { VueWrapper, mount } from "@vue/test-utils";
 import DraggableBox from "../src/components/DraggableBox.vue";
+import DragItems from "../src/components/DragItems.vue";
 
 describe("DraggableBox.vue", () => {
   let wrapper: VueWrapper;
 
   beforeEach(() => {
-    wrapper = mount(DraggableBox);
+    wrapper = mount(DraggableBox, { component: DragItems });
   });
   it("should render drop zones", () => {
     expect(wrapper.find(".drop-zone").exists()).toBeTruthy;

@@ -1,33 +1,48 @@
 <template>
     <div>
         <div class="drop-zone" @drop="onDrop($event, 1)" @dragover.prevent @dragenter.prevent>
-            <div v-for="item in listOne" :key="item.id" class="drag-el"
+            <DragItems :item-list="listOne" @start-drag="startDrag" @end-drag="endDrag" />
+            <!-- <div v-for="item in listOne" :key="item.id" class="drag-el"
                 :style="{ top: item.position.y + 'px', left: item.position.x + 'px' }" draggable="true"
                 @dragstart="startDrag($event, item)" @dragend="endDrag(item)">
                 {{ item.title }}
-            </div>
+            </div> -->
         </div>
+        <div class="dropped-item-area">
 
-        <div class="drop-zone" @drop="onDrop($event, 2)" @dragover.prevent @dragenter.prevent>
-            <div v-for="item in listTwo" :key="item.id" class="drag-el"
-                :style="{ top: item.position.y + 'px', left: item.position.x + 'px' }" draggable="true"
-                @dragstart="startDrag($event, item)" @dragend="endDrag(item)">
-                {{ item.title }}
+            <div class="drop-zone" @drop="onDrop($event, 2)" @dragover.prevent @dragenter.prevent>
+                <DragItems :item-list="listTwo" @start-drag="startDrag" @end-drag="endDrag" />
+                <!-- <div v-for="item in listTwo" :key="item.id" class="drag-el"
+                    :style="{ top: item.position.y + 'px', left: item.position.x + 'px' }" draggable="true"
+                    @dragstart="startDrag($event, item)" @dragend="endDrag(item)">
+                    {{ item.title }}
+                </div> -->
+            </div>
+
+            <div>Item Position In Drop Zone 2
+                <table>
+                    <tr>
+                        <th>Item Id</th>
+                        <th>Item Title</th>
+                        <th>Item Position</th>
+                    </tr>
+                    <tr v-for="item in listTwo" :key="item.id">
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.title }}</td>
+                        <td>{{ item.position }}</td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>
+
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import DragItems from "./DragItems.vue";
+import { Item } from '../type';
 
-// Define the reactive state
-interface Item {
-    id: number;
-    title: string;
-    list: number;
-    position: { x: number; y: number };
-}
 
 const items = ref<Item[]>([
     { id: 0, title: 'Item A', list: 1, position: { x: 0, y: 0 } },
@@ -39,23 +54,25 @@ const listOne = computed(() => items.value.filter(item => item.list === 1));
 const listTwo = computed(() => items.value.filter(item => item.list === 2));
 
 // Store the item being dragged
-let draggedItem: Item | null = null;
+// let draggedItem: Item | null = null;
+const draggedItem = ref<Item | null>(null);
 
-function startDrag(evt: DragEvent, item: Item) {
-    draggedItem = item;
-    evt.dataTransfer!.effectAllowed = 'move';
-    evt.dataTransfer!.setData('text/plain', item.id.toString());
+function startDrag({ event, item }: { event: DragEvent; item: Item }) {
+    draggedItem.value = item;
+
+    event.dataTransfer!.effectAllowed = 'move';
+    event.dataTransfer!.setData('text/plain', item.id.toString());
 }
 
 function endDrag(item: Item) {
     // Reset dragged item
-    draggedItem = item
-    draggedItem = null;
+    draggedItem.value = item
+    draggedItem.value = null;
 }
 
 function onDrop(evt: DragEvent, list: number) {
     evt.preventDefault();
-    if (draggedItem) {
+    if (draggedItem.value) {
         const itemID = evt.dataTransfer!.getData('text/plain');
         const item = items.value.find(item => item.id === Number(itemID));
         if (item) {
@@ -86,8 +103,34 @@ function onDrop(evt: DragEvent, list: number) {
 .drag-el {
     background-color: #6c6868;
     padding: 5px;
-    color: red;
+    color: whitesmoke;
     position: absolute;
     cursor: grab;
+}
+
+.dropped-item-area {
+    display: flex;
+    border: 2px solid purple;
+    min-width: 1000px;
+    color: #6c6868
+}
+
+table {
+    border-collapse: collapse;
+    width: 400px;
+    color: #6c6868;
+    margin: 5px;
+    border: 2px solid #6c6868;
+}
+
+th,
+td {
+    text-align: left;
+    padding: 8px;
+    border: 2px solid #6c6868
+}
+
+tr {
+    width: 100%;
 }
 </style>

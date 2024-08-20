@@ -7,3 +7,10 @@ declare module "@vue/runtime-core" {
     $placeholder: string;
   }
 }
+
+export interface Item {
+  id: number;
+  title: string;
+  list: number;
+  position: { x: number; y: number };
+}
