@@ -1,73 +1,44 @@
 <template>
+  <h3>Create Drag & Drop Picture here</h3>
+  <div class="quiz-edit-container">
     <form action="">
-        <input type="file" accept="image/*" @change="(event) => handleFileUpload(event)" />
-        upload your image here
+      <label for="#drag-drop-image-upload">
+        Upload Image:
+        <input
+          id="drag-drop-image-upload"
+          type="file"
+          accept="image/*"
+          @change="(event) => handleFileUpload(event)"
+        />
+      </label>
+      <QuizEdit :image-url="imageSrc" />
+      <!-- todo: Handle Submit data to database -->
+      <input type="submit" value="Create Quiz" />
     </form>
-    <div>
-
-        <div class="image-container">
-            <img :src="imageSrc ?? ''" id="output" class="image-style" @mousedown="handlePosition" />
-            <div v-for="(item, index) in  collectPosition " :style="{ top: item.y + 'px', left: item.x + 'px' }"
-                class="option-item-position" :key="item.id" @click="() => collectPosition.splice(index, 1)">
-            </div>
-        </div>
-    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
+import QuizEdit from "./QuizEdit.vue";
 
-const form = ref({ media: {} });
-const collectPosition = ref<{ id: number; x: number; y: number }[]>([])
 const imageSrc = ref();
 
 const handleFileUpload = (e: Event) => {
-    const file = (e.target as HTMLInputElement).files
-    imageSrc.value = file ? URL.createObjectURL(file[0]) : ""
-}
-
-const handlePosition = (event: MouseEvent) => {
-    const img = event.currentTarget as HTMLImageElement;
-    const rect = img.getBoundingClientRect();
-    console.log("img size: ", rect)
-    // Calculate click position relative to the image
-    const x = event.clientX - rect.x
-    const y = event.clientY - rect.y
-    console.log("x", x)
-    // Collect position with a unique id for each item
-    collectPosition.value.push({
-        id: Date.now(),
-        x: x,
-        y: y
-    });
-}
-
+  const file = (e.target as HTMLInputElement).files;
+  imageSrc.value = file ? URL.createObjectURL(file[0]) : undefined;
+};
 </script>
 
-<style>
-.image-container {
-    position: relative;
+<style scoped>
+.quiz-edit-container {
+  margin: auto;
+  width: 100%;
+  margin-bottom: 2em;
 }
-
-.image-style {
-    display: block;
-    max-width: 100%;
-    height: auto;
-}
-
-.option-item-position {
-    background-color: #2970b3;
-    padding: 5px;
-    color: whitesmoke;
-    position: absolute;
-    cursor: url('src/assets/icons8-delete.svg'), auto;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-}
-
-.selected-spot {
-    width: 5px;
-
+input {
+  margin-bottom: 2em;
+  font-size: large;
+  box-shadow: 5px 5px 5px rgb(223, 222, 222) inset;
 }
 </style>

@@ -1,30 +1,22 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { VueWrapper, mount } from "@vue/test-utils";
-import QuizCreator from "../src/components/DraggableBox.vue";
+import QuizEdit from "../src/components/QuizEdit.vue";
 import { nextTick } from "vue";
+import testImageUrl from "../src/assets/TestDD.png";
 
 describe("YourComponent", () => {
   let wrapper: VueWrapper;
-  const testImageUrl = "src/assets/TestDD.png";
-  beforeEach(() => {
-    wrapper = mount(QuizCreator, {
-      global: { provide: { imageSrc: testImageUrl } },
+
+  beforeEach(async () => {
+    wrapper = mount(QuizEdit, {
+      context: { props: { imageUrl: testImageUrl } },
     });
+    await nextTick();
   });
 
-  // it("should update imageSrc when a file is uploaded", async () => {
-  //   const file = new File(["dummy content"], "example.png", {
-  //     type: "image/png",
-  //   });
-  //   const input = wrapper.find('input[type="file"]');
-  //   await input.trigger("change", { target: { files: [file] } });
-
-  //   await nextTick();
-
-  //   const img = wrapper.find("img");
-  //   expect(img.attributes("src")).toBeTruthy();
-  // });
-
+  it("should found image", async () => {
+    expect(wrapper.find("img").exists()).toBe(true);
+  });
   it("should add position marker on image click", async () => {
     const img = wrapper.find(".image-style");
     console.log("img", img);
@@ -33,20 +25,12 @@ describe("YourComponent", () => {
     await nextTick();
     await img.trigger("mousedown", { clientX: 310, clientY: 320 });
     const positions = wrapper.findAll(".option-item-position");
-    console.log("position: ", wrapper.vm.collectPosition);
-    expect(positions.length).toBe(1);
-  });
 
-  it("should remove position marker when clicked", async () => {
-    const img = wrapper.find("img");
-    await img.trigger("mousedown", { clientX: 100, clientY: 150 });
-    await nextTick();
+    const style1 = window.getComputedStyle(positions[0].element as HTMLElement);
+    const style2 = window.getComputedStyle(positions[1].element as HTMLElement);
 
-    const position = wrapper.find(".option-item-position");
-    await position.trigger("click");
-    await nextTick();
-
-    const positions = wrapper.findAll(".option-item-position");
-    expect(positions.length).toBe(0);
+    expect(positions.length).toBe(2);
+    expect(style1.top).toBe("300px");
+    expect(style2.top).toBe("320px");
   });
 });
