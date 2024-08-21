@@ -13,7 +13,7 @@
       </label>
       <QuizEdit :image-url="imageSrc" />
       <!-- todo: Handle Submit data to database -->
-      <input type="submit" value="Create Quiz" />
+      <input type="submit" value="Submit Quiz" />
     </form>
   </div>
 </template>
