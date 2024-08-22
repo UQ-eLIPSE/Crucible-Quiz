@@ -1,26 +1,22 @@
 <script setup lang="ts">
-import DraggableBox from "./components/DraggableBox.vue"
+import DraggableBox from "./components/DraggableBox.vue";
+import QuizCreator from "./components/QuizCreator.vue";
 </script>
 
 <template>
-  <div>
+  <div class="container">
+    <QuizCreator />
+    <hr />
+
     <DraggableBox />
   </div>
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
 }
 </style>
