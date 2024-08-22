@@ -1,7 +1,7 @@
 <template>
   <h3>Create Drag & Drop Picture here</h3>
   <div class="quiz-edit-container">
-    <form action="">
+    <form action="" @submit.prevent="handleSubmit">
       <label for="#drag-drop-image-upload">
         Upload Image:
         <input
@@ -27,6 +27,14 @@ const imageSrc = ref();
 const handleFileUpload = (e: Event) => {
   const file = (e.target as HTMLInputElement).files;
   imageSrc.value = file ? URL.createObjectURL(file[0]) : undefined;
+};
+
+const handleSubmit = () => {
+  const formdata = {
+    image: imageSrc.value, // Include image data if needed
+  };
+  console.log(formdata);
+  // You can add logic here to send formdata to a server or handle it as required
 };
 </script>
 
