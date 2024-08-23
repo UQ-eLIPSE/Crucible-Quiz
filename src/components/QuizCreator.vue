@@ -31,10 +31,9 @@ const handleFileUpload = (e: Event) => {
 
 const handleSubmit = () => {
   const formdata = {
-    image: imageSrc.value, // Include image data if needed
+    image: imageSrc.value, // todo: handle formdata
   };
   console.log(formdata);
-  // You can add logic here to send formdata to a server or handle it as required
 };
 </script>
 

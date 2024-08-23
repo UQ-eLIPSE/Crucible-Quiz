@@ -1,17 +1,17 @@
 <template>
   <div class="container">
-    <button @click="() => (showCreator = !showCreator)">
-      Land Quiz Editor
-    </button>
-    <div v-if="showCreator">
-      <QuizCreator />
-    </div>
-    <hr />
     <button @click="() => (showDraggableBox = !showDraggableBox)">
       Land Quiz
     </button>
     <div v-if="showDraggableBox">
       <DraggableBox />
+    </div>
+    <hr />
+    <button @click="() => (showCreator = !showCreator)">
+      Land Quiz Editor
+    </button>
+    <div v-if="showCreator">
+      <QuizCreator />
     </div>
   </div>
 </template>
