@@ -4,14 +4,9 @@
     <form action="" @submit.prevent="handleSubmit">
       <label for="#drag-drop-image-upload">
         Upload Image:
-        <input
-          id="drag-drop-image-upload"
-          type="file"
-          accept="image/*"
-          @change="(event) => handleFileUpload(event)"
-        />
+        <input id="drag-drop-image-upload" type="file" accept="image/*" @change="(event) => handleFileUpload(event)" />
       </label>
-      <QuizEdit :image-url="imageSrc" />
+      <QuizEdit :image-url="imageSrc" @update-collect-position="handlePosition" />
       <!-- todo: Handle Submit data to database -->
       <input type="submit" value="Submit Quiz" />
     </form>
@@ -20,7 +15,10 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { QuizOption, DDquizFormData } from "@/type";
 import QuizEdit from "./QuizEdit.vue";
+import { handleSubmitData } from "../dataAccessLayer.ts"
+
 
 const imageSrc = ref();
 
@@ -29,11 +27,18 @@ const handleFileUpload = (e: Event) => {
   imageSrc.value = file ? URL.createObjectURL(file[0]) : undefined;
 };
 
+const handlePosition = (newPositions: QuizOption[]) => {
+  collectPosition.value = newPositions
+}
+
+const collectPosition = ref<QuizOption[]>([]);
 const handleSubmit = () => {
-  const formdata = {
-    image: imageSrc.value, // todo: handle formdata
+  const formdata: DDquizFormData = {
+    image: imageSrc.value,
+    collectPosition: collectPosition.value,
   };
-  console.log(formdata);
+  handleSubmitData(formdata)
+
 };
 </script>
 
@@ -43,6 +48,7 @@ const handleSubmit = () => {
   width: 100%;
   margin-bottom: 2em;
 }
+
 input {
   margin-bottom: 2em;
   font-size: large;

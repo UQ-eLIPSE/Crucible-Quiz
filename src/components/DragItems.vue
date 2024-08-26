@@ -1,9 +1,10 @@
 <template>
 
+
     <div v-for="item in itemList" :key="item.id" class="drag-el"
         :style="{ top: item.position.y + 'px', left: item.position.x + 'px' }" draggable="true"
         @dragstart="(event) => emit('start-drag', { event, item })" @dragend="(__event) => emit('end-drag', item)">
-        {{ item.title }}
+        {{ item.label }}
     </div>
 </template>
 <script setup lang="ts">
@@ -15,8 +16,11 @@ const emit = defineEmits<{
 }>();
 
 defineProps<{
-    itemList?: Item[]
+    itemList?: Item[],
+    imgPosition: { imgX: number; imgY: number } | null
 }>()
+
+
 
 </script>
 <style>
@@ -26,5 +30,6 @@ defineProps<{
     color: whitesmoke;
     position: absolute;
     cursor: grab;
+    z-index: 100;
 }
 </style>
