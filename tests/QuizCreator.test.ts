@@ -19,7 +19,7 @@ describe("YourComponent", () => {
   });
   it("should add position marker on image click", async () => {
     const img = wrapper.find(".image-style");
-    console.log("img", img);
+
     await img.trigger("mousedown", { clientX: 300, clientY: 300 });
 
     await nextTick();
@@ -32,5 +32,15 @@ describe("YourComponent", () => {
     expect(positions.length).toBe(2);
     expect(style1.top).toBe("300px");
     expect(style2.top).toBe("320px");
+  });
+
+  it("The description of an option(option label) is editable", async () => {
+    const img = wrapper.find(".image-style");
+    await img.trigger("mousedown", { clientX: 300, clientY: 300 });
+    await nextTick();
+    const labelInput = wrapper.find("#option-label-0");
+    expect(labelInput.exists()).toBe(true);
+    labelInput.setValue("horse");
+    expect(wrapper.vm.collectPosition[0].label).toBe("horse");
   });
 });

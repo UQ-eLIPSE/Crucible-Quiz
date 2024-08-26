@@ -1,0 +1,62 @@
+- name: Client in PROD zone
+  hosts: newzone
+  tasks:
+    - name: Check if already deployed
+      debug:
+        msg: "Host {{ inventory_hostname }} is already deployed."
+      when: hostvars[inventory_hostname]['deployed'] | default(false) | bool
+
+    - name: End play if already deployed
+      meta: end_host
+      when: hostvars[inventory_hostname]['deployed'] | default(false) | bool
+
+    #  Set up product Zone directory
+    - name: Remove /root/crucible-quiz if it exists
+      command: rm -rf /root/crucible-quiz
+
+    - name: Create /root/crucible-quiz
+      file:
+        path: /root/crucible-quiz
+        state: directory
+
+    # Prepare transfer of client code
+    - name: Compress client code
+      shell: |
+        rsync -av --exclude=node_modules --exclude=yarn.lock --exclude=tests --exclude=.husky --exclude=.github --exclude=.git . client/ && \
+        rm -f client.tar.gz && \
+        tar -czvf client.tar.gz client
+      delegate_to: localhost
+
+    # Ensure no client codes file and directory exists when deploying starts
+    - name: Ensure no file client.tar.gz exists
+      file:
+        path: /root/crucible-quiz/client.tar.gz
+        state: absent
+
+    - name: Ensure no /root/crucible-quiz/client exists
+      file:
+        path: /root/crucible-quiz/client
+        state: absent
+
+    # Transfer client code to remote instance and set up client
+    - name: Transfer client code
+      copy:
+        src: client.tar.gz
+        dest: /root/crucible-quiz
+
+    - name: Uncompress the file in the remote instance
+      command: tar -xzf /root/crucible-quiz/client.tar.gz -C /root/crucible-quiz/
+
+    - name: Create client
+      shell: |
+        cd /root/crucible-quiz/client && \
+        yarn && \
+        yarn build && \
+        rm -rf /var/www/client && \
+        mkdir /var/www/client && \
+        cp -R dist/ /var/www/client/
+
+    - name: Restart Nginx service
+      systemd:
+        name: nginx
+        state: restarted

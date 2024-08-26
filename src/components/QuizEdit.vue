@@ -18,7 +18,16 @@
     <ul>
       <h3>Questions Option Select and Edit</h3>
       <li v-for="(item, index) in collectPosition" :key="index">
-        {{ item }}
+        <label :for="`option-label-${index}`"> option text: </label>
+        <input
+          :id="`option-label-${index}`"
+          type="text"
+          :value="item.label"
+          @input="
+            (event) =>
+              updateLabel(index, (event.target as HTMLInputElement).value)
+          "
+        />
       </li>
     </ul>
   </div>
@@ -46,6 +55,10 @@ const handlePosition = (event: MouseEvent) => {
     y: y,
     label: "*", //todo: should be a input change
   });
+};
+
+const updateLabel = (index: number, newLabel: string) => {
+  collectPosition.value[index].label = newLabel;
 };
 </script>
 <style scoped>
