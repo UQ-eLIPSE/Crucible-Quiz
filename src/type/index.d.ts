@@ -10,7 +10,19 @@ declare module "@vue/runtime-core" {
 
 export interface Item {
   id: number;
-  title: string;
-  list: number;
+  label: string;
   position: { x: number; y: number };
+  list: number;
+}
+
+export interface QuizOption {
+  id: number;
+  label: string;
+  position: { x: number; y: number };
+  list?: number;
+}
+
+export interface DDquizFormData {
+  image: string;
+  collectPosition: QuizOption[];
 }
