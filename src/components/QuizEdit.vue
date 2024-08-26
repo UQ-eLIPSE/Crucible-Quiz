@@ -1,18 +1,33 @@
 <template>
   <div class="edit-container">
     <div class="image-container">
-      <img :src="imageUrl" id="output" class="image-style" @mousedown="handlePosition" />
-      <div v-for="(item, index) in collectPosition"
-        :style="{ top: item.position.y + 'px', left: item.position.x + 'px' }" class="option-item-position"
-        :key="item.id" @click="() => collectPosition.splice(index, 1)"></div>
+      <img
+        :src="imageUrl"
+        id="output"
+        class="image-style"
+        @mousedown="handlePosition"
+      />
+      <div
+        v-for="(item, index) in collectPosition"
+        :style="{ top: item.position.y + 'px', left: item.position.x + 'px' }"
+        class="option-item-position"
+        :key="item.id"
+        @click="() => collectPosition.splice(index, 1)"
+      ></div>
     </div>
     <ul>
       <h3>Questions Option Select and Edit</h3>
       <li v-for="(item, index) in collectPosition" :key="index">
         <label :for="`option-label-${index}`"> option text: </label>
-        <input :id="`option-label-${index}`" type="text" :value="item.label" @input="(event) =>
-        updateLabel(index, (event.target as HTMLInputElement).value)
-        " />
+        <input
+          :id="`option-label-${index}`"
+          type="text"
+          :value="item.label"
+          @input="
+            (event) =>
+              updateLabel(index, (event.target as HTMLInputElement).value)
+          "
+        />
       </li>
     </ul>
   </div>
@@ -24,18 +39,16 @@ defineProps<{
   imageUrl?: string;
 }>();
 
-const collectPosition = ref<
-  QuizOption[]
->([]);
+const collectPosition = ref<QuizOption[]>([]);
 const emit = defineEmits<{
-  (event: 'update-collect-position', positions: QuizOption[]): void;
+  (event: "update-collect-position", positions: QuizOption[]): void;
 }>();
 const handlePosition = (event: MouseEvent) => {
   const img = event.currentTarget as HTMLImageElement;
   const rect = img.getBoundingClientRect();
   // Calculate click position relative to the image
-  const x = event.clientX - rect.x - window.scrollX;
-  const y = event.clientY - rect.y - window.scrollY;
+  const x = event.clientX - rect.x;
+  const y = event.clientY - rect.y;
   // Collect position with a unique id for each item
   collectPosition.value.push({
     id: Date.now(),
