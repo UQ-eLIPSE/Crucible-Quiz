@@ -26,8 +26,8 @@
 import { ref } from "vue";
 import { QuizOption, DDquizFormData } from "@/type";
 import QuizEdit from "./QuizEdit.vue";
-import { handleSubmitData } from "../dataAccessLayer.ts";
 import TextImage from "./TextImage.vue";
+import { handleSubmitData } from "../dataAccessLayer.ts";
 
 const imageSrc = ref();
 

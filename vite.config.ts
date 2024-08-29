@@ -34,9 +34,11 @@ export default defineConfig({
     },
   },
   test: {
+    setupFiles: ["./vitest.setup.ts"],
     include: [path.resolve(__dirname, "./tests/*.test.ts")],
     globals: true,
     environment: "jsdom",
+    deps: { inline: ["vitest-canvas-mock"] },
     css: true,
   },
 });
