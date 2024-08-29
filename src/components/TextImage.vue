@@ -1,18 +1,19 @@
 <template>
-  <div>
+  <div class="text-image-container">
+    <button @click="generateImage">Generate Image</button>
     <textarea
       v-model="text"
-      placeholder="Enter one question text here..."
+      placeholder="Enter question text body here..."
       rows="5"
-      cols="50"
+      cols="40"
     ></textarea>
-    <button @click="generateImage">Generate Image</button>
-    <img v-if="imageSrc" :src="imageSrc" alt="Generated Text Image" />
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
+
+const emit = defineEmits(["updateTextimageSrc"]);
 
 const text = ref("");
 const imageSrc = ref("");
@@ -21,9 +22,12 @@ const generateImage = () => {
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d");
   const fontSize = 20;
-  const padding = 20;
-
-  context.font = `${fontSize}px`;
+  const padding = 10;
+  if (!context) {
+    console.error("Failed to get 2D context from canvas.");
+    return;
+  }
+  context.font = `${fontSize}px Arial`;
   context.fillStyle = "black";
   context.textAlign = "left";
   context.textBaseline = "top";
@@ -44,17 +48,28 @@ const generateImage = () => {
   });
 
   imageSrc.value = canvas.toDataURL("image/png");
+  console.log(imageSrc.value);
+  emit("updateTextimageSrc", imageSrc.value);
 };
 </script>
 
-<style>
+<style scoped>
+.text-image-container {
+  display: flex;
+  padding: 2px;
+}
 textarea {
-  width: 100%;
+  width: 80%;
   resize: vertical;
+  flex-grow: 1;
 }
 
 button {
-  margin-top: 10px;
+  color: white;
+  width: 80px;
+  height: 40px;
+  padding: 3px;
+  margin: auto;
 }
 
 img {

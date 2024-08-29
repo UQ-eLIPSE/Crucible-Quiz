@@ -4,9 +4,18 @@
     <form action="" @submit.prevent="handleSubmit">
       <label for="#drag-drop-image-upload">
         Upload Image:
-        <input id="drag-drop-image-upload" type="file" accept="image/*" @change="(event) => handleFileUpload(event)" />
+        <input
+          id="drag-drop-image-upload"
+          type="file"
+          accept="image/*"
+          @change="(event) => handleFileUpload(event)"
+        />
+        <TextImage @update-textimage-src="handleTxtImageSrcUpdate" />
       </label>
-      <QuizEdit :image-url="imageSrc" @update-collect-position="handlePosition" />
+      <QuizEdit
+        :image-url="imageSrc"
+        @update-collect-position="handlePosition"
+      />
       <!-- todo: Handle Submit data to database -->
       <input type="submit" value="Submit Quiz" />
     </form>
@@ -17,19 +26,23 @@
 import { ref } from "vue";
 import { QuizOption, DDquizFormData } from "@/type";
 import QuizEdit from "./QuizEdit.vue";
-import { handleSubmitData } from "../dataAccessLayer.ts"
-
+import { handleSubmitData } from "../dataAccessLayer.ts";
+import TextImage from "./TextImage.vue";
 
 const imageSrc = ref();
 
+const handleTxtImageSrcUpdate = (src: string) => {
+  imageSrc.value = src;
+  console.log(src);
+};
 const handleFileUpload = (e: Event) => {
   const file = (e.target as HTMLInputElement).files;
   imageSrc.value = file ? URL.createObjectURL(file[0]) : undefined;
 };
 
 const handlePosition = (newPositions: QuizOption[]) => {
-  collectPosition.value = newPositions
-}
+  collectPosition.value = newPositions;
+};
 
 const collectPosition = ref<QuizOption[]>([]);
 const handleSubmit = () => {
@@ -37,8 +50,7 @@ const handleSubmit = () => {
     image: imageSrc.value,
     collectPosition: collectPosition.value,
   };
-  handleSubmitData(formdata)
-
+  handleSubmitData(formdata);
 };
 </script>
 
@@ -53,5 +65,18 @@ input {
   margin-bottom: 2em;
   font-size: large;
   box-shadow: 5px 5px 5px rgb(223, 222, 222) inset;
+}
+textarea {
+  width: 100%;
+  resize: vertical;
+}
+
+button {
+  margin-top: 10px;
+}
+
+img {
+  margin-top: 20px;
+  max-width: 100%;
 }
 </style>
