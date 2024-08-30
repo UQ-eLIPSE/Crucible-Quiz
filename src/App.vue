@@ -8,7 +8,7 @@
         Launch D&D Quiz
       </button>
     </div>
-
+    <hr />
     <div v-if="showCreator" class="create-ddQuiz-container">
       <QuizCreator />
     </div>
@@ -32,8 +32,13 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
 .btn-container {
-  position: absolute;
   top: 0;
   left: 0;
 }
@@ -44,6 +49,11 @@ button {
   border: 2px solid grey;
 }
 .create-ddQuiz-container {
+  display: flex;
+  flex-direction: column;
+  align-items: space-between;
   border: 2px dashed grey;
+  min-height: 35em;
+  min-width: 25em;
 }
 </style>

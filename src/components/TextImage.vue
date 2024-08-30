@@ -1,12 +1,12 @@
 <template>
   <div class="text-image-container">
-    <button @click="generateImage">Generate Image</button>
     <textarea
       v-model="text"
       placeholder="Enter question text body here..."
       rows="5"
-      cols="40"
+      cols="50"
     ></textarea>
+    <button @click="generateImage">Convert</button>
   </div>
 </template>
 
@@ -21,13 +21,14 @@ const imageSrc = ref("");
 const generateImage = () => {
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d");
-  const fontSize = 20;
-  const padding = 10;
+  const fontSize = 50;
+  const padding = 50;
   if (!context) {
     console.error("Failed to get 2D context from canvas.");
     return;
   }
-  context.font = `${fontSize}px Arial`;
+  context.font = "50px verdana";
+  console.log(`Font set to: ${context.font}`);
   context.fillStyle = "black";
   context.textAlign = "left";
   context.textBaseline = "top";
@@ -48,7 +49,6 @@ const generateImage = () => {
   });
 
   imageSrc.value = canvas.toDataURL("image/png");
-  console.log(imageSrc.value);
   emit("updateTextimageSrc", imageSrc.value);
 };
 </script>
@@ -56,20 +56,24 @@ const generateImage = () => {
 <style scoped>
 .text-image-container {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 2px;
 }
 textarea {
   width: 80%;
   resize: vertical;
-  flex-grow: 1;
+  font-size: large;
 }
 
 button {
-  color: white;
+  color: black;
   width: 80px;
   height: 40px;
   padding: 3px;
   margin: auto;
+  background-color: transparent !important;
+  border: 2px solid rgb(74, 109, 206);
 }
 
 img {

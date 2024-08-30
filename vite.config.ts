@@ -5,6 +5,7 @@ import path from "path";
 import vue from "@vitejs/plugin-vue";
 
 // https://vitejs.dev/config/
+const buildAsLibrary = process.env.BUILDASLIBRARY === "true";
 export default defineConfig({
   plugins: [vue()],
   root: fileURLToPath(new URL(".", import.meta.url)),
@@ -18,7 +19,7 @@ export default defineConfig({
     },
   },
 
-  build: {
+  build: buildAsLibrary && {
     lib: {
       entry: "./src/quizPlugin.ts",
       name: "QuizPlugin",

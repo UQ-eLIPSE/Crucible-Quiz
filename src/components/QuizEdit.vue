@@ -16,7 +16,6 @@
       ></div>
     </div>
     <ul>
-      <h3>Questions Option Select and Edit</h3>
       <li v-for="(item, index) in collectPosition" :key="index">
         <label :for="`option-label-${index}`"> option text: </label>
         <input
@@ -78,12 +77,14 @@ input {
 
 .edit-container {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  min-height: 200px;
 }
 
 .image-container {
   position: relative;
   margin: auto;
+  border: solid 1px grey;
 }
 
 .image-style {
