@@ -21,17 +21,12 @@ const imageSrc = ref("");
 const generateImage = () => {
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d");
-  const fontSize = 50;
-  const padding = 50;
+  const fontSize = 20;
+  const padding = 5;
   if (!context) {
     console.error("Failed to get 2D context from canvas.");
     return;
   }
-  context.font = "50px verdana";
-  console.log(`Font set to: ${context.font}`);
-  context.fillStyle = "black";
-  context.textAlign = "left";
-  context.textBaseline = "top";
 
   const lines = text.value.split("\n");
 
@@ -40,8 +35,14 @@ const generateImage = () => {
   );
   const totalHeight = lines.length * fontSize + padding * 2;
 
-  canvas.width = maxWidth + padding * 2;
-  canvas.height = totalHeight;
+  canvas.width = Math.max(maxWidth, 800);
+  canvas.height = Math.max(totalHeight, 200);
+
+  context.font = `${fontSize}px verdana`;
+  console.log(`Font set to: ${context.font}`);
+  context.fillStyle = "black";
+  context.textAlign = "left";
+  context.textBaseline = "top";
 
   context.clearRect(0, 0, canvas.width, canvas.height);
   lines.forEach((line, index) => {
