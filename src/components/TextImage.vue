@@ -39,7 +39,6 @@ const generateImage = () => {
   canvas.height = Math.max(totalHeight, 200);
 
   context.font = `${fontSize}px verdana`;
-  console.log(`Font set to: ${context.font}`);
   context.fillStyle = "black";
   context.textAlign = "left";
   context.textBaseline = "top";

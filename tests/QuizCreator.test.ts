@@ -4,7 +4,7 @@ import QuizEdit from "../src/components/QuizEdit.vue";
 import { nextTick } from "vue";
 import testImageUrl from "../src/assets/TestDD.png";
 
-describe("YourComponent", () => {
+describe("QuizEdit", () => {
   let wrapper: VueWrapper;
 
   beforeEach(async () => {
@@ -17,30 +17,47 @@ describe("YourComponent", () => {
   it("should found image", async () => {
     expect(wrapper.find("img").exists()).toBe(true);
   });
-  it("should add position marker on image click", async () => {
+
+  it("should add position marker on two image clicks", async () => {
     const img = wrapper.find(".image-style");
 
-    await img.trigger("mousedown", { clientX: 300, clientY: 300 });
+    // First click to start the selection
+    await img.trigger("click", { clientX: 300, clientY: 300 });
 
+    // Ensure the selection start was registered
     await nextTick();
-    await img.trigger("mousedown", { clientX: 310, clientY: 320 });
+    expect(wrapper.vm.isSelecting).toBe(true);
+
+    // Second click to end the selection
+    await img.trigger("click", { clientX: 310, clientY: 320 });
+
+    // Ensure the selection was finalized
+    await nextTick();
     const positions = wrapper.findAll(".option-item-position");
+    expect(positions.length).toBe(1);
 
-    const style1 = window.getComputedStyle(positions[0].element as HTMLElement);
-    const style2 = window.getComputedStyle(positions[1].element as HTMLElement);
-
-    expect(positions.length).toBe(2);
-    expect(style1.top).toBe("300px");
-    expect(style2.top).toBe("320px");
+    const style = window.getComputedStyle(positions[0].element as HTMLElement);
+    expect(style.top).toBe("300px");
+    expect(style.left).toBe("300px");
+    expect(style.width).toBe("10px");
+    expect(style.height).toBe("20px");
   });
 
-  it("The description of an option(option label) is editable", async () => {
+  it("should allow editing the label of a created option", async () => {
     const img = wrapper.find(".image-style");
-    await img.trigger("mousedown", { clientX: 300, clientY: 300 });
+
+    // First click to start the selection
+    await img.trigger("click", { clientX: 300, clientY: 300 });
+
+    // Second click to end the selection
+    await img.trigger("click", { clientX: 310, clientY: 320 });
     await nextTick();
+
+    // Ensure the option label input appears and is editable
     const labelInput = wrapper.find("#option-label-0");
     expect(labelInput.exists()).toBe(true);
-    labelInput.setValue("horse");
+
+    await labelInput.setValue("horse");
     expect(wrapper.vm.collectPosition[0].label).toBe("horse");
   });
 });

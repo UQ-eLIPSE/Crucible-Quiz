@@ -25,6 +25,7 @@
         @dragenter.prevent
       >
         <img ref="imgRef" :src="imageUrl" alt="" @load="getImagePosition" />
+
         <DragItems
           :item-list="listTwo"
           :img-position="imagePosition"

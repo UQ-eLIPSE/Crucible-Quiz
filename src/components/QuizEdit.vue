@@ -5,16 +5,13 @@
         :src="imageUrl"
         id="output"
         class="image-style"
-        @mousedown="startSelection"
-        @mousemove="drawSelection"
-        @mouseup="endSelection"
+        @click="handleClick"
+        :class="{ 'cursor-crosshair': isSelecting }"
       />
-      <!-- Render current selection box -->
-      <div
-        v-if="isSelecting"
-        :style="selectionStyle"
-        class="option-item-position"
-      ></div>
+      <!-- Hint for first click -->
+      <div v-if="isSelecting" :style="hintStyle" class="hint-style">
+        Click to finish the selection
+      </div>
       <div
         v-for="(item, index) in collectPosition"
         :style="getItemStyle(item)"
@@ -40,7 +37,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, computed, CSSProperties } from "vue";
+import { ref, CSSProperties, computed } from "vue";
 import { QuizOption } from "@/type";
 defineProps<{
   imageUrl?: string;
@@ -53,71 +50,66 @@ const emit = defineEmits<{
 const isSelecting = ref(false);
 const selectionStart = ref({ x: 0, y: 0 });
 const selectionEnd = ref({ x: 0, y: 0 });
+const hintPosition = ref({ x: 0, y: 0 });
+const handleClick = (event: MouseEvent) => {
+  const img = event.currentTarget as HTMLImageElement;
+  const rect = img.getBoundingClientRect();
 
-const startSelection = (event: MouseEvent) => {
-  const img = event.currentTarget as HTMLImageElement;
-  const rect = img.getBoundingClientRect();
-  // Calculate the starting position
-  selectionStart.value = {
-    x: event.clientX - rect.left,
-    y: event.clientY - rect.top,
-  };
-  isSelecting.value = true;
-  console.log("start");
+  if (!isSelecting.value) {
+    // First click: start the selection
+    selectionStart.value = {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
+    };
+    isSelecting.value = true;
+  } else {
+    // Second click: finish the selection
+    selectionEnd.value = {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
+    };
+    finalizeSelection();
+  }
 };
-const drawSelection = (event: MouseEvent) => {
-  if (!isSelecting.value) return;
-  const img = event.currentTarget as HTMLImageElement;
-  const rect = img.getBoundingClientRect();
-  // Update the end position as the mouse moves
-  selectionEnd.value = {
-    x: event.clientX - rect.left,
-    y: event.clientY - rect.top,
-  };
-  console.log("draw");
-};
-const endSelection = () => {
-  console.log("end1", !isSelecting.value);
-  if (!isSelecting.value) return;
-  // Collect position and size of the selected area
-  collectPosition.value.push({
-    id: Date.now(),
-    position: {
-      x: Math.min(selectionStart.value.x, selectionEnd.value.x),
-      y: Math.min(selectionStart.value.y, selectionEnd.value.y),
-      width: Math.abs(selectionEnd.value.x - selectionStart.value.x),
-      height: Math.abs(selectionEnd.value.y - selectionStart.value.y),
-    },
-    label: "*", // To be changed based on input
-  });
-  emit("update-collect-position", collectPosition.value);
+
+const finalizeSelection = () => {
+  if (
+    selectionEnd.value.x !== selectionStart.value.x &&
+    selectionEnd.value.y !== selectionStart.value.y
+  ) {
+    // Collect position and size of the selected area
+    collectPosition.value.push({
+      id: Date.now(),
+      position: {
+        x: Math.min(selectionStart.value.x, selectionEnd.value.x),
+        y: Math.min(selectionStart.value.y, selectionEnd.value.y),
+        width: Math.abs(selectionEnd.value.x - selectionStart.value.x),
+        height: Math.abs(selectionEnd.value.y - selectionStart.value.y),
+      },
+      label: "*", // Placeholder label
+    });
+  }
+
   // Reset selection state
   isSelecting.value = false;
   selectionStart.value = { x: 0, y: 0 };
   selectionEnd.value = { x: 0, y: 0 };
-  console.log("end");
-  console.log(collectPosition.value);
+
+  // Emit updated positions
+  emit("update-collect-position", collectPosition.value);
 };
-
-// Computed style for the selection box
-const selectionStyle = computed<CSSProperties>(() => {
-  if (!isSelecting.value) return {};
-  const x = Math.min(selectionStart.value.x, selectionEnd.value.x);
-  const y = Math.min(selectionStart.value.y, selectionEnd.value.y);
-  const width = Math.abs(selectionEnd.value.x - selectionStart.value.x);
-  const height = Math.abs(selectionEnd.value.y - selectionStart.value.y);
-
+const hintStyle = computed<CSSProperties>(() => {
   return {
     position: "absolute",
-    top: `${y}px`,
-    left: `${x}px`,
-    width: `${width}px`,
-    height: `${height}px`,
-    border: "2px dashed blue",
-    pointerEvents: "none",
+    top: `${hintPosition.value.y}px`,
+    left: `${hintPosition.value.x}px`,
+    color: "blue",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    padding: "2px 4px",
+    borderRadius: "3px",
+    fontSize: "12px",
   };
 });
-
 // Function to compute style for each collected item
 const getItemStyle = (item: {
   position: { x: number; y: number; width: number; height: number };
@@ -128,7 +120,6 @@ const getItemStyle = (item: {
     left: `${item.position.x}px`,
     width: `${item.position.width}px`,
     height: `${item.position.height}px`,
-    border: "2px solid red",
     pointerEvents: "auto",
   };
 };
@@ -157,9 +148,9 @@ input {
 }
 
 .image-container {
-  position: relative;
   margin: auto;
   border: solid 1px grey;
+  position: relative;
 }
 
 .image-style {
@@ -169,21 +160,23 @@ input {
 }
 
 .option-item-position {
-  background-color: #2970b3;
-  padding: 5px;
-  color: whitesmoke;
+  border: 2px dashed blue;
+  background: rgba(0, 0, 255);
   position: absolute;
-  cursor: url("src/assets/icons8-delete.svg"), auto;
-  width: 5px;
-  height: 5px;
-
-  /* border: 2px dashed blue;
-  background: rgba(0, 0, 255, 0.2);
-  position: absolute;
-  pointer-events: none; */
+  pointer-events: none;
 }
 
 .selected-spot {
   width: 5px;
+}
+.cursor-crosshair {
+  cursor: crosshair;
+}
+
+.hint-style {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1000;
 }
 </style>
