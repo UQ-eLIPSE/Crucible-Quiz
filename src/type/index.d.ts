@@ -18,7 +18,7 @@ export interface Item {
 export interface QuizOption {
   id: number;
   label: string;
-  position: { x: number; y: number };
+  position: { x: number; y: number; width: number; height: number };
   list?: number;
 }
 

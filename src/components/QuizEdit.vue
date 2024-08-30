@@ -5,18 +5,22 @@
         :src="imageUrl"
         id="output"
         class="image-style"
-        @mousedown="handlePosition"
+        @click="handleClick"
+        :class="{ 'cursor-crosshair': isSelecting }"
       />
+      <!-- Hint for first click -->
+      <div v-if="isSelecting" :style="hintStyle" class="hint-style">
+        Click to finish the selection
+      </div>
       <div
         v-for="(item, index) in collectPosition"
-        :style="{ top: item.position.y + 'px', left: item.position.x + 'px' }"
+        :style="getItemStyle(item)"
         class="option-item-position"
         :key="item.id"
         @click="() => collectPosition.splice(index, 1)"
       ></div>
     </div>
     <ul>
-      <h3>Questions Option Select and Edit</h3>
       <li v-for="(item, index) in collectPosition" :key="index">
         <label :for="`option-label-${index}`"> option text: </label>
         <input
@@ -33,7 +37,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, CSSProperties, computed } from "vue";
 import { QuizOption } from "@/type";
 defineProps<{
   imageUrl?: string;
@@ -43,21 +47,82 @@ const collectPosition = ref<QuizOption[]>([]);
 const emit = defineEmits<{
   (event: "update-collect-position", positions: QuizOption[]): void;
 }>();
-const handlePosition = (event: MouseEvent) => {
+const isSelecting = ref(false);
+const selectionStart = ref({ x: 0, y: 0 });
+const selectionEnd = ref({ x: 0, y: 0 });
+const hintPosition = ref({ x: 0, y: 0 });
+const handleClick = (event: MouseEvent) => {
   const img = event.currentTarget as HTMLImageElement;
   const rect = img.getBoundingClientRect();
-  // Calculate click position relative to the image
-  const x = event.clientX - rect.x;
-  const y = event.clientY - rect.y;
-  // Collect position with a unique id for each item
-  collectPosition.value.push({
-    id: Date.now(),
-    position: { x, y },
-    label: "*", //todo: should be a input change
-  });
-  emit("update-collect-position", collectPosition.value);
+
+  if (!isSelecting.value) {
+    // First click: start the selection
+    selectionStart.value = {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
+    };
+    isSelecting.value = true;
+  } else {
+    // Second click: finish the selection
+    selectionEnd.value = {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
+    };
+    finalizeSelection();
+  }
 };
 
+const finalizeSelection = () => {
+  if (
+    selectionEnd.value.x !== selectionStart.value.x &&
+    selectionEnd.value.y !== selectionStart.value.y
+  ) {
+    // Collect position and size of the selected area
+    collectPosition.value.push({
+      id: Date.now(),
+      position: {
+        x: Math.min(selectionStart.value.x, selectionEnd.value.x),
+        y: Math.min(selectionStart.value.y, selectionEnd.value.y),
+        width: Math.abs(selectionEnd.value.x - selectionStart.value.x),
+        height: Math.abs(selectionEnd.value.y - selectionStart.value.y),
+      },
+      label: "*", // Placeholder label
+    });
+  }
+
+  // Reset selection state
+  isSelecting.value = false;
+  selectionStart.value = { x: 0, y: 0 };
+  selectionEnd.value = { x: 0, y: 0 };
+
+  // Emit updated positions
+  emit("update-collect-position", collectPosition.value);
+};
+const hintStyle = computed<CSSProperties>(() => {
+  return {
+    position: "absolute",
+    top: `${hintPosition.value.y}px`,
+    left: `${hintPosition.value.x}px`,
+    color: "blue",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    padding: "2px 4px",
+    borderRadius: "3px",
+    fontSize: "12px",
+  };
+});
+// Function to compute style for each collected item
+const getItemStyle = (item: {
+  position: { x: number; y: number; width: number; height: number };
+}): CSSProperties => {
+  return {
+    position: "absolute",
+    top: `${item.position.y}px`,
+    left: `${item.position.x}px`,
+    width: `${item.position.width}px`,
+    height: `${item.position.height}px`,
+    pointerEvents: "auto",
+  };
+};
 const updateLabel = (index: number, newLabel: string) => {
   collectPosition.value[index].label = newLabel;
   emit("update-collect-position", collectPosition.value);
@@ -78,12 +143,14 @@ input {
 
 .edit-container {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  min-height: 200px;
 }
 
 .image-container {
-  position: relative;
   margin: auto;
+  border: solid 1px grey;
+  position: relative;
 }
 
 .image-style {
@@ -93,17 +160,23 @@ input {
 }
 
 .option-item-position {
-  background-color: #2970b3;
-  padding: 5px;
-  color: whitesmoke;
+  border: 2px dashed blue;
+  background: rgba(0, 0, 255);
   position: absolute;
-  cursor: url("src/assets/icons8-delete.svg"), auto;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
+  pointer-events: none;
 }
 
 .selected-spot {
   width: 5px;
+}
+.cursor-crosshair {
+  cursor: crosshair;
+}
+
+.hint-style {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1000;
 }
 </style>
