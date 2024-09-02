@@ -11,7 +11,7 @@
       <div class="drop-zone" @drop="onDrop($event, 2)" @dragover.prevent @dragenter.prevent>
         <img ref="imgRef" :src="imageUrl" alt="" @load="getImagePosition" />
 
-        <!-- <DragItems :item-list="listTwo" :img-position="imagePosition" @start-drag="startDrag" @end-drag="endDrag" /> -->
+        <DragItems :item-list="listTwo" :img-position="imagePosition" @start-drag="startDrag" @end-drag="endDrag" />
         <div v-for="ele in snapItems" :key="ele.id"
           :style="{ top: ele.position.y + 'px', left: ele.position.x + 'px', width: ele.position.width + 'px', height: ele.position.height + 'px' }"
           class="snap-position">{{ ele.position.x }}</div>
