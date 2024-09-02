@@ -11,7 +11,7 @@ declare module "@vue/runtime-core" {
 export interface Item {
   id: number;
   label: string;
-  position: { x: number; y: number };
+  position: { x: number; y: number; width: number; height: number };
   list: number;
 }
 

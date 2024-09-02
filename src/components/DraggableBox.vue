@@ -2,36 +2,19 @@
   <h3>Drag & Drop Quiz Render</h3>
   <div class="container-ddQuiz">
     <!-- Initial D&D Quiz options -->
-    <div
-      class="drop-zone"
-      @drop="onDrop($event, 1)"
-      @dragover.prevent
-      @dragenter.prevent
-    >
-      <DragItems
-        :item-list="listOne"
-        :img-position="imagePosition"
-        @start-drag="startDrag"
-        @end-drag="endDrag"
-      />
+    <div class="drop-zone" @drop="onDrop($event, 1)" @dragover.prevent @dragenter.prevent>
+      <DragItems :item-list="listOne" :img-position="imagePosition" @start-drag="startDrag" @end-drag="endDrag" />
     </div>
     <!-- Drop Options in the picture Zone -->
 
     <div class="dropped-item-area">
-      <div
-        class="drop-zone"
-        @drop="onDrop($event, 2)"
-        @dragover.prevent
-        @dragenter.prevent
-      >
+      <div class="drop-zone" @drop="onDrop($event, 2)" @dragover.prevent @dragenter.prevent>
         <img ref="imgRef" :src="imageUrl" alt="" @load="getImagePosition" />
 
-        <DragItems
-          :item-list="listTwo"
-          :img-position="imagePosition"
-          @start-drag="startDrag"
-          @end-drag="endDrag"
-        />
+        <!-- <DragItems :item-list="listTwo" :img-position="imagePosition" @start-drag="startDrag" @end-drag="endDrag" /> -->
+        <div v-for="ele in snapItems" :key="ele.id"
+          :style="{ top: ele.position.y + 'px', left: ele.position.x + 'px', width: ele.position.width + 'px', height: ele.position.height + 'px' }"
+          class="snap-position">{{ ele.position.x }}</div>
       </div>
       <!-- Collection Result and todo: add submit data form -->
       <div>
@@ -62,15 +45,17 @@ const imageUrl = ref<string>(fallbackImg);
 // Todo: these Data should come from quiz database as options
 
 const items = ref<Item[]>([
-  { id: 0, label: "Item A", position: { x: 0, y: 0 }, list: 1 },
-  { id: 1, label: "Item B", position: { x: 100, y: 0 }, list: 1 },
-  { id: 2, label: "Item C", position: { x: 200, y: 0 }, list: 1 },
+  { id: 0, label: "Item A", position: { x: 0, y: 0, width: 1, height: 1, }, list: 1 },
+  { id: 1, label: "Item B", position: { x: 100, y: 0, width: 1, height: 1, }, list: 1 },
+  { id: 2, label: "Item C", position: { x: 200, y: 0, width: 1, height: 1, }, list: 1 },
 ]);
+const snapItems = ref<Item[]>([])
 const imgRef = ref<HTMLImageElement | null>();
 const imagePosition = ref<{ imgX: number; imgY: number } | null>(null);
 const getImagePosition = () => {
   if (imgRef.value) {
     const rect = imgRef.value.getBoundingClientRect();
+    console.log("editImage: ", rect)
     imagePosition.value = {
       imgX: rect.x + window.scrollX,
       imgY: rect.y + window.scrollY,
@@ -86,8 +71,11 @@ onMounted(() => {
         localStorage.getItem("ddQuizFormdata") ?? "",
       );
       const collectPositionFrLocal = storeDDquizData["collectPosition"];
+      snapItems.value = collectPositionFrLocal.map((item) => {
+        return { ...item, list: 2 };
+      });
       items.value = collectPositionFrLocal.map((item, index) => {
-        return { ...item, list: 1, position: { x: 50, y: index * 40 + 100 } };
+        return { ...item, list: 1, position: { x: 50, y: index * 40 + 100, width: item.position.width, height: item.position.height } };
       }); //Todo: to fix a suitable position in Render Quiz Ticket
 
       imageUrl.value = storeDDquizData.image;
@@ -95,8 +83,8 @@ onMounted(() => {
   }
 });
 
-const listOne = computed(() => items.value.filter((item) => item.list === 1));
-const listTwo = computed(() => items.value.filter((item) => item.list === 2));
+const listOne = computed(() => items.value.filter((item: Item) => item.list === 1));
+const listTwo = computed(() => items.value.filter((item: Item) => item.list === 2));
 
 const draggedItem = ref<Item | null>(null);
 
@@ -117,7 +105,7 @@ function onDrop(evt: DragEvent, list: number) {
   evt.preventDefault();
   if (draggedItem.value) {
     const itemID = evt.dataTransfer!.getData("text/plain");
-    const item = items.value.find((item) => item.id === Number(itemID));
+    const item = items.value.find((item: Item) => item.id === Number(itemID));
     if (item) {
       item.list = list;
       // Update position
@@ -126,6 +114,8 @@ function onDrop(evt: DragEvent, list: number) {
       item.position = {
         x: evt.clientX - rect.left,
         y: evt.clientY - rect.top,
+        width: item.position.width,
+        height: item.position.height
       };
     }
   }
@@ -135,6 +125,7 @@ function onDrop(evt: DragEvent, list: number) {
 <style scoped>
 .container-ddQuiz {
   display: flex;
+  flex-direction: column;
   margin: auto;
   width: 100%;
   gap: 10px;
@@ -142,14 +133,10 @@ function onDrop(evt: DragEvent, list: number) {
 
 .drop-zone {
   background-color: #dfdfdf;
-  margin-bottom: 10px;
-  padding: 10px;
+  margin: auto;
   min-height: 300px;
   min-width: 300px;
   position: relative;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
 }
 
 .dropped-item-area {
@@ -177,5 +164,16 @@ td {
 
 tr {
   width: 100%;
+}
+
+img {
+  position: relative;
+  max-width: 100%;
+  height: auto;
+}
+
+.snap-position {
+  position: absolute;
+  border: 2px dashed rgb(254, 4, 4);
 }
 </style>
