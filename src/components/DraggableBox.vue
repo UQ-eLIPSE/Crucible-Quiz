@@ -18,12 +18,7 @@
     <!-- Drop Options in the picture Zone -->
 
     <div class="dropped-item-area">
-      <div
-        class="drop-zone"
-        @drop="onDrop($event, 2)"
-        @dragover.prevent
-        @dragenter.prevent
-      >
+      <div class="drop-zone">
         <img ref="imgRef" :src="imageUrl" alt="" @load="getImagePosition" />
 
         <DragItems
@@ -42,9 +37,10 @@
             height: ele.position.height + 'px',
           }"
           class="snap-position"
-        >
-          {{ ele.position.x }}
-        </div>
+          @drop="onDrop($event, 2, ele)"
+          @dragover.prevent
+          @dragenter.prevent
+        ></div>
       </div>
       <!-- Collection Result and todo: add submit data form -->
       <div>
@@ -93,7 +89,26 @@ const items = ref<Item[]>([
     list: 1,
   },
 ]);
-const snapItems = ref<Item[]>([]);
+const snapItems = ref<Item[]>([
+  {
+    id: 0,
+    label: "Item A",
+    position: { x: 0, y: 0, width: 1, height: 1 },
+    list: 2,
+  },
+  {
+    id: 1,
+    label: "Item B",
+    position: { x: 100, y: 0, width: 1, height: 1 },
+    list: 2,
+  },
+  {
+    id: 2,
+    label: "Item C",
+    position: { x: 200, y: 0, width: 1, height: 1 },
+    list: 2,
+  },
+]);
 const imgRef = ref<HTMLImageElement | null>(null);
 const imagePosition = ref<{ imgX: number; imgY: number } | null>(null);
 const draggedItem = ref<Item | null>(null);
@@ -165,7 +180,7 @@ function endDrag(item: Item) {
   initialMousePosition.value = null;
 }
 
-function onDrop(evt: DragEvent, list: number) {
+function onDrop(evt: DragEvent, list: number, snapItem?: Item) {
   evt.preventDefault();
   if (draggedItem.value) {
     const itemID = evt.dataTransfer!.getData("text/plain");
@@ -175,8 +190,12 @@ function onDrop(evt: DragEvent, list: number) {
       const dropZone = evt.currentTarget as HTMLElement;
       const rect = dropZone.getBoundingClientRect();
       item.position = {
-        x: evt.clientX - rect.left - initialMousePosition.value.offsetX,
-        y: evt.clientY - rect.top - initialMousePosition.value.offsetY,
+        x: snapItem
+          ? snapItem.position.x
+          : evt.clientX - rect.left - initialMousePosition.value.offsetX,
+        y: snapItem
+          ? snapItem.position.y
+          : evt.clientY - rect.top - initialMousePosition.value.offsetY,
         width: item.position.width,
         height: item.position.height,
       };
@@ -237,6 +256,6 @@ img {
 
 .snap-position {
   position: absolute;
-  border: 2px dashed rgb(254, 4, 4);
+  border: 1px dashed rgb(254, 4, 4);
 }
 </style>
