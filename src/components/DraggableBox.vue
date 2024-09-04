@@ -104,7 +104,6 @@ const initialMousePosition = ref<{ offsetX: number; offsetY: number } | null>(
 const getImagePosition = () => {
   if (imgRef.value) {
     const rect = imgRef.value.getBoundingClientRect();
-    console.log("editImage: ", rect);
     imagePosition.value = {
       imgX: rect.x + window.scrollX,
       imgY: rect.y + window.scrollY,
