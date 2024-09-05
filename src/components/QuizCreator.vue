@@ -11,7 +11,7 @@
     </div>
     <form action="" @submit.prevent="handleSubmit">
       <label for="drag-drop-image-upload" v-if="quizType == 'Image'">
-        Upload file:
+        Upload:
         <input
           id="drag-drop-image-upload"
           type="file"
@@ -65,7 +65,6 @@ const handleSubmit = () => {
     image: imageSrc.value,
     collectPosition: collectPosition.value,
   };
-  console.log("HELLO");
   handleSubmitData(formdata.value); // might have to remove it later on
   emit("save-items", formdata);
 };
