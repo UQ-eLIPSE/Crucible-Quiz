@@ -59,6 +59,11 @@
         </table>
       </div>
     </div>
+    <div v-if="showResult">
+      <p v-if="result" class="success-message">Submission successful!</p>
+      <p v-else class="error-message">Submission failed!</p>
+    </div>
+    <button class="submit-button" @click="handleSubmit">Submit</button>
   </div>
 </template>
 
@@ -77,6 +82,8 @@ const draggedItem = ref<Item | null>(null);
 const initialMousePosition = ref<{ offsetX: number; offsetY: number } | null>(
   null
 );
+const showResult = ref<boolean>(false);
+const result = ref<boolean>(false);
 
 const getImagePosition = () => {
   if (imgRef.value) {
@@ -125,6 +132,7 @@ const listTwo = computed(() =>
 );
 
 function startDrag({ event, item }: { event: DragEvent; item: Item }) {
+  showResult.value = false;
   draggedItem.value = item;
   const rect = (event.target as HTMLElement).getBoundingClientRect();
   initialMousePosition.value = {
@@ -165,6 +173,37 @@ function onDrop(evt: DragEvent, list: number, snapItem?: Item) {
         height: item.dimensions.height,
       };
     }
+  }
+}
+
+function handleSubmit() {
+  showResult.value = true;
+  if (listOne.value.length > 0) {
+    result.value = false;
+    return;
+  }
+
+  const allItemsMatch = listTwo.value.every((item) => {
+    const matchingSnapItem = snapItems.value.find(
+      (snapItem) => snapItem.id === item.id
+    );
+    if (!matchingSnapItem) {
+      result.value = false;
+      return;
+    }
+
+    return (
+      item.position.x === matchingSnapItem.position.x &&
+      item.position.y === matchingSnapItem.position.y
+    );
+  });
+
+  if (allItemsMatch) {
+    result.value = true;
+    return;
+  } else {
+    result.value = false;
+    return;
   }
 }
 </script>
@@ -222,5 +261,16 @@ img {
 .snap-position {
   position: absolute;
   border: 1px dashed rgb(254, 4, 4);
+}
+
+.submit-button {
+  background-color: #4caf50; /* Green background */
+  color: white; /* White text */
+  padding: 10px 20px; /* Padding for the button */
+  font-size: 16px; /* Font size */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease; /* Smooth transition on hover */
 }
 </style>
