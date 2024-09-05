@@ -1,37 +1,22 @@
 <template>
   <div class="edit-container">
     <div class="image-container">
-      <img
-        :src="imageUrl"
-        id="output"
-        class="image-style"
-        @click="handleClick"
-        :class="{ 'cursor-crosshair': isSelecting }"
-      />
+      <img :src="imageUrl" id="output" class="image-style" @click="handleClick"
+        :class="{ 'cursor-crosshair': isSelecting }" />
       <!-- Hint for first click -->
       <div v-if="isSelecting" :style="hintStyle" class="hint-style">
         Click to finish the selection
       </div>
-      <div
-        v-for="(item, index) in collectPosition"
-        :style="getItemStyle(item)"
-        class="option-item-position"
-        :key="item.id"
-        @click="() => collectPosition.splice(index, 1)"
-      ></div>
+      <div v-for="(item, index) in collectPosition" :style="getItemStyle(item)" class="option-item-position"
+        :key="item.id" @click="() => collectPosition.splice(index, 1)"></div>
     </div>
     <ul>
       <li v-for="(item, index) in collectPosition" :key="index">
+        {{ item.position }}
         <label :for="`option-label-${index}`"> option text: </label>
-        <input
-          :id="`option-label-${index}`"
-          type="text"
-          :value="item.label"
-          @input="
-            (event) =>
-              updateLabel(index, (event.target as HTMLInputElement).value)
-          "
-        />
+        <input :id="`option-label-${index}`" type="text" :value="item.label" @input="(event) =>
+        updateLabel(index, (event.target as HTMLInputElement).value)
+        " />
       </li>
     </ul>
   </div>
@@ -54,7 +39,7 @@ const hintPosition = ref({ x: 0, y: 0 });
 const handleClick = (event: MouseEvent) => {
   const img = event.currentTarget as HTMLImageElement;
   const rect = img.getBoundingClientRect();
-
+  console.log("create img", rect)
   if (!isSelecting.value) {
     // First click: start the selection
     selectionStart.value = {
@@ -169,6 +154,7 @@ input {
 .selected-spot {
   width: 5px;
 }
+
 .cursor-crosshair {
   cursor: crosshair;
 }
