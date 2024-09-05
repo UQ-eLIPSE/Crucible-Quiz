@@ -1,16 +1,30 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { VueWrapper, mount } from "@vue/test-utils";
 import DraggableBox from "../src/components/DraggableBox.vue";
-import DragItems from "../src/components/DragItems.vue";
 
 describe("DraggableBox.vue", () => {
   let wrapper: VueWrapper;
 
-  beforeEach(() => {
-    wrapper = mount(DraggableBox, { component: DragItems });
+  beforeEach(async () => {
+    wrapper = mount(DraggableBox);
+
+    wrapper.vm.items = [
+      { id: 0, label: "Item A", dimensions: { width: 1, height: 1 }, position: { x: 0, y: 0 }, list: 1 },
+      { id: 1, label: "Item B", dimensions: { width: 1, height: 1 }, position: { x: 100, y: 0 }, list: 1 },
+      { id: 2, label: "Item C", dimensions: { width: 1, height: 1 }, position: { x: 200, y: 0 }, list: 1 },
+    ];
+
+    wrapper.vm.snapItems = [
+      { id: 0, label: "Item A", dimensions: { width: 1, height: 1 }, position: { x: 0, y: 0 }, list: 2 },
+      { id: 1, label: "Item B", dimensions: { width: 1, height: 1 }, position: { x: 100, y: 0 }, list: 2 },
+      { id: 2, label: "Item C", dimensions: { width: 1, height: 1 }, position: { x: 200, y: 0 }, list: 2 },
+    ];
+
+    await wrapper.vm.$nextTick(); 
   });
+
   it("should render drop zones", () => {
-    expect(wrapper.find(".drop-zone").exists()).toBeTruthy;
+    expect(wrapper.find(".drop-zone").exists()).toBeTruthy();
   });
 
   it("it should increase drag-el in drop zone if drag one box to this drop zone and show the correct name of this box", async () => {
@@ -37,6 +51,7 @@ describe("DraggableBox.vue", () => {
         getData: () => dragEl.element.id,
       },
     });
+
     await dropZone2.trigger("dragover", {
       dataTransfer: {
         dropEffect: "move",
@@ -48,15 +63,8 @@ describe("DraggableBox.vue", () => {
     const itemsInDropZone2 = dropZone2.findAll(".drag-el");
     const itemsInDropZone1 = dropZone1.findAll(".drag-el");
 
-    expect(itemsInDropZone2.length).toBeGreaterThan(
-      initialDropZone2Items.length,
-    );
-
-    expect(itemsInDropZone1.length).toBeLessThan(
-      initialDropZone1Items.length,
-    );
-    expect(itemsInDropZone2.some((item) => item.text() === dragEl.text())).toBe(
-      true,
-    );
+    expect(itemsInDropZone2.length).toBeGreaterThan(initialDropZone2Items.length);
+    expect(itemsInDropZone1.length).toBeLessThan(initialDropZone1Items.length);
+    expect(itemsInDropZone2.some((item) => item.text() === dragEl.text())).toBe(true);
   });
 });

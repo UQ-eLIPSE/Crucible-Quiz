@@ -33,8 +33,8 @@
           :style="{
             top: ele.position.y + 'px',
             left: ele.position.x + 'px',
-            width: ele.position.width + 'px',
-            height: ele.position.height + 'px',
+            width: ele.dimensions.width + 'px',
+            height: ele.dimensions.height + 'px',
           }"
           class="snap-position"
           @drop="onDrop($event, 2, ele)"
@@ -69,46 +69,8 @@ import { DDquizFormData, Item } from "../type";
 import fallbackImg from "../assets/TestDD.png";
 
 const imageUrl = ref<string>(fallbackImg);
-const items = ref<Item[]>([
-  {
-    id: 0,
-    label: "Item A",
-    position: { x: 0, y: 0, width: 1, height: 1 },
-    list: 1,
-  },
-  {
-    id: 1,
-    label: "Item B",
-    position: { x: 100, y: 0, width: 1, height: 1 },
-    list: 1,
-  },
-  {
-    id: 2,
-    label: "Item C",
-    position: { x: 200, y: 0, width: 1, height: 1 },
-    list: 1,
-  },
-]);
-const snapItems = ref<Item[]>([
-  {
-    id: 0,
-    label: "Item A",
-    position: { x: 0, y: 0, width: 1, height: 1 },
-    list: 2,
-  },
-  {
-    id: 1,
-    label: "Item B",
-    position: { x: 100, y: 0, width: 1, height: 1 },
-    list: 2,
-  },
-  {
-    id: 2,
-    label: "Item C",
-    position: { x: 200, y: 0, width: 1, height: 1 },
-    list: 2,
-  },
-]);
+const items = ref<Item[]>([]);
+const snapItems = ref<Item[]>([]);
 const imgRef = ref<HTMLImageElement | null>(null);
 const imagePosition = ref<{ imgX: number; imgY: number } | null>(null);
 const draggedItem = ref<Item | null>(null);
@@ -144,8 +106,8 @@ onMounted(() => {
           position: {
             x: 50,
             y: index * 40 + 100,
-            width: item.position.width,
-            height: item.position.height,
+            width: item.dimensions.width,
+            height: item.dimensions.height,
           },
         };
       }); //Todo: to fix a suitable position in Render Quiz Ticket
@@ -196,8 +158,11 @@ function onDrop(evt: DragEvent, list: number, snapItem?: Item) {
         y: snapItem
           ? snapItem.position.y
           : evt.clientY - rect.top - initialMousePosition.value.offsetY,
-        width: item.position.width,
-        height: item.position.height,
+      };
+
+      item.dimensions = {
+        width: item.dimensions.width,
+        height: item.dimensions.height,
       };
     }
   }

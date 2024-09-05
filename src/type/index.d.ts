@@ -11,14 +11,16 @@ declare module "@vue/runtime-core" {
 export interface Item {
   id: number;
   label: string;
-  position: { x: number; y: number; width: number; height: number };
+  dimensions: { width: number; height: number };
+  position: { x: number; y: number };
   list: number;
 }
 
 export interface QuizOption {
   id: number;
   label: string;
-  position: { x: number; y: number; width: number; height: number };
+  dimensions: { width: number; height: number };
+  position: { x: number; y: number };
   list?: number;
 }
 
