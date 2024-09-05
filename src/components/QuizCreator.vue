@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits } from "vue";
+import { ref } from "vue";
 import { QuizOption, DDquizFormData } from "@/type";
 import QuizEdit from "./QuizEdit.vue";
 import TextImage from "./TextImage.vue";
@@ -43,6 +43,7 @@ import { handleSubmitData } from "../dataAccessLayer.ts";
 const quizType = ref("Image");
 const imageSrc = ref();
 const collectPosition = ref<QuizOption[]>([]);
+const formdata = ref<DDquizFormData>({} as DDquizFormData);
 
 const emit = defineEmits(["save-items"]);
 
@@ -60,11 +61,12 @@ const handlePosition = (newPositions: QuizOption[]) => {
 };
 
 const handleSubmit = () => {
-  const formdata: DDquizFormData = {
+  formdata.value = {
     image: imageSrc.value,
     collectPosition: collectPosition.value,
   };
-  handleSubmitData(formdata); // might have to remove it later on
+  console.log("HELLO");
+  handleSubmitData(formdata.value); // might have to remove it later on
   emit("save-items", formdata);
 };
 </script>
