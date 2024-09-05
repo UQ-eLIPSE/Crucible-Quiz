@@ -11,7 +11,7 @@
     </div>
     <form action="" @submit.prevent="handleSubmit">
       <label for="drag-drop-image-upload" v-if="quizType == 'Image'">
-        Upload:
+        Upload file:
         <input
           id="drag-drop-image-upload"
           type="file"
