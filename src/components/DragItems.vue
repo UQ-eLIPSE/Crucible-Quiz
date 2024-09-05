@@ -6,8 +6,8 @@
     :style="{
       top: item.position.y + 'px',
       left: item.position.x + 'px',
-      width: item.position.width + 'px',
-      height: item.position.height + 'px',
+      width: item.dimensions.width + 'px',
+      height: item.dimensions.height + 'px',
     }"
     draggable="true"
     @dragstart="(event) => emit('start-drag', { event, item })"
