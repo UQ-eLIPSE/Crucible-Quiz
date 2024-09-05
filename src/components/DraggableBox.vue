@@ -69,52 +69,8 @@ import { DDquizFormData, Item } from "../type";
 import fallbackImg from "../assets/TestDD.png";
 
 const imageUrl = ref<string>(fallbackImg);
-const items = ref<Item[]>([
-  {
-    id: 0,
-    label: "Item A",
-    dimensions: { width: 1, height: 1 },
-    position: { x: 0, y: 0 },
-    list: 1,
-  },
-  {
-    id: 1,
-    label: "Item B",
-    dimensions: { width: 1, height: 1 },
-    position: { x: 100, y: 0 },
-    list: 1,
-  },
-  {
-    id: 2,
-    label: "Item C",
-    dimensions: { width: 1, height: 1 },
-    position: { x: 200, y: 0 },
-    list: 1,
-  },
-]);
-const snapItems = ref<Item[]>([
-  {
-    id: 0,
-    label: "Item A",
-    dimensions: { width: 1, height: 1 },
-    position: { x: 0, y: 0 },
-    list: 2,
-  },
-  {
-    id: 1,
-    label: "Item B",
-    dimensions: { width: 1, height: 1 },
-    position: { x: 100, y: 0 },
-    list: 2,
-  },
-  {
-    id: 2,
-    label: "Item C",
-    dimensions: { width: 1, height: 1 },
-    position: { x: 200, y: 0 },
-    list: 2,
-  },
-]);
+const items = ref<Item[]>([]);
+const snapItems = ref<Item[]>([]);
 const imgRef = ref<HTMLImageElement | null>(null);
 const imagePosition = ref<{ imgX: number; imgY: number } | null>(null);
 const draggedItem = ref<Item | null>(null);
