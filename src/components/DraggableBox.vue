@@ -264,13 +264,13 @@ img {
 }
 
 .submit-button {
-  background-color: #4caf50; /* Green background */
-  color: white; /* White text */
-  padding: 10px 20px; /* Padding for the button */
-  font-size: 16px; /* Font size */
-  border: none; /* Remove border */
-  border-radius: 5px; /* Rounded corners */
-  cursor: pointer; /* Pointer cursor on hover */
-  transition: background-color 0.3s ease; /* Smooth transition on hover */
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 </style>
