@@ -39,12 +39,18 @@ import { QuizOption, DDquizFormData } from "@/type";
 import QuizEdit from "./QuizEdit.vue";
 import TextImage from "./TextImage.vue";
 import { handleSubmitData } from "../dataAccessLayer.ts";
+
 const quizType = ref("Image");
 const imageSrc = ref();
+const collectPosition = ref<QuizOption[]>([]);
+const formdata = ref<DDquizFormData>({} as DDquizFormData);
+
+const emit = defineEmits(["save-items"]);
 
 const handleTxtImageSrcUpdate = (src: string) => {
   imageSrc.value = src;
 };
+
 const handleFileUpload = (e: Event) => {
   const file = (e.target as HTMLInputElement).files;
   imageSrc.value = file ? URL.createObjectURL(file[0]) : undefined;
@@ -54,13 +60,13 @@ const handlePosition = (newPositions: QuizOption[]) => {
   collectPosition.value = newPositions;
 };
 
-const collectPosition = ref<QuizOption[]>([]);
 const handleSubmit = () => {
-  const formdata: DDquizFormData = {
+  formdata.value = {
     image: imageSrc.value,
     collectPosition: collectPosition.value,
   };
-  handleSubmitData(formdata);
+  handleSubmitData(formdata.value); // might have to remove it later on
+  emit("save-items", formdata);
 };
 </script>
 
