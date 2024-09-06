@@ -59,6 +59,11 @@
         </table>
       </div>
     </div>
+    <div v-if="showResult">
+      <p v-if="result" class="success-message">Submission successful!</p>
+      <p v-else class="error-message">Submission failed!</p>
+    </div>
+    <button class="submit-button" @click="handleSubmit">Submit</button>
   </div>
 </template>
 
@@ -77,6 +82,8 @@ const draggedItem = ref<Item | null>(null);
 const initialMousePosition = ref<{ offsetX: number; offsetY: number } | null>(
   null
 );
+const showResult = ref<boolean>(false);
+const result = ref<boolean>(false);
 
 const getImagePosition = () => {
   if (imgRef.value) {
@@ -125,6 +132,7 @@ const listTwo = computed(() =>
 );
 
 function startDrag({ event, item }: { event: DragEvent; item: Item }) {
+  showResult.value = false;
   draggedItem.value = item;
   const rect = (event.target as HTMLElement).getBoundingClientRect();
   initialMousePosition.value = {
@@ -166,6 +174,26 @@ function onDrop(evt: DragEvent, list: number, snapItem?: Item) {
       };
     }
   }
+}
+
+function handleSubmit() {
+  showResult.value = true;
+
+  if (listOne.value.length > 0) {
+    result.value = false;
+    return;
+  }
+
+  result.value = listTwo.value.every((item) => {
+    const matchingSnapItem = snapItems.value.find(
+      (snapItem) => snapItem.id === item.id
+    );
+    return (
+      matchingSnapItem &&
+      item.position.x === matchingSnapItem.position.x &&
+      item.position.y === matchingSnapItem.position.y
+    );
+  });
 }
 </script>
 
@@ -222,5 +250,16 @@ img {
 .snap-position {
   position: absolute;
   border: 1px dashed rgb(254, 4, 4);
+}
+
+.submit-button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 </style>
