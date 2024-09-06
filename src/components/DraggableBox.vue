@@ -178,33 +178,22 @@ function onDrop(evt: DragEvent, list: number, snapItem?: Item) {
 
 function handleSubmit() {
   showResult.value = true;
+
   if (listOne.value.length > 0) {
     result.value = false;
     return;
   }
 
-  const allItemsMatch = listTwo.value.every((item) => {
+  result.value = listTwo.value.every((item) => {
     const matchingSnapItem = snapItems.value.find(
       (snapItem) => snapItem.id === item.id
     );
-    if (!matchingSnapItem) {
-      result.value = false;
-      return;
-    }
-
     return (
+      matchingSnapItem &&
       item.position.x === matchingSnapItem.position.x &&
       item.position.y === matchingSnapItem.position.y
     );
   });
-
-  if (allItemsMatch) {
-    result.value = true;
-    return;
-  } else {
-    result.value = false;
-    return;
-  }
 }
 </script>
 
