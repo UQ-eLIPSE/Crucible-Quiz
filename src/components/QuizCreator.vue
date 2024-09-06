@@ -16,7 +16,7 @@
           id="drag-drop-image-upload"
           type="file"
           accept="image/*"
-          @change="(event) => handleFileUpload(event)"
+          @change="(event) => handleFileInput(event)"
         />
       </label>
       <TextImage
@@ -44,6 +44,7 @@ const quizType = ref("Image");
 const imageSrc = ref();
 const collectPosition = ref<QuizOption[]>([]);
 const formdata = ref<DDquizFormData>({} as DDquizFormData);
+const imageFile = ref<File>();
 
 const emit = defineEmits(["save-items"]);
 
@@ -51,9 +52,10 @@ const handleTxtImageSrcUpdate = (src: string) => {
   imageSrc.value = src;
 };
 
-const handleFileUpload = (e: Event) => {
+const handleFileInput = (e: Event) => {
   const file = (e.target as HTMLInputElement).files;
   imageSrc.value = file ? URL.createObjectURL(file[0]) : undefined;
+  imageFile.value = file ? file[0] : undefined;
 };
 
 const handlePosition = (newPositions: QuizOption[]) => {
@@ -62,6 +64,7 @@ const handlePosition = (newPositions: QuizOption[]) => {
 
 const handleSubmit = () => {
   formdata.value = {
+    imageFile: imageFile.value,
     image: imageSrc.value,
     collectPosition: collectPosition.value,
   };
