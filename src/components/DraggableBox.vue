@@ -31,10 +31,17 @@
           v-for="ele in snapItems"
           :key="ele.id"
           :style="{
-            top: ele.position.y + 'px',
-            left: ele.position.x + 'px',
-            width: ele.dimensions.width + 'px',
-            height: ele.dimensions.height + 'px',
+            top:
+              ele.position.y * (imagePosition ? imagePosition?.imgY : 0) + 'px',
+            left:
+              ele.position.x * (imagePosition ? imagePosition?.imgX : 0) + 'px',
+            width:
+              ele.dimensions.width * (imagePosition ? imagePosition?.imgX : 0) +
+              'px',
+            height:
+              ele.dimensions.height *
+                (imagePosition ? imagePosition?.imgY : 0) +
+              'px',
           }"
           class="snap-position"
           @drop="onDrop($event, 2, ele)"
@@ -68,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import DragItems from "./DragItems.vue";
 import { DDquizFormData, Item } from "../type";
 import fallbackImg from "../assets/TestDD.png";
@@ -80,10 +87,11 @@ const imgRef = ref<HTMLImageElement | null>(null);
 const imagePosition = ref<{ imgX: number; imgY: number } | null>(null);
 const draggedItem = ref<Item | null>(null);
 const initialMousePosition = ref<{ offsetX: number; offsetY: number } | null>(
-  null
+  null,
 );
 const showResult = ref<boolean>(false);
 const result = ref<boolean>(false);
+let resizeObserver: ResizeObserver | null = null;
 
 const getImagePosition = () => {
   if (imgRef.value) {
@@ -92,6 +100,7 @@ const getImagePosition = () => {
       imgX: rect.x + window.scrollX,
       imgY: rect.y + window.scrollY,
     };
+    console.log("image position value", imagePosition.value);
   }
 };
 
@@ -100,12 +109,13 @@ onMounted(() => {
     const storedData = localStorage.getItem("ddQuizFormdata");
     if (storedData) {
       const storeDDquizData: DDquizFormData = JSON.parse(
-        localStorage.getItem("ddQuizFormdata") ?? ""
+        localStorage.getItem("ddQuizFormdata") ?? "",
       );
       const collectPositionFrLocal = storeDDquizData["collectPosition"];
       snapItems.value = collectPositionFrLocal.map((item) => {
         return { ...item, list: 2 };
       });
+      console.log("collection", collectPositionFrLocal);
       items.value = collectPositionFrLocal.map((item, index) => {
         return {
           ...item,
@@ -122,13 +132,32 @@ onMounted(() => {
       imageUrl.value = storeDDquizData.image;
     }
   }
+
+  if (imgRef.value) {
+    resizeObserver = new ResizeObserver((entries) => {
+      entries.forEach((entry) => {
+        imagePosition.value = {
+          imgX: entry.contentRect.width,
+          imgY: entry.contentRect.height,
+        };
+      });
+    });
+    resizeObserver.observe(imgRef.value);
+  }
+});
+
+onUnmounted(() => {
+  if (resizeObserver && imgRef.value) {
+    resizeObserver.unobserve(imgRef.value);
+    resizeObserver.disconnect();
+  }
 });
 
 const listOne = computed(() =>
-  items.value.filter((item: Item) => item.list === 1)
+  items.value.filter((item: Item) => item.list === 1),
 );
 const listTwo = computed(() =>
-  items.value.filter((item: Item) => item.list === 2)
+  items.value.filter((item: Item) => item.list === 2),
 );
 
 function startDrag({ event, item }: { event: DragEvent; item: Item }) {
@@ -186,7 +215,7 @@ function handleSubmit() {
 
   result.value = listTwo.value.every((item) => {
     const matchingSnapItem = snapItems.value.find(
-      (snapItem) => snapItem.id === item.id
+      (snapItem) => snapItem.id === item.id,
     );
     return (
       matchingSnapItem &&

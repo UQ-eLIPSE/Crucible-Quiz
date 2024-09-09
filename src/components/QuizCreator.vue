@@ -63,11 +63,13 @@ const handlePosition = (newPositions: QuizOption[]) => {
 };
 
 const handleSubmit = () => {
+  console.log("submitting");
   formdata.value = {
     imageFile: imageFile.value,
     image: imageSrc.value,
     collectPosition: collectPosition.value,
   };
+  console.log('formdata', formdata.value);
   handleSubmitData(formdata.value); // might have to remove it later on
   emit("save-items", formdata);
 };

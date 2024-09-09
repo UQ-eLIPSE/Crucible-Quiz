@@ -62,6 +62,10 @@ const handleClick = (event: MouseEvent) => {
       x: event.clientX - rect.left,
       y: event.clientY - rect.top,
     };
+    selectionStart.value = {
+      x: selectionStart.value.x / rect.width,
+      y: selectionStart.value.y / rect.height,
+    };
     isSelecting.value = true;
   } else {
     // Second click: finish the selection
@@ -69,6 +73,11 @@ const handleClick = (event: MouseEvent) => {
       x: event.clientX - rect.left,
       y: event.clientY - rect.top,
     };
+    selectionEnd.value = {
+      x: selectionEnd.value.x / rect.width,
+      y: selectionEnd.value.y / rect.height,
+    };
+    console.log("selection end value", selectionEnd.value);
     finalizeSelection();
   }
 };
@@ -86,8 +95,10 @@ const finalizeSelection = () => {
         y: Math.min(selectionStart.value.y, selectionEnd.value.y),
       },
       dimensions: {
-        width: Math.abs(selectionEnd.value.x - selectionStart.value.x),
-        height: Math.abs(selectionEnd.value.y - selectionStart.value.y),
+        // width: Math.abs(selectionEnd.value.x - selectionStart.value.x),
+        // height: Math.abs(selectionEnd.value.y - selectionStart.value.y),
+        width: selectionEnd.value.x - selectionStart.value.x,
+        height: selectionEnd.value.y - selectionStart.value.y,
       },
       label: "*", // Placeholder label
     });
@@ -120,10 +131,10 @@ const getItemStyle = (item: {
 }): CSSProperties => {
   return {
     position: "absolute",
-    top: `${item.position.y}px`,
-    left: `${item.position.x}px`,
-    width: `${item.dimensions.width}px`,
-    height: `${item.dimensions.height}px`,
+    top: `${item.position.y * 100}%`,
+    left: `${item.position.x * 100}%`,
+    width: `${item.dimensions.width * 100}%`,
+    height: `${item.dimensions.height * 100}%`,
     pointerEvents: "auto",
   };
 };

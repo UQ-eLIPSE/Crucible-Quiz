@@ -4,10 +4,10 @@
     :key="item.id"
     class="drag-el"
     :style="{
-      top: item.position.y + 'px',
-      left: item.position.x + 'px',
-      width: item.dimensions.width + 'px',
-      height: item.dimensions.height + 'px',
+      top: item.position.y * 100 + '%',
+      left: item.position.x * 100 + '%',
+      width: item.dimensions.width * 100 + '%',
+      height: item.dimensions.height * 100 + '%',
     }"
     draggable="true"
     @dragstart="(event) => emit('start-drag', { event, item })"
