@@ -70,8 +70,24 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import DragItems from "./DragItems.vue";
-import { DDquizFormData, Item } from "../type";
+import { Item } from "../type";
+import { sampleDatabase } from "@/dataAccessLayer";
 import fallbackImg from "../assets/TestDD.png";
+
+interface OptionsDatabase {
+  imgUrl: string;
+  position: {
+    x: number;
+    y: number;
+  };
+  width: number;
+  height: number;
+  label: string;
+}
+
+const { dragQuestion } = defineProps<{
+  dragQuestion: OptionsDatabase[] | undefined;
+}>();
 
 const imageUrl = ref<string>(fallbackImg);
 const items = ref<Item[]>([]);
@@ -96,31 +112,45 @@ const getImagePosition = () => {
 };
 
 onMounted(() => {
-  if (localStorage.getItem("ddQuizFormdata")) {
-    const storedData = localStorage.getItem("ddQuizFormdata");
-    if (storedData) {
-      const storeDDquizData: DDquizFormData = JSON.parse(
-        localStorage.getItem("ddQuizFormdata") ?? ""
-      );
-      const collectPositionFrLocal = storeDDquizData["collectPosition"];
-      snapItems.value = collectPositionFrLocal.map((item) => {
-        return { ...item, list: 2 };
-      });
-      items.value = collectPositionFrLocal.map((item, index) => {
-        return {
-          ...item,
-          list: 1,
-          position: {
-            x: 50,
-            y: index * 40 + 100,
-            width: item.dimensions.width,
-            height: item.dimensions.height,
-          },
-        };
-      }); //Todo: to fix a suitable position in Render Quiz Ticket
-
-      imageUrl.value = storeDDquizData.image;
-    }
+  console.log("onmoutn", dragQuestion);
+  if (dragQuestion === undefined) {
+    imageUrl.value = sampleDatabase[0].imgUrl;
+    snapItems.value = sampleDatabase.map((item, index) => {
+      return {
+        ...item,
+        id: index,
+        list: 2,
+        dimensions: { width: item.width, height: item.height },
+      };
+    });
+    items.value = sampleDatabase.map((item, index) => {
+      return {
+        ...item,
+        id: index,
+        list: 1,
+        dimensions: { width: 25, height: 25 },
+        position: { x: 50, y: index * 40 + 100 },
+      };
+    });
+  } else {
+    imageUrl.value = dragQuestion[0].imgUrl;
+    snapItems.value = dragQuestion.map((item, index) => {
+      return {
+        ...item,
+        id: index,
+        list: 2,
+        dimensions: { width: item.width, height: item.height },
+      };
+    });
+    items.value = dragQuestion.map((item, index) => {
+      return {
+        ...item,
+        id: index,
+        list: 1,
+        dimensions: { width: 25, height: 25 },
+        position: { x: 50, y: index * 40 + 100 },
+      };
+    });
   }
 });
 

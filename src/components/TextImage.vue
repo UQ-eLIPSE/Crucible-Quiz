@@ -6,7 +6,7 @@
       rows="5"
       cols="50"
     ></textarea>
-    <button @click="generateImage">Convert</button>
+    <button @click.prevent="generateImage">Convert</button>
   </div>
 </template>
 
@@ -31,7 +31,7 @@ const generateImage = () => {
   const lines = text.value.split("\n");
 
   const maxWidth = Math.max(
-    ...lines.map((line) => context.measureText(line).width),
+    ...lines.map((line) => context.measureText(line).width)
   );
   const totalHeight = lines.length * fontSize + padding * 2;
 
