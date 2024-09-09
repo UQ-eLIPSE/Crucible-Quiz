@@ -11,6 +11,7 @@
       <DragItems
         :item-list="listOne"
         :img-position="imagePosition"
+        :get-item-style="getItemStyle"
         @start-drag="startDrag"
         @end-drag="endDrag"
       />
@@ -24,25 +25,14 @@
         <DragItems
           :item-list="listTwo"
           :img-position="imagePosition"
+          :get-item-style="getItemStyle"
           @start-drag="startDrag"
           @end-drag="endDrag"
         />
         <div
           v-for="ele in snapItems"
           :key="ele.id"
-          :style="{
-            top:
-              ele.position.y * (imagePosition ? imagePosition?.imgY : 0) + 'px',
-            left:
-              ele.position.x * (imagePosition ? imagePosition?.imgX : 0) + 'px',
-            width:
-              ele.dimensions.width * (imagePosition ? imagePosition?.imgX : 0) +
-              'px',
-            height:
-              ele.dimensions.height *
-                (imagePosition ? imagePosition?.imgY : 0) +
-              'px',
-          }"
+          :style="getItemStyle(ele)"
           class="snap-position"
           @drop="onDrop($event, 2, ele)"
           @dragover.prevent
@@ -100,7 +90,6 @@ const getImagePosition = () => {
       imgX: rect.x + window.scrollX,
       imgY: rect.y + window.scrollY,
     };
-    console.log("image position value", imagePosition.value);
   }
 };
 
@@ -115,7 +104,6 @@ onMounted(() => {
       snapItems.value = collectPositionFrLocal.map((item) => {
         return { ...item, list: 2 };
       });
-      console.log("collection", collectPositionFrLocal);
       items.value = collectPositionFrLocal.map((item, index) => {
         return {
           ...item,
@@ -149,7 +137,7 @@ onMounted(() => {
 onUnmounted(() => {
   if (resizeObserver && imgRef.value) {
     resizeObserver.unobserve(imgRef.value);
-    resizeObserver.disconnect();
+    resizeObserver = null;
   }
 });
 
@@ -188,14 +176,19 @@ function onDrop(evt: DragEvent, list: number, snapItem?: Item) {
       item.list = list;
       const dropZone = evt.currentTarget as HTMLElement;
       const rect = dropZone.getBoundingClientRect();
+      const scaleAdjustmentsX =
+        snapItem && imagePosition?.value ? imagePosition.value.imgX : 0;
+      const scaleAdjustmentsY =
+        snapItem && imagePosition?.value ? imagePosition.value.imgY : 0;
       item.position = {
         x: snapItem
-          ? snapItem.position.x
+          ? snapItem.position.x * scaleAdjustmentsX
           : evt.clientX - rect.left - initialMousePosition.value.offsetX,
         y: snapItem
-          ? snapItem.position.y
+          ? snapItem.position.y * scaleAdjustmentsY
           : evt.clientY - rect.top - initialMousePosition.value.offsetY,
       };
+      console.log("item position ON DROP", item.position);
 
       item.dimensions = {
         width: item.dimensions.width,
@@ -223,6 +216,23 @@ function handleSubmit() {
       item.position.y === matchingSnapItem.position.y
     );
   });
+}
+
+function getItemStyle(item: Item, draggable: boolean = false) {
+  if (!imagePosition || !imagePosition.value) return {};
+  console.log("item position", item.position);
+  const style = {
+    top: !draggable
+      ? `${(item.position.y * imagePosition.value.imgY).toFixed(0)}px`
+      : `${item.position.y}px`,
+    left: !draggable
+      ? `${(item.position.x * imagePosition.value.imgX).toFixed(0)}px`
+      : `${item.position.x}px`,
+    width: `${item.dimensions.width * imagePosition.value.imgX}px`,
+    height: `${item.dimensions.height * imagePosition.value.imgY}px`,
+  };
+
+  return style;
 }
 </script>
 
