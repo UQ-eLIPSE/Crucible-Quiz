@@ -2,18 +2,8 @@
   <h3>Drag & Drop Quiz Render</h3>
   <div class="container-ddQuiz">
     <!-- Initial D&D Quiz options -->
-    <div
-      class="drop-zone"
-      @drop="onDrop($event, 1)"
-      @dragover.prevent
-      @dragenter.prevent
-    >
-      <DragItems
-        :item-list="listOne"
-        :img-position="imagePosition"
-        @start-drag="startDrag"
-        @end-drag="endDrag"
-      />
+    <div class="drop-zone" @drop="onDrop($event, 1)" @dragover.prevent @dragenter.prevent>
+      <DragItems :item-list="listOne" :img-position="imagePosition" @start-drag="startDrag" @end-drag="endDrag" />
     </div>
     <!-- Drop Options in the picture Zone -->
 
@@ -21,26 +11,13 @@
       <div class="drop-zone">
         <img ref="imgRef" :src="imageUrl" alt="" @load="getImagePosition" />
 
-        <DragItems
-          :item-list="listTwo"
-          :img-position="imagePosition"
-          @start-drag="startDrag"
-          @end-drag="endDrag"
-        />
-        <div
-          v-for="ele in snapItems"
-          :key="ele.id"
-          :style="{
-            top: ele.position.y + 'px',
-            left: ele.position.x + 'px',
-            width: ele.dimensions.width + 'px',
-            height: ele.dimensions.height + 'px',
-          }"
-          class="snap-position"
-          @drop="onDrop($event, 2, ele)"
-          @dragover.prevent
-          @dragenter.prevent
-        ></div>
+        <DragItems :item-list="listTwo" :img-position="imagePosition" @start-drag="startDrag" @end-drag="endDrag" />
+        <div v-for="ele in snapItems" :key="ele.id" :style="{
+      top: ele.position.y + 'px',
+      left: ele.position.x + 'px',
+      width: ele.dimensions.width + 'px',
+      height: ele.dimensions.height + 'px',
+    }" class="snap-position" @drop="onDrop($event, 2, ele)" @dragover.prevent @dragenter.prevent></div>
       </div>
       <!-- Collection Result and todo: add submit data form -->
       <div>
@@ -112,8 +89,9 @@ const getImagePosition = () => {
 };
 
 onMounted(() => {
-  console.log("onmoutn", dragQuestion);
+
   if (dragQuestion === undefined) {
+    console.log("no data from db")
     imageUrl.value = sampleDatabase[0].imgUrl;
     snapItems.value = sampleDatabase.map((item, index) => {
       return {
@@ -133,6 +111,7 @@ onMounted(() => {
       };
     });
   } else {
+    console.log("onmoutn", dragQuestion[0]);
     imageUrl.value = dragQuestion[0].imgUrl;
     snapItems.value = dragQuestion.map((item, index) => {
       return {
