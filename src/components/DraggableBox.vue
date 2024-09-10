@@ -91,14 +91,14 @@ const getImagePosition = () => {
 };
 
 onMounted(() => {
-
+  console.log("onMounted: ", dragQuestion.value)
   if (dragQuestion.value === undefined) {
     console.log("no data from db")
     imageUrl.value = sampleDatabase[0].imgUrl;
     snapItems.value = sampleDatabase.map((item, index) => {
       return {
         ...item,
-        id: index,
+        id: index + 200,
         list: 2,
         dimensions: { width: item.width, height: item.height },
       };
@@ -106,7 +106,7 @@ onMounted(() => {
     items.value = sampleDatabase.map((item, index) => {
       return {
         ...item,
-        id: index,
+        id: index + 100,
         list: 1,
         dimensions: { width: 25, height: 25 },
         position: { x: 50, y: index * 40 + 100 },
@@ -118,7 +118,7 @@ onMounted(() => {
     snapItems.value = dragQuestion.value.map((item, index) => {
       return {
         ...item,
-        id: index,
+        id: index + 200,
         list: 2,
         dimensions: { width: item.width, height: item.height },
       };
@@ -126,7 +126,7 @@ onMounted(() => {
     items.value = dragQuestion.value.map((item, index) => {
       return {
         ...item,
-        id: index,
+        id: index + 100,
         list: 1,
         dimensions: { width: 25, height: 25 },
         position: { x: 50, y: index * 40 + 100 },
