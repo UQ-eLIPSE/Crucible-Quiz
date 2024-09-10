@@ -94,10 +94,8 @@ const finalizeSelection = () => {
         y: Math.min(selectionStart.value.y, selectionEnd.value.y),
       },
       dimensions: {
-        // width: Math.abs(selectionEnd.value.x - selectionStart.value.x),
-        // height: Math.abs(selectionEnd.value.y - selectionStart.value.y),
-        width: selectionEnd.value.x - selectionStart.value.x,
-        height: selectionEnd.value.y - selectionStart.value.y,
+        width: Math.abs(selectionEnd.value.x - selectionStart.value.x),
+        height: Math.abs(selectionEnd.value.y - selectionStart.value.y),
       },
       label: "*", // Placeholder label
     });
