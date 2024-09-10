@@ -22,7 +22,7 @@
     # Prepare transfer of client code
     - name: Compress client code
       shell: |
-        rsync -av --exclude=node_modules --exclude=yarn.lock --exclude=tests --exclude=.husky --exclude=.github --exclude=.git . client/ && \
+        rsync -av --exclude=dist --exclude=node_modules --exclude=yarn.lock --exclude=tests --exclude=.husky --exclude=.github --exclude=.git . client/ && \
         rm -f client.tar.gz && \
         tar -czvf client.tar.gz client
       delegate_to: localhost
