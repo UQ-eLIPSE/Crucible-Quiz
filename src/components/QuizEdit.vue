@@ -79,10 +79,13 @@ const selectionStyle = computed(() => {
 });
 
 const handleMouseMove = (event: MouseEvent) => {
-  const size = (event.target as HTMLDivElement).getBoundingClientRect();
+  const { left, top, width, height } = (
+    event.target as HTMLDivElement
+  ).getBoundingClientRect();
+
   currCursorPos.value = {
-    x: (event.clientX - size.left) / size.width,
-    y: (event.clientY - size.top) / size.height,
+    x: (event.clientX - left) / width,
+    y: (event.clientY - top) / height,
   };
 };
 
