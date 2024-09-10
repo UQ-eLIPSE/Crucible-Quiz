@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, toRefs } from "vue";
+import { ref, computed, watch, toRefs } from "vue";
 import DragItems from "./DragItems.vue";
 import { Item } from "../type";
 import { sampleDatabase } from "@/dataAccessLayer";
@@ -89,10 +89,10 @@ const getImagePosition = () => {
     };
   }
 };
-
-onMounted(() => {
+watch(() => dragQuestion.value, (newVal: OptionsDatabase[] | undefined) => {
+  // onMounted(() => {
   console.log("onMounted: ", dragQuestion.value)
-  if (dragQuestion.value === undefined) {
+  if (newVal === undefined) {
     console.log("no data from db")
     imageUrl.value = sampleDatabase[0].imgUrl;
     snapItems.value = sampleDatabase.map((item, index) => {
@@ -114,8 +114,8 @@ onMounted(() => {
     });
   } else {
     console.log("onmoutn");
-    imageUrl.value = dragQuestion.value[0].imgUrl;
-    snapItems.value = dragQuestion.value.map((item, index) => {
+    imageUrl.value = newVal[0].imgUrl;
+    snapItems.value = newVal.map((item, index) => {
       return {
         ...item,
         id: index + 200,
@@ -123,7 +123,7 @@ onMounted(() => {
         dimensions: { width: item.width, height: item.height },
       };
     });
-    items.value = dragQuestion.value.map((item, index) => {
+    items.value = newVal.map((item, index) => {
       return {
         ...item,
         id: index + 100,
@@ -133,7 +133,7 @@ onMounted(() => {
       };
     });
   }
-});
+}, { immediate: true });
 
 const listOne = computed(() =>
   items.value.filter((item: Item) => item.list === 1)
