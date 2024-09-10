@@ -55,12 +55,15 @@ const hintPosition = ref({ x: 0, y: 0 });
 const handleClick = (event: MouseEvent) => {
   const img = event.currentTarget as HTMLImageElement;
   const rect = img.getBoundingClientRect();
-  console.log("create img", rect);
   if (!isSelecting.value) {
     // First click: start the selection
     selectionStart.value = {
       x: event.clientX - rect.left,
       y: event.clientY - rect.top,
+    };
+    selectionStart.value = {
+      x: selectionStart.value.x / rect.width,
+      y: selectionStart.value.y / rect.height,
     };
     isSelecting.value = true;
   } else {
@@ -68,6 +71,10 @@ const handleClick = (event: MouseEvent) => {
     selectionEnd.value = {
       x: event.clientX - rect.left,
       y: event.clientY - rect.top,
+    };
+    selectionEnd.value = {
+      x: selectionEnd.value.x / rect.width,
+      y: selectionEnd.value.y / rect.height,
     };
     finalizeSelection();
   }
@@ -120,10 +127,10 @@ const getItemStyle = (item: {
 }): CSSProperties => {
   return {
     position: "absolute",
-    top: `${item.position.y}px`,
-    left: `${item.position.x}px`,
-    width: `${item.dimensions.width}px`,
-    height: `${item.dimensions.height}px`,
+    top: `${item.position.y * 100}%`,
+    left: `${item.position.x * 100}%`,
+    width: `${item.dimensions.width * 100}%`,
+    height: `${item.dimensions.height * 100}%`,
     pointerEvents: "auto",
   };
 };
