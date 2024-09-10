@@ -128,6 +128,14 @@ onMounted(() => {
           imgX: entry.contentRect.width,
           imgY: entry.contentRect.height,
         };
+        listTwo.value.forEach((item) => {
+          // the x position and y position scales to the image size
+          if (!item.initialPosition) return;
+          item.position = {
+            x: item.initialPosition.x * entry.contentRect.width,
+            y: item.initialPosition.y * entry.contentRect.height,
+          };
+        });
       });
     });
     resizeObserver.observe(imgRef.value);
@@ -187,6 +195,10 @@ function onDrop(evt: DragEvent, list: number, snapItem?: Item) {
         y: snapItem
           ? snapItem.position.y * scaleAdjustmentsY
           : evt.clientY - rect.top - initialMousePosition.value.offsetY,
+      };
+      item.initialPosition = {
+        x: snapItem?.position.x,
+        y: snapItem?.position.y,
       };
 
       item.dimensions = {
