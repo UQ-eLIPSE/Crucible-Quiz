@@ -3,13 +3,8 @@
     v-for="item in itemList"
     :key="item.id"
     class="drag-el"
-    :style="{
-      top: item.position.y + 'px',
-      left: item.position.x + 'px',
-      width: item.dimensions.width + 'px',
-      height: item.dimensions.height + 'px',
-    }"
     draggable="true"
+    :style="getItemStyle(item, true)"
     @dragstart="(event) => emit('start-drag', { event, item })"
     @dragend="(__event) => emit('end-drag', item)"
   >
@@ -18,6 +13,7 @@
 </template>
 <script setup lang="ts">
 import { Item } from "@/type";
+import { CSSProperties } from "vue";
 
 const emit = defineEmits<{
   (event: "start-drag", data: { event: DragEvent; item: Item }): void;
@@ -27,6 +23,7 @@ const emit = defineEmits<{
 defineProps<{
   itemList?: Item[];
   imgPosition: { imgX: number; imgY: number } | null;
+  getItemStyle: (item: Item, draggable: boolean) => CSSProperties;
 }>();
 </script>
 <style>

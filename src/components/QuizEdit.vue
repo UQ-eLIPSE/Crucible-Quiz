@@ -1,38 +1,22 @@
 <template>
   <div class="edit-container">
     <div class="image-container">
-      <img
-        id="output"
-        :src="imageUrl"
-        class="image-style"
-        :class="{ 'cursor-crosshair': isSelecting }"
-        @click="handleClick"
-      />
+      <img id="output" :src="imageUrl" class="image-style" :class="{ 'cursor-crosshair': isSelecting }"
+        @click="handleClick" />
       <!-- Hint for first click -->
       <div v-if="isSelecting" :style="hintStyle" class="hint-style">
         Click to finish the selection
       </div>
-      <div
-        v-for="(item, index) in collectPosition"
-        :key="item.id"
-        :style="getItemStyle(item)"
-        class="option-item-position"
-        @click="() => collectPosition.splice(index, 1)"
-      ></div>
+      <div v-for="(item, index) in collectPosition" :key="item.id" :style="getItemStyle(item)"
+        class="option-item-position" @click="() => collectPosition.splice(index, 1)"></div>
     </div>
     <ul>
       <li v-for="(item, index) in collectPosition" :key="index">
         {{ item.position }}
         <label :for="`option-label-${index}`"> option text: </label>
-        <input
-          :id="`option-label-${index}`"
-          type="text"
-          :value="item.label"
-          @input="
-            (event) =>
-              updateLabel(index, (event.target as HTMLInputElement).value)
-          "
-        />
+        <input :id="`option-label-${index}`" type="text" :value="item.label" @input="(event) =>
+          updateLabel(index, (event.target as HTMLInputElement).value)
+        " />
       </li>
     </ul>
   </div>
@@ -55,12 +39,15 @@ const hintPosition = ref({ x: 0, y: 0 });
 const handleClick = (event: MouseEvent) => {
   const img = event.currentTarget as HTMLImageElement;
   const rect = img.getBoundingClientRect();
-
   if (!isSelecting.value) {
     // First click: start the selection
     selectionStart.value = {
       x: event.clientX - rect.left,
       y: event.clientY - rect.top,
+    };
+    selectionStart.value = {
+      x: selectionStart.value.x / rect.width,
+      y: selectionStart.value.y / rect.height,
     };
     isSelecting.value = true;
   } else {
@@ -68,6 +55,10 @@ const handleClick = (event: MouseEvent) => {
     selectionEnd.value = {
       x: event.clientX - rect.left,
       y: event.clientY - rect.top,
+    };
+    selectionEnd.value = {
+      x: selectionEnd.value.x / rect.width,
+      y: selectionEnd.value.y / rect.height,
     };
     finalizeSelection();
   }
@@ -120,10 +111,10 @@ const getItemStyle = (item: {
 }): CSSProperties => {
   return {
     position: "absolute",
-    top: `${item.position.y}px`,
-    left: `${item.position.x}px`,
-    width: `${item.dimensions.width}px`,
-    height: `${item.dimensions.height}px`,
+    top: `${item.position.y * 100}%`,
+    left: `${item.position.x * 100}%`,
+    width: `${item.dimensions.width * 100}%`,
+    height: `${item.dimensions.height * 100}%`,
     pointerEvents: "auto",
   };
 };
