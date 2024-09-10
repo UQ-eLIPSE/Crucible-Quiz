@@ -68,7 +68,7 @@ const selectionStyle = computed(() => {
     return `${Math.abs(a - b) * 100}%`;
   };
   return {
-    border: "3px dashed rgb(254, 4, 4)",
+    border: "4px dashed rgb(254, 4, 4)",
     pointerEvents: "none",
     position: "absolute",
     left: getMinAlignment(currCursorPos.value.x, selectionStart.value.x),
