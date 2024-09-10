@@ -73,6 +73,9 @@ const handleClick = (event: MouseEvent) => {
       x: event.clientX - rect.left,
       y: event.clientY - rect.top,
     };
+    console.log('selectionEnd', selectionEnd.value);
+    console.log('rect', rect);
+    console.log('img', img);
     selectionEnd.value = {
       x: selectionEnd.value.x / rect.width,
       y: selectionEnd.value.y / rect.height,
