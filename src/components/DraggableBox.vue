@@ -62,10 +62,10 @@ interface OptionsDatabase {
   label: string;
 }
 
+// here define the reactive props received from main
 const props = defineProps<{
   dragQuestion: OptionsDatabase[] | undefined;
 }>();
-
 const { dragQuestion } = toRefs(props);
 
 const imageUrl = ref<string>(fallbackImg);
@@ -89,11 +89,10 @@ const getImagePosition = () => {
     };
   }
 };
+
+// This is the updating of reactive props received from main
 watch(() => dragQuestion.value, (newVal: OptionsDatabase[] | undefined) => {
-  // onMounted(() => {
-  console.log("onMounted: ", dragQuestion.value)
   if (newVal === undefined) {
-    console.log("no data from db")
     imageUrl.value = sampleDatabase[0].imgUrl;
     snapItems.value = sampleDatabase.map((item, index) => {
       return {
@@ -113,7 +112,6 @@ watch(() => dragQuestion.value, (newVal: OptionsDatabase[] | undefined) => {
       };
     });
   } else {
-    console.log("onmoutn");
     imageUrl.value = newVal[0].imgUrl;
     snapItems.value = newVal.map((item, index) => {
       return {
