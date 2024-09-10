@@ -197,8 +197,8 @@ function onDrop(evt: DragEvent, list: number, snapItem?: Item) {
           : evt.clientY - rect.top - initialMousePosition.value.offsetY,
       };
       item.initialPosition = {
-        x: snapItem?.position.x,
-        y: snapItem?.position.y,
+        x: snapItem?.position.x ?? 0,
+        y: snapItem?.position.y ?? 0,
       };
 
       item.dimensions = {
