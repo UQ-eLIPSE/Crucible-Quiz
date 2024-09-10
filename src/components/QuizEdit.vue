@@ -1,28 +1,51 @@
 <template>
   <div class="edit-container">
     <div class="image-container">
-      <img id="output" :src="imageUrl" class="image-style" :class="{ 'cursor-crosshair': isSelecting }"
-        @click="handleClick" />
+      <div
+        :style="selectionStyle"
+        class="selection-rectangle"
+        v-show="isSelecting"
+      ></div>
+
+      <img
+        :src="imageUrl"
+        id="output"
+        class="image-style"
+        @click="handleClick"
+        @mousemove="handleMouseMove"
+        :class="{ 'cursor-crosshair': isSelecting }"
+      />
       <!-- Hint for first click -->
       <div v-if="isSelecting" :style="hintStyle" class="hint-style">
         Click to finish the selection
       </div>
-      <div v-for="(item, index) in collectPosition" :key="item.id" :style="getItemStyle(item)"
-        class="option-item-position" @click="() => collectPosition.splice(index, 1)"></div>
+      <div
+        v-for="(item, index) in collectPosition"
+        :key="item.id"
+        :style="getItemStyle(item)"
+        class="option-item-position"
+        @click="() => collectPosition.splice(index, 1)"
+      ></div>
     </div>
     <ul>
       <li v-for="(item, index) in collectPosition" :key="index">
         {{ item.position }}
         <label :for="`option-label-${index}`"> option text: </label>
-        <input :id="`option-label-${index}`" type="text" :value="item.label" @input="(event) =>
-          updateLabel(index, (event.target as HTMLInputElement).value)
-        " />
+        <input
+          :id="`option-label-${index}`"
+          type="text"
+          :value="item.label"
+          @input="
+            (event) =>
+              updateLabel(index, (event.target as HTMLInputElement).value)
+          "
+        />
       </li>
     </ul>
   </div>
 </template>
 <script setup lang="ts">
-import { ref, CSSProperties, computed } from "vue";
+import { ref, CSSProperties, computed, StyleValue } from "vue";
 import { QuizOption } from "@/type";
 defineProps<{
   imageUrl?: string;
@@ -36,6 +59,34 @@ const isSelecting = ref(false);
 const selectionStart = ref({ x: 0, y: 0 });
 const selectionEnd = ref({ x: 0, y: 0 });
 const hintPosition = ref({ x: 0, y: 0 });
+const currCursorPos = ref({ x: 0, y: 0 });
+const selectionStyle = computed(() => {
+  const getMinAlignment = (a: number, b: number) => {
+    // offset needed to allow img click to be included in selection
+    const offset = a < b ? 0.75 : -0.75;
+    return Math.min(a, b) * 100 + offset + "%";
+  };
+  const getDiffDimension = (a: number, b: number) => {
+    return Math.abs(a - b) * 100 + "%";
+  };
+  return {
+    border: "1px dashed rgb(254, 4, 4)",
+    position: "absolute",
+    left: getMinAlignment(currCursorPos.value.x, selectionStart.value.x),
+    top: getMinAlignment(currCursorPos.value.y, selectionStart.value.y),
+    width: getDiffDimension(currCursorPos.value.x, selectionStart.value.x),
+    height: getDiffDimension(currCursorPos.value.y, selectionStart.value.y),
+  } as StyleValue;
+});
+
+const handleMouseMove = (event: MouseEvent) => {
+  const size = (event.target as HTMLDivElement).getBoundingClientRect();
+  currCursorPos.value = {
+    x: (event.clientX - size.left) / size.width,
+    y: (event.clientY - size.top) / size.height,
+  };
+};
+
 const handleClick = (event: MouseEvent) => {
   const img = event.currentTarget as HTMLImageElement;
   const rect = img.getBoundingClientRect();
@@ -174,5 +225,12 @@ input {
   pointer-events: none;
   user-select: none;
   z-index: 1000;
+}
+
+.selction-rectangle {
+  position: absolute;
+  border: 4px dashed rgb(254, 4, 4);
+  /* z-index: 1; */
+  pointer-events: none;
 }
 </style>
