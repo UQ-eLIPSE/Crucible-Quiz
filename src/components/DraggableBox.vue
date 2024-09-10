@@ -2,8 +2,18 @@
   <h3>Drag & Drop Quiz Render</h3>
   <div class="container-ddQuiz">
     <!-- Initial D&D Quiz options -->
-    <div class="drop-zone" @drop="onDrop($event, 1)" @dragover.prevent @dragenter.prevent>
-      <DragItems :item-list="listOne" :img-position="imagePosition" @start-drag="startDrag" @end-drag="endDrag" />
+    <div
+      class="drop-zone"
+      @drop="onDrop($event, 1)"
+      @dragover.prevent
+      @dragenter.prevent
+    >
+      <DragItems
+        :item-list="listOne"
+        :img-position="imagePosition"
+        @start-drag="startDrag"
+        @end-drag="endDrag"
+      />
     </div>
     <!-- Drop Options in the picture Zone -->
 
@@ -11,13 +21,26 @@
       <div class="drop-zone">
         <img ref="imgRef" :src="imageUrl" alt="" @load="getImagePosition" />
 
-        <DragItems :item-list="listTwo" :img-position="imagePosition" @start-drag="startDrag" @end-drag="endDrag" />
-        <div v-for="ele in snapItems" :key="ele.id" :style="{
-      top: ele.position.y + 'px',
-      left: ele.position.x + 'px',
-      width: ele.dimensions.width + 'px',
-      height: ele.dimensions.height + 'px',
-    }" class="snap-position" @drop="onDrop($event, 2, ele)" @dragover.prevent @dragenter.prevent></div>
+        <DragItems
+          :item-list="listTwo"
+          :img-position="imagePosition"
+          @start-drag="startDrag"
+          @end-drag="endDrag"
+        />
+        <div
+          v-for="ele in snapItems"
+          :key="ele.id"
+          :style="{
+            top: ele.position.y + 'px',
+            left: ele.position.x + 'px',
+            width: ele.dimensions.width + 'px',
+            height: ele.dimensions.height + 'px',
+          }"
+          class="snap-position"
+          @drop="onDrop($event, 2, ele)"
+          @dragover.prevent
+          @dragenter.prevent
+        ></div>
       </div>
       <!-- Collection Result and todo: add submit data form -->
       <div>
@@ -75,7 +98,7 @@ const imgRef = ref<HTMLImageElement | null>(null);
 const imagePosition = ref<{ imgX: number; imgY: number } | null>(null);
 const draggedItem = ref<Item | null>(null);
 const initialMousePosition = ref<{ offsetX: number; offsetY: number } | null>(
-  null
+  null,
 );
 const showResult = ref<boolean>(false);
 const result = ref<boolean>(false);
@@ -91,53 +114,57 @@ const getImagePosition = () => {
 };
 
 // This is the updating of reactive props received from main
-watch(() => dragQuestion.value, (newVal: OptionsDatabase[] | undefined) => {
-  if (newVal === undefined) {
-    imageUrl.value = sampleDatabase[0].imgUrl;
-    snapItems.value = sampleDatabase.map((item, index) => {
-      return {
-        ...item,
-        id: index + 200,
-        list: 2,
-        dimensions: { width: item.width, height: item.height },
-      };
-    });
-    items.value = sampleDatabase.map((item, index) => {
-      return {
-        ...item,
-        id: index + 100,
-        list: 1,
-        dimensions: { width: 25, height: 25 },
-        position: { x: 50, y: index * 40 + 100 },
-      };
-    });
-  } else {
-    imageUrl.value = newVal[0].imgUrl;
-    snapItems.value = newVal.map((item, index) => {
-      return {
-        ...item,
-        id: index + 200,
-        list: 2,
-        dimensions: { width: item.width, height: item.height },
-      };
-    });
-    items.value = newVal.map((item, index) => {
-      return {
-        ...item,
-        id: index + 100,
-        list: 1,
-        dimensions: { width: 25, height: 25 },
-        position: { x: 50, y: index * 40 + 100 },
-      };
-    });
-  }
-}, { immediate: true });
+watch(
+  () => dragQuestion.value,
+  (newVal: OptionsDatabase[] | undefined) => {
+    if (newVal === undefined) {
+      imageUrl.value = sampleDatabase[0].imgUrl;
+      snapItems.value = sampleDatabase.map((item, index) => {
+        return {
+          ...item,
+          id: index + 200,
+          list: 2,
+          dimensions: { width: item.width, height: item.height },
+        };
+      });
+      items.value = sampleDatabase.map((item, index) => {
+        return {
+          ...item,
+          id: index + 100,
+          list: 1,
+          dimensions: { width: 25, height: 25 },
+          position: { x: 50, y: index * 40 + 100 },
+        };
+      });
+    } else {
+      imageUrl.value = newVal[0].imgUrl;
+      snapItems.value = newVal.map((item, index) => {
+        return {
+          ...item,
+          id: index + 200,
+          list: 2,
+          dimensions: { width: item.width, height: item.height },
+        };
+      });
+      items.value = newVal.map((item, index) => {
+        return {
+          ...item,
+          id: index + 100,
+          list: 1,
+          dimensions: { width: 25, height: 25 },
+          position: { x: 50, y: index * 40 + 100 },
+        };
+      });
+    }
+  },
+  { immediate: true },
+);
 
 const listOne = computed(() =>
-  items.value.filter((item: Item) => item.list === 1)
+  items.value.filter((item: Item) => item.list === 1),
 );
 const listTwo = computed(() =>
-  items.value.filter((item: Item) => item.list === 2)
+  items.value.filter((item: Item) => item.list === 2),
 );
 
 function startDrag({ event, item }: { event: DragEvent; item: Item }) {
@@ -195,7 +222,7 @@ function handleSubmit() {
 
   result.value = listTwo.value.every((item) => {
     const matchingSnapItem = snapItems.value.find(
-      (snapItem) => snapItem.id === item.id
+      (snapItem) => snapItem.id === item.id,
     );
     return (
       matchingSnapItem &&

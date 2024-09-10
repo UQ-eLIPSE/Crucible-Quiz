@@ -1,22 +1,38 @@
 <template>
   <div class="edit-container">
     <div class="image-container">
-      <img :src="imageUrl" id="output" class="image-style" @click="handleClick"
-        :class="{ 'cursor-crosshair': isSelecting }" />
+      <img
+        id="output"
+        :src="imageUrl"
+        class="image-style"
+        :class="{ 'cursor-crosshair': isSelecting }"
+        @click="handleClick"
+      />
       <!-- Hint for first click -->
       <div v-if="isSelecting" :style="hintStyle" class="hint-style">
         Click to finish the selection
       </div>
-      <div v-for="(item, index) in collectPosition" :style="getItemStyle(item)" class="option-item-position"
-        :key="item.id" @click="() => collectPosition.splice(index, 1)"></div>
+      <div
+        v-for="(item, index) in collectPosition"
+        :key="item.id"
+        :style="getItemStyle(item)"
+        class="option-item-position"
+        @click="() => collectPosition.splice(index, 1)"
+      ></div>
     </div>
     <ul>
       <li v-for="(item, index) in collectPosition" :key="index">
         {{ item.position }}
         <label :for="`option-label-${index}`"> option text: </label>
-        <input :id="`option-label-${index}`" type="text" :value="item.label" @input="(event) =>
-          updateLabel(index, (event.target as HTMLInputElement).value)
-        " />
+        <input
+          :id="`option-label-${index}`"
+          type="text"
+          :value="item.label"
+          @input="
+            (event) =>
+              updateLabel(index, (event.target as HTMLInputElement).value)
+          "
+        />
       </li>
     </ul>
   </div>

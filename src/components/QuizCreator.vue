@@ -4,13 +4,13 @@
     <div>
       <p>Choose Question Type</p>
 
-      <input type="radio" id="image-dd-quiz" value="Image" v-model="quizType" />
+      <input id="image-dd-quiz" v-model="quizType" type="radio" value="Image" />
       <label for="image-dd-quiz">Image D&D Question</label>
-      <input type="radio" id="text-dd-quiz" value="Text" v-model="quizType" />
+      <input id="text-dd-quiz" v-model="quizType" type="radio" value="Text" />
       <label for="text-dd-quiz">Text D&D Question</label>
     </div>
     <form action="" @submit.prevent="handleSubmit">
-      <label for="drag-drop-image-upload" v-if="quizType == 'Image'">
+      <label v-if="quizType == 'Image'" for="drag-drop-image-upload">
         Upload:
         <input
           id="drag-drop-image-upload"
