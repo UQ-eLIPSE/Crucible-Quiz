@@ -3,7 +3,8 @@ name: Deploy To Quiz Test Zone
 on:
   workflow_dispatch:
   push:
-    - main
+    branches:
+      - main
 
   jobs:
     deploy:
