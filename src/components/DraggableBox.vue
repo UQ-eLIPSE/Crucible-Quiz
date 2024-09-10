@@ -184,10 +184,8 @@ function onDrop(evt: DragEvent, list: number, snapItem?: Item) {
       item.list = list;
       const dropZone = evt.currentTarget as HTMLElement;
       const rect = dropZone.getBoundingClientRect();
-      const scaleAdjustmentsX =
-        snapItem && imagePosition?.value ? imagePosition.value.imgX : 0;
-      const scaleAdjustmentsY =
-        snapItem && imagePosition?.value ? imagePosition.value.imgY : 0;
+      const { imgX: scaleAdjustmentsX = 0, imgY: scaleAdjustmentsY = 0 } =
+        snapItem && imagePosition?.value ? imagePosition.value : {};
       item.position = {
         x: snapItem
           ? snapItem.position.x * scaleAdjustmentsX
