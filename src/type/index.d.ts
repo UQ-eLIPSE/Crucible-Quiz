@@ -13,7 +13,6 @@ export interface Item {
   label: string;
   dimensions: { width: number; height: number };
   position: { x: number; y: number };
-  initialPosition?: { x: number; y: number };
   list: number;
 }
 

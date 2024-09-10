@@ -1,20 +1,10 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { VueWrapper, mount } from "@vue/test-utils";
 import DraggableBox from "../src/components/DraggableBox.vue";
 
 describe("DraggableBox.vue", () => {
   let wrapper: VueWrapper;
-  global.ResizeObserver = class ResizeObserver {
-    constructor() {
-      this.observe = vi.fn();
-      this.unobserve = vi.fn();
-      this.disconnect = vi.fn();
-    }
 
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  };
   beforeEach(async () => {
     wrapper = mount(DraggableBox);
 

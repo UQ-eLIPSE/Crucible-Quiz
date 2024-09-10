@@ -11,7 +11,6 @@
       <DragItems
         :item-list="listOne"
         :img-position="imagePosition"
-        :get-item-style="getItemStyle"
         @start-drag="startDrag"
         @end-drag="endDrag"
       />
@@ -25,14 +24,18 @@
         <DragItems
           :item-list="listTwo"
           :img-position="imagePosition"
-          :get-item-style="getItemStyle"
           @start-drag="startDrag"
           @end-drag="endDrag"
         />
         <div
           v-for="ele in snapItems"
           :key="ele.id"
-          :style="getItemStyle(ele)"
+          :style="{
+            top: ele.position.y + 'px',
+            left: ele.position.x + 'px',
+            width: ele.dimensions.width + 'px',
+            height: ele.dimensions.height + 'px',
+          }"
           class="snap-position"
           @drop="onDrop($event, 2, ele)"
           @dragover.prevent
@@ -65,7 +68,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import DragItems from "./DragItems.vue";
 import { DDquizFormData, Item } from "../type";
 import fallbackImg from "../assets/TestDD.png";
@@ -77,11 +80,10 @@ const imgRef = ref<HTMLImageElement | null>(null);
 const imagePosition = ref<{ imgX: number; imgY: number } | null>(null);
 const draggedItem = ref<Item | null>(null);
 const initialMousePosition = ref<{ offsetX: number; offsetY: number } | null>(
-  null,
+  null
 );
 const showResult = ref<boolean>(false);
 const result = ref<boolean>(false);
-let resizeObserver: ResizeObserver | null = null;
 
 const getImagePosition = () => {
   if (imgRef.value) {
@@ -98,7 +100,7 @@ onMounted(() => {
     const storedData = localStorage.getItem("ddQuizFormdata");
     if (storedData) {
       const storeDDquizData: DDquizFormData = JSON.parse(
-        localStorage.getItem("ddQuizFormdata") ?? "",
+        localStorage.getItem("ddQuizFormdata") ?? ""
       );
       const collectPositionFrLocal = storeDDquizData["collectPosition"];
       snapItems.value = collectPositionFrLocal.map((item) => {
@@ -120,40 +122,13 @@ onMounted(() => {
       imageUrl.value = storeDDquizData.image;
     }
   }
-
-  if (imgRef.value) {
-    resizeObserver = new ResizeObserver((entries) => {
-      entries.forEach((entry) => {
-        imagePosition.value = {
-          imgX: entry.contentRect.width,
-          imgY: entry.contentRect.height,
-        };
-        listTwo.value.forEach((item) => {
-          // the x position and y position scales to the image size
-          if (!item.initialPosition) return;
-          item.position = {
-            x: item.initialPosition.x * entry.contentRect.width,
-            y: item.initialPosition.y * entry.contentRect.height,
-          };
-        });
-      });
-    });
-    resizeObserver.observe(imgRef.value);
-  }
-});
-
-onUnmounted(() => {
-  if (resizeObserver && imgRef.value) {
-    resizeObserver.unobserve(imgRef.value);
-    resizeObserver = null;
-  }
 });
 
 const listOne = computed(() =>
-  items.value.filter((item: Item) => item.list === 1),
+  items.value.filter((item: Item) => item.list === 1)
 );
 const listTwo = computed(() =>
-  items.value.filter((item: Item) => item.list === 2),
+  items.value.filter((item: Item) => item.list === 2)
 );
 
 function startDrag({ event, item }: { event: DragEvent; item: Item }) {
@@ -184,19 +159,13 @@ function onDrop(evt: DragEvent, list: number, snapItem?: Item) {
       item.list = list;
       const dropZone = evt.currentTarget as HTMLElement;
       const rect = dropZone.getBoundingClientRect();
-      const { imgX: scaleAdjustmentsX = 0, imgY: scaleAdjustmentsY = 0 } =
-        snapItem && imagePosition?.value ? imagePosition.value : {};
       item.position = {
         x: snapItem
-          ? snapItem.position.x * scaleAdjustmentsX
+          ? snapItem.position.x
           : evt.clientX - rect.left - initialMousePosition.value.offsetX,
         y: snapItem
-          ? snapItem.position.y * scaleAdjustmentsY
+          ? snapItem.position.y
           : evt.clientY - rect.top - initialMousePosition.value.offsetY,
-      };
-      item.initialPosition = {
-        x: snapItem?.position.x ?? 0,
-        y: snapItem?.position.y ?? 0,
       };
 
       item.dimensions = {
@@ -217,30 +186,14 @@ function handleSubmit() {
 
   result.value = listTwo.value.every((item) => {
     const matchingSnapItem = snapItems.value.find(
-      (snapItem) => snapItem.id === item.id,
+      (snapItem) => snapItem.id === item.id
     );
     return (
       matchingSnapItem &&
-      item?.initialPosition?.x === matchingSnapItem.position.x &&
-      item?.initialPosition?.y === matchingSnapItem.position.y
+      item.position.x === matchingSnapItem.position.x &&
+      item.position.y === matchingSnapItem.position.y
     );
   });
-}
-
-function getItemStyle(item: Item, draggable: boolean = false) {
-  if (!imagePosition || !imagePosition.value) return {};
-  const style = {
-    top: !draggable
-      ? `${(item.position.y * imagePosition.value.imgY).toFixed(0)}px`
-      : `${item.position.y}px`,
-    left: !draggable
-      ? `${(item.position.x * imagePosition.value.imgX).toFixed(0)}px`
-      : `${item.position.x}px`,
-    width: `${item.dimensions.width * imagePosition.value.imgX}px`,
-    height: `${item.dimensions.height * imagePosition.value.imgY}px`,
-  };
-
-  return style;
 }
 </script>
 
