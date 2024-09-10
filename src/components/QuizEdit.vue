@@ -77,7 +77,6 @@ const handleClick = (event: MouseEvent) => {
       x: selectionEnd.value.x / rect.width,
       y: selectionEnd.value.y / rect.height,
     };
-    console.log("selection end value", selectionEnd.value);
     finalizeSelection();
   }
 };

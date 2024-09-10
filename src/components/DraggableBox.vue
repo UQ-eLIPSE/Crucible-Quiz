@@ -188,7 +188,6 @@ function onDrop(evt: DragEvent, list: number, snapItem?: Item) {
           ? snapItem.position.y * scaleAdjustmentsY
           : evt.clientY - rect.top - initialMousePosition.value.offsetY,
       };
-      console.log("item position ON DROP", item.position);
 
       item.dimensions = {
         width: item.dimensions.width,
@@ -220,7 +219,6 @@ function handleSubmit() {
 
 function getItemStyle(item: Item, draggable: boolean = false) {
   if (!imagePosition || !imagePosition.value) return {};
-  console.log("item position", item.position);
   const style = {
     top: !draggable
       ? `${(item.position.y * imagePosition.value.imgY).toFixed(0)}px`
