@@ -55,7 +55,6 @@ const hintPosition = ref({ x: 0, y: 0 });
 const handleClick = (event: MouseEvent) => {
   const img = event.currentTarget as HTMLImageElement;
   const rect = img.getBoundingClientRect();
-  console.log("create img", rect);
   if (!isSelecting.value) {
     // First click: start the selection
     selectionStart.value = {
@@ -73,9 +72,6 @@ const handleClick = (event: MouseEvent) => {
       x: event.clientX - rect.left,
       y: event.clientY - rect.top,
     };
-    console.log('selectionEnd', selectionEnd.value);
-    console.log('rect', rect);
-    console.log('img', img);
     selectionEnd.value = {
       x: selectionEnd.value.x / rect.width,
       y: selectionEnd.value.y / rect.height,
