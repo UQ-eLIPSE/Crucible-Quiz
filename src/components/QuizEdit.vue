@@ -62,15 +62,14 @@ const hintPosition = ref({ x: 0, y: 0 });
 const currCursorPos = ref({ x: 0, y: 0 });
 const selectionStyle = computed(() => {
   const getMinAlignment = (a: number, b: number) => {
-    // offset needed to allow img click to be included in selection
-    const offset = a < b ? 0.75 : -0.75;
-    return Math.min(a, b) * 100 + offset + "%";
+    return `${Math.min(a, b) * 100}%`;
   };
   const getDiffDimension = (a: number, b: number) => {
-    return Math.abs(a - b) * 100 + "%";
+    return `${Math.abs(a - b) * 100}%`;
   };
   return {
-    border: "1px dashed rgb(254, 4, 4)",
+    border: "3px dashed rgb(254, 4, 4)",
+    pointerEvents: "none",
     position: "absolute",
     left: getMinAlignment(currCursorPos.value.x, selectionStart.value.x),
     top: getMinAlignment(currCursorPos.value.y, selectionStart.value.y),
@@ -225,12 +224,5 @@ input {
   pointer-events: none;
   user-select: none;
   z-index: 1000;
-}
-
-.selction-rectangle {
-  position: absolute;
-  border: 4px dashed rgb(254, 4, 4);
-  /* z-index: 1; */
-  pointer-events: none;
 }
 </style>
