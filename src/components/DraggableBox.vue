@@ -223,8 +223,8 @@ function handleSubmit() {
     );
     return (
       matchingSnapItem &&
-      item.position.x === matchingSnapItem.position.x &&
-      item.position.y === matchingSnapItem.position.y
+      item?.initialPosition?.x === matchingSnapItem.position.x &&
+      item?.initialPosition?.y === matchingSnapItem.position.y
     );
   });
 }
