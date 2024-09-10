@@ -2,9 +2,19 @@
   <h3>Drag & Drop Quiz Render</h3>
   <div class="container-ddQuiz">
     <!-- Initial D&D Quiz options -->
-    <div class="drop-zone" @drop="onDrop($event, 1)" @dragover.prevent @dragenter.prevent>
-      <DragItems :item-list="listOne" :img-position="imagePosition" :get-item-style="getItemStyle"
-        @start-drag="startDrag" @end-drag="endDrag" />
+    <div
+      class="drop-zone"
+      @drop="onDrop($event, 1)"
+      @dragover.prevent
+      @dragenter.prevent
+    >
+      <DragItems
+        :item-list="listOne"
+        :img-position="imagePosition"
+        :get-item-style="getItemStyle"
+        @start-drag="startDrag"
+        @end-drag="endDrag"
+      />
     </div>
     <!-- Drop Options in the picture Zone -->
 
@@ -12,10 +22,22 @@
       <div class="drop-zone">
         <img ref="imgRef" :src="imageUrl" alt="" @load="getImagePosition" />
 
-        <DragItems :item-list="listTwo" :img-position="imagePosition" :get-item-style="getItemStyle"
-          @start-drag="startDrag" @end-drag="endDrag" />
-        <div v-for="ele in snapItems" :key="ele.id" :style="getItemStyle(ele)" class="snap-position"
-          @drop="onDrop($event, 2, ele)" @dragover.prevent @dragenter.prevent></div>
+        <DragItems
+          :item-list="listTwo"
+          :img-position="imagePosition"
+          :get-item-style="getItemStyle"
+          @start-drag="startDrag"
+          @end-drag="endDrag"
+        />
+        <div
+          v-for="ele in snapItems"
+          :key="ele.id"
+          :style="getItemStyle(ele)"
+          class="snap-position"
+          @drop="onDrop($event, 2, ele)"
+          @dragover.prevent
+          @dragenter.prevent
+        ></div>
       </div>
       <!-- Collection Result and todo: add submit data form -->
       <div>
@@ -43,28 +65,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, toRefs, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import DragItems from "./DragItems.vue";
-import { Item } from "../type";
-import { sampleDatabase } from "@/dataAccessLayer";
+import { DDquizFormData, Item } from "../type";
 import fallbackImg from "../assets/TestDD.png";
-
-interface OptionsDatabase {
-  imgUrl: string;
-  position: {
-    x: number;
-    y: number;
-  };
-  width: number;
-  height: number;
-  label: string;
-}
-
-// here define the reactive props received from main
-const props = defineProps<{
-  dragQuestion: OptionsDatabase[] | undefined;
-}>();
-const { dragQuestion } = toRefs(props);
 
 const imageUrl = ref<string>(fallbackImg);
 const items = ref<Item[]>([]);
@@ -89,77 +93,54 @@ const getImagePosition = () => {
   }
 };
 
-// This is the updating of reactive props received from main
-watch(
-  () => dragQuestion.value,
-  (newVal: OptionsDatabase[] | undefined) => {
-    if (newVal === undefined) {
-      imageUrl.value = sampleDatabase[0].imgUrl;
-      snapItems.value = sampleDatabase.map((item, index) => {
-        return {
-          ...item,
-          id: index + 200,
-          list: 2,
-          dimensions: { width: item.width, height: item.height },
-        };
+onMounted(() => {
+  if (localStorage.getItem("ddQuizFormdata")) {
+    const storedData = localStorage.getItem("ddQuizFormdata");
+    if (storedData) {
+      const storeDDquizData: DDquizFormData = JSON.parse(
+        localStorage.getItem("ddQuizFormdata") ?? "",
+      );
+      const collectPositionFrLocal = storeDDquizData["collectPosition"];
+      snapItems.value = collectPositionFrLocal.map((item) => {
+        return { ...item, list: 2 };
       });
-      items.value = sampleDatabase.map((item, index) => {
+      items.value = collectPositionFrLocal.map((item, index) => {
         return {
           ...item,
-          id: index + 100,
           list: 1,
-          dimensions: { width: 25, height: 25 },
-          position: { x: 50, y: index * 40 + 100 },
+          position: {
+            x: 50,
+            y: index * 40 + 100,
+            width: item.dimensions.width,
+            height: item.dimensions.height,
+          },
         };
-      });
-    } else {
-      imageUrl.value = newVal[0].imgUrl;
-      snapItems.value = newVal.map((item, index) => {
-        return {
-          ...item,
-          id: index + 200,
-          list: 2,
-          dimensions: { width: item.width, height: item.height },
-        };
-      });
-      items.value = newVal.map((item, index) => {
-        return {
-          ...item,
-          id: index + 100,
-          list: 1,
-          dimensions: { width: 25, height: 25 },
-          position: { x: 50, y: index * 40 + 100 },
-        };
-      });
-    }
+      }); //Todo: to fix a suitable position in Render Quiz Ticket
 
-  },
-  { immediate: true },
-);
-
-onMounted(
-  () => {
-    if (imgRef.value) {
-      resizeObserver = new ResizeObserver((entries) => {
-        entries.forEach((entry) => {
-          imagePosition.value = {
-            imgX: entry.contentRect.width,
-            imgY: entry.contentRect.height,
-          };
-          listTwo.value.forEach((item) => {
-            // the x position and y position scales to the image size
-            if (!item.initialPosition) return;
-            item.position = {
-              x: item.initialPosition.x * entry.contentRect.width,
-              y: item.initialPosition.y * entry.contentRect.height,
-            };
-          });
-        });
-      });
-      resizeObserver.observe(imgRef.value);
+      imageUrl.value = storeDDquizData.image;
     }
   }
-)
+
+  if (imgRef.value) {
+    resizeObserver = new ResizeObserver((entries) => {
+      entries.forEach((entry) => {
+        imagePosition.value = {
+          imgX: entry.contentRect.width,
+          imgY: entry.contentRect.height,
+        };
+        listTwo.value.forEach((item) => {
+          // the x position and y position scales to the image size
+          if (!item.initialPosition) return;
+          item.position = {
+            x: item.initialPosition.x * entry.contentRect.width,
+            y: item.initialPosition.y * entry.contentRect.height,
+          };
+        });
+      });
+    });
+    resizeObserver.observe(imgRef.value);
+  }
+});
 
 onUnmounted(() => {
   if (resizeObserver && imgRef.value) {
@@ -167,7 +148,6 @@ onUnmounted(() => {
     resizeObserver = null;
   }
 });
-
 
 const listOne = computed(() =>
   items.value.filter((item: Item) => item.list === 1),

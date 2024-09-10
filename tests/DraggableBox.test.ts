@@ -19,54 +19,18 @@ describe("DraggableBox.vue", () => {
     wrapper = mount(DraggableBox);
 
     wrapper.vm.items = [
-      {
-        id: 0,
-        label: "Item A",
-        dimensions: { width: 1, height: 1 },
-        position: { x: 0, y: 0 },
-        list: 1,
-      },
-      {
-        id: 1,
-        label: "Item B",
-        dimensions: { width: 1, height: 1 },
-        position: { x: 100, y: 0 },
-        list: 1,
-      },
-      {
-        id: 2,
-        label: "Item C",
-        dimensions: { width: 1, height: 1 },
-        position: { x: 200, y: 0 },
-        list: 1,
-      },
+      { id: 0, label: "Item A", dimensions: { width: 1, height: 1 }, position: { x: 0, y: 0 }, list: 1 },
+      { id: 1, label: "Item B", dimensions: { width: 1, height: 1 }, position: { x: 100, y: 0 }, list: 1 },
+      { id: 2, label: "Item C", dimensions: { width: 1, height: 1 }, position: { x: 200, y: 0 }, list: 1 },
     ];
 
     wrapper.vm.snapItems = [
-      {
-        id: 0,
-        label: "Item A",
-        dimensions: { width: 1, height: 1 },
-        position: { x: 0, y: 0 },
-        list: 2,
-      },
-      {
-        id: 1,
-        label: "Item B",
-        dimensions: { width: 1, height: 1 },
-        position: { x: 100, y: 0 },
-        list: 2,
-      },
-      {
-        id: 2,
-        label: "Item C",
-        dimensions: { width: 1, height: 1 },
-        position: { x: 200, y: 0 },
-        list: 2,
-      },
+      { id: 0, label: "Item A", dimensions: { width: 1, height: 1 }, position: { x: 0, y: 0 }, list: 2 },
+      { id: 1, label: "Item B", dimensions: { width: 1, height: 1 }, position: { x: 100, y: 0 }, list: 2 },
+      { id: 2, label: "Item C", dimensions: { width: 1, height: 1 }, position: { x: 200, y: 0 }, list: 2 },
     ];
 
-    await wrapper.vm.$nextTick();
+    await wrapper.vm.$nextTick(); 
   });
 
   it("should render drop zones", () => {
@@ -109,12 +73,8 @@ describe("DraggableBox.vue", () => {
     const itemsInDropZone2 = dropZone2.findAll(".drag-el");
     const itemsInDropZone1 = dropZone1.findAll(".drag-el");
 
-    expect(itemsInDropZone2.length).toBeGreaterThan(
-      initialDropZone2Items.length,
-    );
+    expect(itemsInDropZone2.length).toBeGreaterThan(initialDropZone2Items.length);
     expect(itemsInDropZone1.length).toBeLessThan(initialDropZone1Items.length);
-    expect(itemsInDropZone2.some((item) => item.text() === dragEl.text())).toBe(
-      true,
-    );
+    expect(itemsInDropZone2.some((item) => item.text() === dragEl.text())).toBe(true);
   });
 });
