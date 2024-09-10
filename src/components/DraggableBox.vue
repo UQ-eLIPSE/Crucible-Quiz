@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, toRefs } from "vue";
 import DragItems from "./DragItems.vue";
 import { Item } from "../type";
 import { sampleDatabase } from "@/dataAccessLayer";
@@ -62,9 +62,11 @@ interface OptionsDatabase {
   label: string;
 }
 
-const { dragQuestion } = defineProps<{
+const props = defineProps<{
   dragQuestion: OptionsDatabase[] | undefined;
 }>();
+
+const { dragQuestion } = toRefs(props);
 
 const imageUrl = ref<string>(fallbackImg);
 const items = ref<Item[]>([]);
@@ -90,7 +92,7 @@ const getImagePosition = () => {
 
 onMounted(() => {
 
-  if (dragQuestion === undefined) {
+  if (dragQuestion.value === undefined) {
     console.log("no data from db")
     imageUrl.value = sampleDatabase[0].imgUrl;
     snapItems.value = sampleDatabase.map((item, index) => {
@@ -111,9 +113,9 @@ onMounted(() => {
       };
     });
   } else {
-    console.log("onmoutn", dragQuestion[0]);
-    imageUrl.value = dragQuestion[0].imgUrl;
-    snapItems.value = dragQuestion.map((item, index) => {
+    console.log("onmoutn");
+    imageUrl.value = dragQuestion.value[0].imgUrl;
+    snapItems.value = dragQuestion.value.map((item, index) => {
       return {
         ...item,
         id: index,
@@ -121,7 +123,7 @@ onMounted(() => {
         dimensions: { width: item.width, height: item.height },
       };
     });
-    items.value = dragQuestion.map((item, index) => {
+    items.value = dragQuestion.value.map((item, index) => {
       return {
         ...item,
         id: index,
