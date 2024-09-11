@@ -102,9 +102,11 @@ onMounted(() => {
       const storeDDquizData: DDquizFormData = JSON.parse(
         localStorage.getItem("ddQuizFormdata") ?? ""
       );
+
       const collectPositionFrLocal = storeDDquizData["collectPosition"];
+
       snapItems.value = collectPositionFrLocal.map((item) => {
-        return { ...item, list: 2 };
+        return { ...item, id: `snap${item.id}`, list: 2 };
       });
       items.value = collectPositionFrLocal.map((item, index) => {
         return {
@@ -154,7 +156,9 @@ function onDrop(evt: DragEvent, list: number, snapItem?: Item) {
   evt.preventDefault();
   if (draggedItem.value) {
     const itemID = evt.dataTransfer!.getData("text/plain");
-    const item = items.value.find((item: Item) => item.id === Number(itemID));
+    const item = items.value.find((item: Item) => {
+      return item.id === itemID;
+    });
     if (item && initialMousePosition.value) {
       item.list = list;
       const dropZone = evt.currentTarget as HTMLElement;
@@ -186,7 +190,7 @@ function handleSubmit() {
 
   result.value = listTwo.value.every((item) => {
     const matchingSnapItem = snapItems.value.find(
-      (snapItem) => snapItem.id === item.id
+      (snapItem) => snapItem.label === item.label
     );
     return (
       matchingSnapItem &&

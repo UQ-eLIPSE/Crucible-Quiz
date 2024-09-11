@@ -55,7 +55,6 @@ const hintPosition = ref({ x: 0, y: 0 });
 const handleClick = (event: MouseEvent) => {
   const img = event.currentTarget as HTMLImageElement;
   const rect = img.getBoundingClientRect();
-  console.log("create img", rect);
   if (!isSelecting.value) {
     // First click: start the selection
     selectionStart.value = {
@@ -80,7 +79,7 @@ const finalizeSelection = () => {
   ) {
     // Collect position and size of the selected area
     collectPosition.value.push({
-      id: Date.now(),
+      id: Date.now().toString(),
       position: {
         x: Math.min(selectionStart.value.x, selectionEnd.value.x),
         y: Math.min(selectionStart.value.y, selectionEnd.value.y),
