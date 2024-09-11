@@ -45,12 +45,7 @@
     </div>
 
     <p v-if="showResult">{{ result }}</p>
-    <button
-      :class="['submit-button', !isDone ? 'disabled' : '']"
-      @click="handleSubmit"
-    >
-      Submit
-    </button>
+    <button class="submit-button" @click="handleSubmit">Submit</button>
   </div>
 </template>
 
@@ -71,7 +66,6 @@ const initialMousePosition = ref<{ offsetX: number; offsetY: number } | null>(
 );
 const showResult = ref<boolean>(false);
 const result = ref<{ label: string; isCorrect: boolean }[]>([]);
-const isDone = ref<boolean>(false);
 
 const getImagePosition = () => {
   if (imgRef.value) {
