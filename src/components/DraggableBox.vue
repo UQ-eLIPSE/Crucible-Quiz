@@ -50,7 +50,7 @@ import DragItems from "./DragItems.vue";
 import { Item } from "../type";
 import fallbackImg from "../assets/TestDD.png";
 import { sampleDatabase } from "@/dataAccessLayer";
-import { getItemStyle } from "@/utils";
+import { getItemStyle, getInitialVal } from "@/utils";
 
 interface OptionsDatabase {
   imgUrl: string;
@@ -97,10 +97,8 @@ const itemStyle = (ele: Item) => {
 watch(
   () => dragQuestion.value,
   (newVal: OptionsDatabase[] | undefined) => {
-    let renderData;
-    newVal === undefined
-      ? (renderData = sampleDatabase)
-      : (renderData = newVal);
+    const renderData = newVal === undefined ? sampleDatabase : newVal;
+    const iniValue = getInitialVal(renderData.length);
     imageUrl.value = renderData[0].imgUrl; //TODO: Change Data Structur in Crucible(main)
     snapItems.value = renderData.map((item, index) => {
       return {
@@ -115,8 +113,11 @@ watch(
         ...item,
         id: `${index}`,
         list: 1,
-        dimensions: { width: 25, height: 25 },
-        position: { x: 50, y: index * 40 + 100 },
+        dimensions: {
+          width: iniValue[index].width,
+          height: iniValue[index].height,
+        },
+        position: { x: iniValue[index].x, y: iniValue[index].y },
       };
     });
   },
@@ -157,7 +158,7 @@ function onDrop(evt: DragEvent, list: number, snapItem?: Item) {
     return item.id === itemID;
   });
 
-  if (!item || !initialMousePosition.value || !snapItem) return;
+  if (!item || !initialMousePosition.value) return;
 
   item.list = list;
   const dropZone = evt.currentTarget as HTMLElement;
@@ -175,7 +176,7 @@ function onDrop(evt: DragEvent, list: number, snapItem?: Item) {
     width: item.dimensions.width,
     height: item.dimensions.height,
   };
-
+  if (!snapItem) return;
   snapItem && snapItem.label === item?.label
     ? result.value?.push({ label: snapItem?.label, isCorrect: true })
     : result.value?.push({ label: snapItem?.label, isCorrect: false });

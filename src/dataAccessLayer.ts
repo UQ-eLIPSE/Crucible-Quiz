@@ -18,8 +18,8 @@ export const sampleDatabase = [
       x: 19,
       y: 19.88330078125,
     },
-    width: 24,
-    height: 11,
+    width: 150,
+    height: 150,
     label: "testdata",
   },
 ];
