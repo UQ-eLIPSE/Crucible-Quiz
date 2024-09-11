@@ -30,12 +30,7 @@
         <div
           v-for="ele in snapItems"
           :key="ele.id"
-          :style="{
-            top: ele.position.y + 'px',
-            left: ele.position.x + 'px',
-            width: ele.dimensions.width + 'px',
-            height: ele.dimensions.height + 'px',
-          }"
+          :style="itemStyle(ele)"
           class="snap-position"
           @drop="onDrop($event, 2, ele)"
           @dragover.prevent
@@ -50,10 +45,29 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, watch, toRefs } from "vue";
 import DragItems from "./DragItems.vue";
-import { DDquizFormData, Item } from "../type";
+import { Item } from "../type";
 import fallbackImg from "../assets/TestDD.png";
+import { sampleDatabase } from "@/dataAccessLayer";
+import { getItemStyle } from "@/utils";
+
+interface OptionsDatabase {
+  imgUrl: string;
+  position: {
+    x: number;
+    y: number;
+  };
+  width: number;
+  height: number;
+  label: string;
+}
+
+// here define the reactive props received from main
+const props = defineProps<{
+  dragQuestion: OptionsDatabase[] | undefined;
+}>();
+const { dragQuestion } = toRefs(props);
 
 const imageUrl = ref<string>(fallbackImg);
 const items = ref<Item[]>([]);
@@ -76,37 +90,38 @@ const getImagePosition = () => {
     };
   }
 };
-
-onMounted(() => {
-  if (localStorage.getItem("ddQuizFormdata")) {
-    const storedData = localStorage.getItem("ddQuizFormdata");
-    if (storedData) {
-      const storeDDquizData: DDquizFormData = JSON.parse(
-        localStorage.getItem("ddQuizFormdata") ?? ""
-      );
-
-      const collectPositionFrLocal = storeDDquizData["collectPosition"];
-
-      snapItems.value = collectPositionFrLocal.map((item) => {
-        return { ...item, id: `snap${item.id}`, list: 2 };
-      });
-      items.value = collectPositionFrLocal.map((item, index) => {
-        return {
-          ...item,
-          list: 1,
-          position: {
-            x: 50,
-            y: index * 40 + 100,
-            width: item.dimensions.width,
-            height: item.dimensions.height,
-          },
-        };
-      }); //Todo: to fix a suitable position in Render Quiz Ticket
-
-      imageUrl.value = storeDDquizData.image;
-    }
-  }
-});
+const itemStyle = (ele: Item) => {
+  return getItemStyle(ele);
+};
+// This is the updating of reactive props received from main
+watch(
+  () => dragQuestion.value,
+  (newVal: OptionsDatabase[] | undefined) => {
+    let renderData;
+    newVal === undefined
+      ? (renderData = sampleDatabase)
+      : (renderData = newVal);
+    imageUrl.value = renderData[0].imgUrl; //TODO: Change Data Structur in Crucible(main)
+    snapItems.value = renderData.map((item, index) => {
+      return {
+        ...item,
+        id: `snap${index}`,
+        list: 2,
+        dimensions: { width: item.width, height: item.height },
+      };
+    });
+    items.value = renderData.map((item, index) => {
+      return {
+        ...item,
+        id: `${index}`,
+        list: 1,
+        dimensions: { width: 25, height: 25 },
+        position: { x: 50, y: index * 40 + 100 },
+      };
+    });
+  },
+  { immediate: true }
+);
 
 const listOne = computed(() =>
   items.value.filter((item: Item) => item.list === 1)
@@ -136,35 +151,34 @@ function endDrag(item: Item) {
 
 function onDrop(evt: DragEvent, list: number, snapItem?: Item) {
   evt.preventDefault();
-  if (draggedItem.value) {
-    const itemID = evt.dataTransfer!.getData("text/plain");
-    const item = items.value.find((item: Item) => {
-      return item.id === itemID;
-    });
+  if (!draggedItem.value) return;
+  const itemID = evt.dataTransfer!.getData("text/plain");
+  const item = items.value.find((item: Item) => {
+    return item.id === itemID;
+  });
 
-    if (item && initialMousePosition.value) {
-      item.list = list;
-      const dropZone = evt.currentTarget as HTMLElement;
-      const rect = dropZone.getBoundingClientRect();
-      item.position = {
-        x: snapItem
-          ? snapItem.position.x
-          : evt.clientX - rect.left - initialMousePosition.value.offsetX,
-        y: snapItem
-          ? snapItem.position.y
-          : evt.clientY - rect.top - initialMousePosition.value.offsetY,
-      };
+  if (!item || !initialMousePosition.value || !snapItem) return;
 
-      item.dimensions = {
-        width: item.dimensions.width,
-        height: item.dimensions.height,
-      };
-    }
-    if (!snapItem) return;
-    snapItem && snapItem.label === item?.label
-      ? result.value?.push({ label: snapItem?.label, isCorrect: true })
-      : result.value?.push({ label: snapItem?.label, isCorrect: false });
-  }
+  item.list = list;
+  const dropZone = evt.currentTarget as HTMLElement;
+  const rect = dropZone.getBoundingClientRect();
+  item.position = {
+    x: snapItem
+      ? snapItem.position.x
+      : evt.clientX - rect.left - initialMousePosition.value.offsetX,
+    y: snapItem
+      ? snapItem.position.y
+      : evt.clientY - rect.top - initialMousePosition.value.offsetY,
+  };
+
+  item.dimensions = {
+    width: item.dimensions.width,
+    height: item.dimensions.height,
+  };
+
+  snapItem && snapItem.label === item?.label
+    ? result.value?.push({ label: snapItem?.label, isCorrect: true })
+    : result.value?.push({ label: snapItem?.label, isCorrect: false });
 }
 
 function handleSubmit() {
