@@ -9,21 +9,54 @@ describe("DraggableBox.vue", () => {
     wrapper = mount(DraggableBox);
 
     wrapper.vm.items = [
-      { id: 0, label: "Item A", dimensions: { width: 1, height: 1 }, position: { x: 0, y: 0 }, list: 1 },
-      { id: 1, label: "Item B", dimensions: { width: 1, height: 1 }, position: { x: 100, y: 0 }, list: 1 },
-      { id: 2, label: "Item C", dimensions: { width: 1, height: 1 }, position: { x: 200, y: 0 }, list: 1 },
+      {
+        id: "3",
+        label: "Item A",
+        dimensions: { width: 1, height: 1 },
+        position: { x: 0, y: 0 },
+        list: 1,
+      },
+      {
+        id: "1",
+        label: "Item B",
+        dimensions: { width: 1, height: 1 },
+        position: { x: 100, y: 0 },
+        list: 1,
+      },
+      {
+        id: "2",
+        label: "Item C",
+        dimensions: { width: 1, height: 1 },
+        position: { x: 200, y: 0 },
+        list: 1,
+      },
     ];
 
     wrapper.vm.snapItems = [
-      { id: 0, label: "Item A", dimensions: { width: 1, height: 1 }, position: { x: 0, y: 0 }, list: 2 },
-      { id: 1, label: "Item B", dimensions: { width: 1, height: 1 }, position: { x: 100, y: 0 }, list: 2 },
-      { id: 2, label: "Item C", dimensions: { width: 1, height: 1 }, position: { x: 200, y: 0 }, list: 2 },
+      {
+        id: "snap3",
+        label: "Item A",
+        dimensions: { width: 1, height: 1 },
+        position: { x: 0, y: 0 },
+        list: 2,
+      },
+      {
+        id: "snap1",
+        label: "Item B",
+        dimensions: { width: 1, height: 1 },
+        position: { x: 100, y: 0 },
+        list: 2,
+      },
+      {
+        id: "snap2",
+        label: "Item C",
+        dimensions: { width: 1, height: 1 },
+        position: { x: 200, y: 0 },
+        list: 2,
+      },
     ];
 
-    await wrapper.vm.$nextTick(); 
-  });
-
-  it("should render drop zones", () => {
+    await wrapper.vm.$nextTick();
     expect(wrapper.find(".drop-zone").exists()).toBeTruthy();
   });
 
@@ -36,26 +69,30 @@ describe("DraggableBox.vue", () => {
     // Get initial state of dropZone1
     const initialDropZone2Items = dropZone2.findAll(".drag-el");
     const initialDropZone1Items = dropZone1.findAll(".drag-el");
+    let dataTransferMock = {
+      data: {},
+      setData: function (key, value) {
+        this.data[key] = value;
+      },
+      getData: function (key) {
+        return this.data[key];
+      },
+    };
 
     // Drag start
     await dragEl.trigger("dragstart", {
-      dataTransfer: {
-        getData: () => dragEl.attributes("id"),
-        setData: () => {},
-      },
+      dataTransfer: dataTransferMock,
     });
+
+    dataTransferMock.setData("id", dragEl.attributes("id"));
 
     // Drop on the second drop zone
     await dropsnap.trigger("drop", {
-      dataTransfer: {
-        getData: () => dragEl.element.id,
-      },
+      dataTransfer: dataTransferMock,
     });
 
     await dropZone2.trigger("dragover", {
-      dataTransfer: {
-        dropEffect: "move",
-      },
+      dataTransfer: { dropEffect: "move" },
     });
 
     await wrapper.vm.$nextTick();
@@ -63,8 +100,12 @@ describe("DraggableBox.vue", () => {
     const itemsInDropZone2 = dropZone2.findAll(".drag-el");
     const itemsInDropZone1 = dropZone1.findAll(".drag-el");
 
-    expect(itemsInDropZone2.length).toBeGreaterThan(initialDropZone2Items.length);
+    expect(itemsInDropZone2.length).toBeGreaterThan(
+      initialDropZone2Items.length
+    );
     expect(itemsInDropZone1.length).toBeLessThan(initialDropZone1Items.length);
-    expect(itemsInDropZone2.some((item) => item.text() === dragEl.text())).toBe(true);
+    expect(itemsInDropZone2.some((item) => item.text() === dragEl.text())).toBe(
+      true
+    );
   });
 });

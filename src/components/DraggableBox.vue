@@ -42,27 +42,9 @@
           @dragenter.prevent
         ></div>
       </div>
-      <!-- Collection Result and todo: add submit data form -->
-      <div>
-        Item Position In Drop Zone 2
-        <table>
-          <tr>
-            <th>Item Id</th>
-            <th>Item Title</th>
-            <th>Item Position</th>
-          </tr>
-          <tr v-for="item in listTwo" :key="item.id">
-            <td>{{ item.id }}</td>
-            <td>{{ item.label }}</td>
-            <td>{{ item.position }}</td>
-          </tr>
-        </table>
-      </div>
     </div>
-    <div v-if="showResult">
-      <p v-if="result" class="success-message">Submission successful!</p>
-      <p v-else class="error-message">Submission failed!</p>
-    </div>
+
+    <p v-if="showResult">{{ result }}</p>
     <button class="submit-button" @click="handleSubmit">Submit</button>
   </div>
 </template>
@@ -83,7 +65,7 @@ const initialMousePosition = ref<{ offsetX: number; offsetY: number } | null>(
   null
 );
 const showResult = ref<boolean>(false);
-const result = ref<boolean>(false);
+const result = ref<{ label: string; isCorrect: boolean }[]>([]);
 
 const getImagePosition = () => {
   if (imgRef.value) {
@@ -102,9 +84,11 @@ onMounted(() => {
       const storeDDquizData: DDquizFormData = JSON.parse(
         localStorage.getItem("ddQuizFormdata") ?? ""
       );
+
       const collectPositionFrLocal = storeDDquizData["collectPosition"];
+
       snapItems.value = collectPositionFrLocal.map((item) => {
-        return { ...item, list: 2 };
+        return { ...item, id: `snap${item.id}`, list: 2 };
       });
       items.value = collectPositionFrLocal.map((item, index) => {
         return {
@@ -154,7 +138,10 @@ function onDrop(evt: DragEvent, list: number, snapItem?: Item) {
   evt.preventDefault();
   if (draggedItem.value) {
     const itemID = evt.dataTransfer!.getData("text/plain");
-    const item = items.value.find((item: Item) => item.id === Number(itemID));
+    const item = items.value.find((item: Item) => {
+      return item.id === itemID;
+    });
+
     if (item && initialMousePosition.value) {
       item.list = list;
       const dropZone = evt.currentTarget as HTMLElement;
@@ -173,27 +160,17 @@ function onDrop(evt: DragEvent, list: number, snapItem?: Item) {
         height: item.dimensions.height,
       };
     }
+    if (!snapItem) return;
+    snapItem && snapItem.label === item?.label
+      ? result.value?.push({ label: snapItem?.label, isCorrect: true })
+      : result.value?.push({ label: snapItem?.label, isCorrect: false });
   }
 }
 
 function handleSubmit() {
   showResult.value = true;
 
-  if (listOne.value.length > 0) {
-    result.value = false;
-    return;
-  }
-
-  result.value = listTwo.value.every((item) => {
-    const matchingSnapItem = snapItems.value.find(
-      (snapItem) => snapItem.id === item.id
-    );
-    return (
-      matchingSnapItem &&
-      item.position.x === matchingSnapItem.position.x &&
-      item.position.y === matchingSnapItem.position.y
-    );
-  });
+  return result.value;
 }
 </script>
 
