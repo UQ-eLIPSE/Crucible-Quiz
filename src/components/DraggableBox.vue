@@ -43,11 +43,14 @@
         ></div>
       </div>
     </div>
-    <div v-if="showResult">
-      <p v-if="result" class="success-message">Submission successful!</p>
-      <p v-else class="error-message">Submission failed!</p>
-    </div>
-    <button class="submit-button" @click="handleSubmit">Submit</button>
+
+    <p v-if="showResult">{{ result }}</p>
+    <button
+      :class="['submit-button', !isDone ? 'disabled' : '']"
+      @click="handleSubmit"
+    >
+      Submit
+    </button>
   </div>
 </template>
 
@@ -67,7 +70,8 @@ const initialMousePosition = ref<{ offsetX: number; offsetY: number } | null>(
   null
 );
 const showResult = ref<boolean>(false);
-const result = ref<boolean>(false);
+const result = ref<{ label: string; isCorrect: boolean }[]>([]);
+const isDone = ref<boolean>(false);
 
 const getImagePosition = () => {
   if (imgRef.value) {
@@ -143,6 +147,7 @@ function onDrop(evt: DragEvent, list: number, snapItem?: Item) {
     const item = items.value.find((item: Item) => {
       return item.id === itemID;
     });
+
     if (item && initialMousePosition.value) {
       item.list = list;
       const dropZone = evt.currentTarget as HTMLElement;
@@ -161,27 +166,17 @@ function onDrop(evt: DragEvent, list: number, snapItem?: Item) {
         height: item.dimensions.height,
       };
     }
+    if (!snapItem) return;
+    snapItem && snapItem.label === item?.label
+      ? result.value?.push({ label: snapItem?.label, isCorrect: true })
+      : result.value?.push({ label: snapItem?.label, isCorrect: false });
   }
 }
 
 function handleSubmit() {
   showResult.value = true;
 
-  if (listOne.value.length > 0) {
-    result.value = false;
-    return;
-  }
-
-  result.value = listTwo.value.every((item) => {
-    const matchingSnapItem = snapItems.value.find(
-      (snapItem) => snapItem.label === item.label
-    );
-    return (
-      matchingSnapItem &&
-      item.position.x === matchingSnapItem.position.x &&
-      item.position.y === matchingSnapItem.position.y
-    );
-  });
+  return result.value;
 }
 </script>
 
