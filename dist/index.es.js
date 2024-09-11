@@ -1,5 +1,5 @@
-import { defineComponent as T, openBlock as b, createElementBlock as w, Fragment as x, renderList as F, normalizeStyle as Z, toDisplayString as W, toRefs as E, ref as s, watch as _, computed as M, createElementVNode as d, withModifiers as N, createVNode as G, createCommentVNode as L, pushScopeId as C, popScopeId as q, normalizeClass as $, createTextVNode as R, withDirectives as U, vModelText as tt, vModelRadio as B, createBlock as et } from "vue";
-const nt = (c) => Array.from({ length: c }, (p, e) => ({ id: e, x: e * 5, y: e * 30, width: 100, height: 100 }));
+import { defineComponent as T, openBlock as b, createElementBlock as w, Fragment as N, renderList as F, normalizeStyle as Z, toDisplayString as W, toRefs as E, ref as s, watch as _, computed as M, createElementVNode as d, withModifiers as x, createVNode as G, createCommentVNode as L, pushScopeId as C, popScopeId as q, normalizeClass as $, createTextVNode as R, withDirectives as U, vModelText as tt, vModelRadio as B, createBlock as et } from "vue";
+const nt = (c) => Array.from({ length: c }, (p, e) => ({ id: e, x: e * 30, y: e * 30, width: 100, height: 30 }));
 function Q(c) {
   return {
     top: c.position.y + "px",
@@ -17,7 +17,7 @@ const ct = ["onDragstart", "onDragend"], Y = /* @__PURE__ */ T({
   emits: ["start-drag", "end-drag"],
   setup(c, { emit: p }) {
     const e = p, f = (l) => Q(l);
-    return (l, X) => (b(!0), w(x, null, F(l.itemList, (n) => (b(), w("div", {
+    return (l, X) => (b(!0), w(N, null, F(l.itemList, (n) => (b(), w("div", {
       key: n.id,
       class: "drag-el",
       style: Z(f(n)),
@@ -117,15 +117,15 @@ const ct = ["onDragstart", "onDragend"], Y = /* @__PURE__ */ T({
     function k() {
       return h.value = !0, P.value;
     }
-    return (u, a) => (b(), w(x, null, [
+    return (u, a) => (b(), w(N, null, [
       lt,
       d("div", st, [
         d("div", {
           class: "drop-zone",
           onDrop: a[0] || (a[0] = (r) => K(r, 1)),
-          onDragover: a[1] || (a[1] = N(() => {
+          onDragover: a[1] || (a[1] = x(() => {
           }, ["prevent"])),
-          onDragenter: a[2] || (a[2] = N(() => {
+          onDragenter: a[2] || (a[2] = x(() => {
           }, ["prevent"]))
         }, [
           G(Y, {
@@ -150,14 +150,14 @@ const ct = ["onDragstart", "onDragend"], Y = /* @__PURE__ */ T({
               onStartDrag: j,
               onEndDrag: y
             }, null, 8, ["item-list", "img-position"]),
-            (b(!0), w(x, null, F(X.value, (r) => (b(), w("div", {
+            (b(!0), w(N, null, F(X.value, (r) => (b(), w("div", {
               key: r.id,
               style: Z(t(r)),
               class: "snap-position",
               onDrop: (D) => K(D, 2, r),
-              onDragover: a[3] || (a[3] = N(() => {
+              onDragover: a[3] || (a[3] = x(() => {
               }, ["prevent"])),
-              onDragenter: a[4] || (a[4] = N(() => {
+              onDragenter: a[4] || (a[4] = x(() => {
               }, ["prevent"]))
             }, null, 44, ot))), 128))
           ])
@@ -237,7 +237,7 @@ const ct = ["onDragstart", "onDragend"], Y = /* @__PURE__ */ T({
           style: Z(h.value),
           class: "hint-style"
         }, " Click to finish the selection ", 4)) : L("", !0),
-        (b(!0), w(x, null, F(e.value, (O, j) => (b(), w("div", {
+        (b(!0), w(N, null, F(e.value, (O, j) => (b(), w("div", {
           style: Z(P(O)),
           class: "option-item-position",
           key: O.id,
@@ -245,7 +245,7 @@ const ct = ["onDragstart", "onDragend"], Y = /* @__PURE__ */ T({
         }, null, 12, zt))), 128))
       ]),
       d("ul", null, [
-        (b(!0), w(x, null, F(e.value, (O, j) => (b(), w("li", { key: j }, [
+        (b(!0), w(N, null, F(e.value, (O, j) => (b(), w("li", { key: j }, [
           R(W(O.position) + " ", 1),
           d("label", {
             for: `option-label-${j}`
@@ -287,10 +287,12 @@ const ct = ["onDragstart", "onDragend"], Y = /* @__PURE__ */ T({
       }, null, 512), [
         [tt, f.value]
       ]),
-      d("button", { onClick: X }, "Convert")
+      d("button", {
+        onClick: x(X, ["prevent"])
+      }, "Convert")
     ]));
   }
-}), Nt = /* @__PURE__ */ m(xt, [["__scopeId", "data-v-37091a38"]]), g = (c) => (C("data-v-37624b45"), c = c(), q(), c), Tt = /* @__PURE__ */ g(() => /* @__PURE__ */ d("h3", null, "Drag & Drop Question Form", -1)), gt = { class: "quiz-edit-container" }, yt = /* @__PURE__ */ g(() => /* @__PURE__ */ d("p", null, "Choose Question Type", -1)), Ft = /* @__PURE__ */ g(() => /* @__PURE__ */ d("label", { for: "image-dd-quiz" }, "Image D&D Question", -1)), Zt = /* @__PURE__ */ g(() => /* @__PURE__ */ d("label", { for: "text-dd-quiz" }, "Text D&D Question", -1)), Lt = {
+}), Nt = /* @__PURE__ */ m(xt, [["__scopeId", "data-v-1d742a2f"]]), g = (c) => (C("data-v-37624b45"), c = c(), q(), c), Tt = /* @__PURE__ */ g(() => /* @__PURE__ */ d("h3", null, "Drag & Drop Question Form", -1)), gt = { class: "quiz-edit-container" }, yt = /* @__PURE__ */ g(() => /* @__PURE__ */ d("p", null, "Choose Question Type", -1)), Ft = /* @__PURE__ */ g(() => /* @__PURE__ */ d("label", { for: "image-dd-quiz" }, "Image D&D Question", -1)), Zt = /* @__PURE__ */ g(() => /* @__PURE__ */ d("label", { for: "text-dd-quiz" }, "Text D&D Question", -1)), Lt = {
   key: 0,
   for: "drag-drop-image-upload"
 }, mt = /* @__PURE__ */ g(() => /* @__PURE__ */ d("input", {
@@ -314,7 +316,7 @@ const ct = ["onDragstart", "onDragend"], Y = /* @__PURE__ */ T({
         collectPosition: l.value
       }, ut(X.value), v("save-items", X);
     };
-    return (z, t) => (b(), w(x, null, [
+    return (z, t) => (b(), w(N, null, [
       Tt,
       d("div", gt, [
         d("div", null, [
@@ -340,7 +342,7 @@ const ct = ["onDragstart", "onDragend"], Y = /* @__PURE__ */ T({
         ]),
         d("form", {
           action: "",
-          onSubmit: N(P, ["prevent"])
+          onSubmit: x(P, ["prevent"])
         }, [
           e.value == "Image" ? (b(), w("label", Lt, [
             R(" Upload: "),
