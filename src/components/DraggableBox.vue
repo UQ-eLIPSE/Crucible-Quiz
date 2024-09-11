@@ -42,22 +42,6 @@
           @dragenter.prevent
         ></div>
       </div>
-      <!-- Collection Result and todo: add submit data form -->
-      <div>
-        Item Position In Drop Zone 2
-        <table>
-          <tr>
-            <th>Item Id</th>
-            <th>Item Title</th>
-            <th>Item Position</th>
-          </tr>
-          <tr v-for="item in listTwo" :key="item.id">
-            <td>{{ item.id }}</td>
-            <td>{{ item.label }}</td>
-            <td>{{ item.position }}</td>
-          </tr>
-        </table>
-      </div>
     </div>
     <div v-if="showResult">
       <p v-if="result" class="success-message">Submission successful!</p>
