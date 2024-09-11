@@ -14,21 +14,19 @@
     </div>
     <hr />
     <div v-if="showDraggableBox" class="ddQuiz-container">
-      <DraggableBox />
+      <DraggableBox :drag-question="sampleDatabase" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import DraggableBox from "./components/DraggableBox.vue";
 import QuizCreator from "./components/QuizCreator.vue";
+import { sampleDatabase } from "./dataAccessLayer";
 
 const showCreator = ref(false);
 const showDraggableBox = ref(false);
-onMounted(() => {
-  localStorage.clear();
-});
 </script>
 
 <style scoped>

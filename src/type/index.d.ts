@@ -29,3 +29,10 @@ export interface DDquizFormData {
   image: string;
   collectPosition: QuizOption[];
 }
+
+export interface ItemStyle {
+  top: string;
+  left: string;
+  width: string;
+  height: string;
+}
