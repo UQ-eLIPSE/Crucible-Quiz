@@ -53,7 +53,6 @@ import { sampleDatabase } from "@/dataAccessLayer";
 import { getItemStyle, getInitialVal } from "@/utils";
 
 interface OptionsDatabase {
-  imgUrl: string;
   position: {
     x: number;
     y: number;
@@ -66,8 +65,9 @@ interface OptionsDatabase {
 // here define the reactive props received from main
 const props = defineProps<{
   dragQuestion: OptionsDatabase[] | undefined;
+  imageSource: string;
 }>();
-const { dragQuestion } = toRefs(props);
+const { dragQuestion, imageSource } = toRefs(props);
 
 const imageUrl = ref<string>(fallbackImg);
 const items = ref<Item[]>([]);
@@ -99,7 +99,6 @@ watch(
   (newVal: OptionsDatabase[] | undefined) => {
     const renderData = newVal === undefined ? sampleDatabase : newVal;
     const iniValue = getInitialVal(renderData.length);
-    imageUrl.value = renderData[0].imgUrl; //TODO: Change Data Structur in Crucible(main)
     snapItems.value = renderData.map((item, index) => {
       return {
         ...item,
@@ -120,6 +119,13 @@ watch(
         position: { x: iniValue[index].x, y: iniValue[index].y },
       };
     });
+  },
+  { immediate: true }
+);
+watch(
+  () => imageSource.value,
+  (newImageSource: string) => {
+    imageUrl.value = newImageSource || fallbackImg;
   },
   { immediate: true }
 );
