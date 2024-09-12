@@ -278,13 +278,13 @@ img {
 
 .text-correct {
   background-color: lightgreen;
-  padding: 10px; /* Optional: Add some padding to make the background color stand out */
+  padding: 10px;
   border-radius: 5px;
 }
 
 .text-incorrect {
   background-color: red;
-  padding: 10px; /* Same padding for consistency */
+  padding: 10px;
   border-radius: 5px;
 }
 </style>
