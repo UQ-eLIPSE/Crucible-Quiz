@@ -47,20 +47,10 @@
 <script setup lang="ts">
 import { ref, computed, watch, toRefs } from "vue";
 import DragItems from "./DragItems.vue";
-import { Item } from "../type";
+import { Item, OptionsDatabase } from "../type";
 import fallbackImg from "../assets/TestDD.png";
 import { sampleDatabase } from "@/dataAccessLayer";
 import { getItemStyle, getInitialVal } from "@/utils";
-
-interface OptionsDatabase {
-  position: {
-    x: number;
-    y: number;
-  };
-  width: number;
-  height: number;
-  label: string;
-}
 
 // here define the reactive props received from main
 const props = defineProps<{
@@ -98,7 +88,7 @@ watch(
   () => dragQuestion.value,
   (newVal: OptionsDatabase[] | undefined) => {
     const renderData = newVal === undefined ? sampleDatabase : newVal;
-    const iniValue = getInitialVal(renderData.length);
+    const iniValue = getInitialVal(renderData, 300);
     snapItems.value = renderData.map((item, index) => {
       return {
         ...item,
@@ -113,8 +103,8 @@ watch(
         id: `${index}`,
         list: 1,
         dimensions: {
-          width: iniValue[index].width,
-          height: iniValue[index].height,
+          width: item.width,
+          height: item.height,
         },
         position: { x: iniValue[index].x, y: iniValue[index].y },
       };
