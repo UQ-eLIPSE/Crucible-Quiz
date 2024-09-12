@@ -62,10 +62,10 @@ const hintPosition = ref({ x: 0, y: 0 });
 const currCursorPos = ref({ x: 0, y: 0 });
 const selectionStyle = computed(() => {
   const getMinAlignment = (a: number, b: number) => {
-    return `${Math.min(a, b) * 100}%`;
+    return `${Math.min(a, b)}px`;
   };
   const getDiffDimension = (a: number, b: number) => {
-    return `${Math.abs(a - b) * 100}%`;
+    return `${Math.abs(a - b)}px`;
   };
   return {
     border: "4px dashed rgb(254, 4, 4)",
@@ -79,13 +79,13 @@ const selectionStyle = computed(() => {
 });
 
 const handleMouseMove = (event: MouseEvent) => {
-  const { left, top, width, height } = (
+  const { left, top } = (
     event.target as HTMLDivElement
   ).getBoundingClientRect();
 
   currCursorPos.value = {
-    x: (event.clientX - left) / width,
-    y: (event.clientY - top) / height,
+    x: event.clientX - left,
+    y: event.clientY - top,
   };
 };
 
