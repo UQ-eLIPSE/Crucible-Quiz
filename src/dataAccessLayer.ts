@@ -10,10 +10,10 @@ export const handleSubmitData = (formData: DDquizFormData) => {
   }
 };
 
+export const imageSource = "https://stluc.manta.uqcloud.net/elipse/public/CHUBS/VETS-TST/undefined/66de8da3bf6c10611cc15078.png";
+
 export const sampleDatabase = [
   {
-    imgUrl:
-      "https://stluc.manta.uqcloud.net/elipse/public/CHUBS/VETS-TST/undefined/66de8da3bf6c10611cc15078.png",
     position: {
       x: 19,
       y: 19.88330078125,
