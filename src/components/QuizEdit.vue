@@ -1,11 +1,18 @@
 <template>
   <div class="edit-container">
     <div class="image-container">
+      <div
+        :style="selectionStyle"
+        class="selection-rectangle"
+        v-show="isSelecting"
+      ></div>
+
       <img
         :src="imageUrl"
         id="output"
         class="image-style"
         @click="handleClick"
+        @mousemove="handleMouseMove"
         :class="{ 'cursor-crosshair': isSelecting }"
       />
       <!-- Hint for first click -->
@@ -38,7 +45,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, CSSProperties, computed } from "vue";
+import { ref, CSSProperties, computed, StyleValue } from "vue";
 import { QuizOption } from "@/type";
 defineProps<{
   imageUrl?: string;
@@ -52,6 +59,33 @@ const isSelecting = ref(false);
 const selectionStart = ref({ x: 0, y: 0 });
 const selectionEnd = ref({ x: 0, y: 0 });
 const hintPosition = ref({ x: 0, y: 0 });
+const currCursorPos = ref({ x: 0, y: 0 });
+const selectionStyle = computed(() => {
+  const getDimension = (a: number, b: number, isMin: boolean = false) => {
+    return `${isMin ? Math.min(a, b) : Math.abs(a - b)}px`;
+  };
+  return {
+    border: "4px dashed rgb(254, 4, 4)",
+    pointerEvents: "none",
+    position: "absolute",
+    left: getDimension(currCursorPos.value.x, selectionStart.value.x, true),
+    top: getDimension(currCursorPos.value.y, selectionStart.value.y, true),
+    width: getDimension(currCursorPos.value.x, selectionStart.value.x),
+    height: getDimension(currCursorPos.value.y, selectionStart.value.y),
+  } as StyleValue;
+});
+
+const handleMouseMove = (event: MouseEvent) => {
+  const { left, top } = (
+    event.target as HTMLDivElement
+  ).getBoundingClientRect();
+
+  currCursorPos.value = {
+    x: event.clientX - left,
+    y: event.clientY - top,
+  };
+};
+
 const handleClick = (event: MouseEvent) => {
   const img = event.currentTarget as HTMLImageElement;
   const rect = img.getBoundingClientRect();
