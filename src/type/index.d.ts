@@ -36,3 +36,13 @@ export interface ItemStyle {
   width: string;
   height: string;
 }
+
+export interface OptionsDatabase {
+  position: {
+    x: number;
+    y: number;
+  };
+  width: number;
+  height: number;
+  label: string;
+}
