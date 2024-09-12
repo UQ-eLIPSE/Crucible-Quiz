@@ -9,16 +9,15 @@ declare module "@vue/runtime-core" {
 }
 
 export interface Item {
-  id: number;
+  id: string;
   label: string;
   dimensions: { width: number; height: number };
   position: { x: number; y: number };
-  initialPosition?: { x: number; y: number };
   list: number;
 }
 
 export interface QuizOption {
-  id: number;
+  id: string;
   label: string;
   dimensions: { width: number; height: number };
   position: { x: number; y: number };
@@ -29,4 +28,11 @@ export interface DDquizFormData {
   imageFile?: File;
   image: string;
   collectPosition: QuizOption[];
+}
+
+export interface ItemStyle {
+  top: string;
+  left: string;
+  width: string;
+  height: string;
 }

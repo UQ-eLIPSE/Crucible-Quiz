@@ -21,9 +21,9 @@
       </div>
       <div
         v-for="(item, index) in collectPosition"
-        :key="item.id"
         :style="getItemStyle(item)"
         class="option-item-position"
+        :key="item.id"
         @click="() => collectPosition.splice(index, 1)"
       ></div>
     </div>
@@ -98,20 +98,12 @@ const handleClick = (event: MouseEvent) => {
       x: event.clientX - rect.left,
       y: event.clientY - rect.top,
     };
-    selectionStart.value = {
-      x: selectionStart.value.x / rect.width,
-      y: selectionStart.value.y / rect.height,
-    };
     isSelecting.value = true;
   } else {
     // Second click: finish the selection
     selectionEnd.value = {
       x: event.clientX - rect.left,
       y: event.clientY - rect.top,
-    };
-    selectionEnd.value = {
-      x: selectionEnd.value.x / rect.width,
-      y: selectionEnd.value.y / rect.height,
     };
     finalizeSelection();
   }
@@ -124,7 +116,7 @@ const finalizeSelection = () => {
   ) {
     // Collect position and size of the selected area
     collectPosition.value.push({
-      id: Date.now(),
+      id: Date.now().toString(),
       position: {
         x: Math.min(selectionStart.value.x, selectionEnd.value.x),
         y: Math.min(selectionStart.value.y, selectionEnd.value.y),
@@ -164,10 +156,10 @@ const getItemStyle = (item: {
 }): CSSProperties => {
   return {
     position: "absolute",
-    top: `${item.position.y * 100}%`,
-    left: `${item.position.x * 100}%`,
-    width: `${item.dimensions.width * 100}%`,
-    height: `${item.dimensions.height * 100}%`,
+    top: `${item.position.y}px`,
+    left: `${item.position.x}px`,
+    width: `${item.dimensions.width}px`,
+    height: `${item.dimensions.height}px`,
     pointerEvents: "auto",
   };
 };

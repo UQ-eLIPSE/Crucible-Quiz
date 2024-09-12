@@ -2,9 +2,18 @@
   <h3>Drag & Drop Quiz Render</h3>
   <div class="container-ddQuiz">
     <!-- Initial D&D Quiz options -->
-    <div class="drop-zone" @drop="onDrop($event, 1)" @dragover.prevent @dragenter.prevent>
-      <DragItems :item-list="listOne" :img-position="imagePosition" :get-item-style="getItemStyle"
-        @start-drag="startDrag" @end-drag="endDrag" />
+    <div
+      class="drop-zone"
+      @drop="onDrop($event, 1)"
+      @dragover.prevent
+      @dragenter.prevent
+    >
+      <DragItems
+        :item-list="listOne"
+        :img-position="imagePosition"
+        @start-drag="startDrag"
+        @end-drag="endDrag"
+      />
     </div>
     <!-- Drop Options in the picture Zone -->
 
@@ -12,45 +21,38 @@
       <div class="drop-zone">
         <img ref="imgRef" :src="imageUrl" alt="" @load="getImagePosition" />
 
-        <DragItems :item-list="listTwo" :img-position="imagePosition" :get-item-style="getItemStyle"
-          @start-drag="startDrag" @end-drag="endDrag" />
-        <div v-for="ele in snapItems" :key="ele.id" :style="getItemStyle(ele)" class="snap-position"
-          @drop="onDrop($event, 2, ele)" @dragover.prevent @dragenter.prevent></div>
-      </div>
-      <!-- Collection Result and todo: add submit data form -->
-      <div>
-        Item Position In Drop Zone 2
-        <table>
-          <tr>
-            <th>Item Id</th>
-            <th>Item Title</th>
-            <th>Item Position</th>
-          </tr>
-          <tr v-for="item in listTwo" :key="item.id">
-            <td>{{ item.id }}</td>
-            <td>{{ item.label }}</td>
-            <td>{{ item.position }}</td>
-          </tr>
-        </table>
+        <DragItems
+          :item-list="listTwo"
+          :img-position="imagePosition"
+          @start-drag="startDrag"
+          @end-drag="endDrag"
+        />
+        <div
+          v-for="ele in snapItems"
+          :key="ele.id"
+          :style="itemStyle(ele)"
+          class="snap-position"
+          @drop="onDrop($event, 2, ele)"
+          @dragover.prevent
+          @dragenter.prevent
+        ></div>
       </div>
     </div>
-    <div v-if="showResult">
-      <p v-if="result" class="success-message">Submission successful!</p>
-      <p v-else class="error-message">Submission failed!</p>
-    </div>
+
+    <p v-if="showResult">{{ result }}</p>
     <button class="submit-button" @click="handleSubmit">Submit</button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, toRefs, onMounted, onUnmounted } from "vue";
+import { ref, computed, watch, toRefs } from "vue";
 import DragItems from "./DragItems.vue";
 import { Item } from "../type";
-import { sampleDatabase } from "@/dataAccessLayer";
 import fallbackImg from "../assets/TestDD.png";
+import { sampleDatabase } from "@/dataAccessLayer";
+import { getItemStyle, getInitialVal } from "@/utils";
 
 interface OptionsDatabase {
-  imgUrl: string;
   position: {
     x: number;
     y: number;
@@ -63,8 +65,9 @@ interface OptionsDatabase {
 // here define the reactive props received from main
 const props = defineProps<{
   dragQuestion: OptionsDatabase[] | undefined;
+  imageSource: string;
 }>();
-const { dragQuestion } = toRefs(props);
+const { dragQuestion, imageSource } = toRefs(props);
 
 const imageUrl = ref<string>(fallbackImg);
 const items = ref<Item[]>([]);
@@ -73,11 +76,10 @@ const imgRef = ref<HTMLImageElement | null>(null);
 const imagePosition = ref<{ imgX: number; imgY: number } | null>(null);
 const draggedItem = ref<Item | null>(null);
 const initialMousePosition = ref<{ offsetX: number; offsetY: number } | null>(
-  null,
+  null
 );
 const showResult = ref<boolean>(false);
-const result = ref<boolean>(false);
-let resizeObserver: ResizeObserver | null = null;
+const result = ref<{ label: string; isCorrect: boolean }[]>([]);
 
 const getImagePosition = () => {
   if (imgRef.value) {
@@ -88,92 +90,51 @@ const getImagePosition = () => {
     };
   }
 };
-
+const itemStyle = (ele: Item) => {
+  return getItemStyle(ele);
+};
 // This is the updating of reactive props received from main
 watch(
   () => dragQuestion.value,
   (newVal: OptionsDatabase[] | undefined) => {
-    if (newVal === undefined) {
-      imageUrl.value = sampleDatabase[0].imgUrl;
-      snapItems.value = sampleDatabase.map((item, index) => {
-        return {
-          ...item,
-          id: index + 200,
-          list: 2,
-          dimensions: { width: item.width, height: item.height },
-        };
-      });
-      items.value = sampleDatabase.map((item, index) => {
-        return {
-          ...item,
-          id: index + 100,
-          list: 1,
-          dimensions: { width: 25, height: 25 },
-          position: { x: 50, y: index * 40 + 100 },
-        };
-      });
-    } else {
-      imageUrl.value = newVal[0].imgUrl;
-      snapItems.value = newVal.map((item, index) => {
-        return {
-          ...item,
-          id: index + 200,
-          list: 2,
-          dimensions: { width: item.width, height: item.height },
-        };
-      });
-      items.value = newVal.map((item, index) => {
-        return {
-          ...item,
-          id: index + 100,
-          list: 1,
-          dimensions: { width: 25, height: 25 },
-          position: { x: 50, y: index * 40 + 100 },
-        };
-      });
-    }
-
+    const renderData = newVal === undefined ? sampleDatabase : newVal;
+    const iniValue = getInitialVal(renderData.length);
+    snapItems.value = renderData.map((item, index) => {
+      return {
+        ...item,
+        id: `snap${index}`,
+        list: 2,
+        dimensions: { width: item.width, height: item.height },
+      };
+    });
+    items.value = renderData.map((item, index) => {
+      return {
+        ...item,
+        id: `${index}`,
+        list: 1,
+        dimensions: {
+          width: iniValue[index].width,
+          height: iniValue[index].height,
+        },
+        position: { x: iniValue[index].x, y: iniValue[index].y },
+      };
+    });
   },
-  { immediate: true },
+  { immediate: true }
 );
-
-onMounted(
-  () => {
-    if (imgRef.value) {
-      resizeObserver = new ResizeObserver((entries) => {
-        entries.forEach((entry) => {
-          imagePosition.value = {
-            imgX: entry.contentRect.width,
-            imgY: entry.contentRect.height,
-          };
-          listTwo.value.forEach((item) => {
-            // the x position and y position scales to the image size
-            if (!item.initialPosition) return;
-            item.position = {
-              x: item.initialPosition.x * entry.contentRect.width,
-              y: item.initialPosition.y * entry.contentRect.height,
-            };
-          });
-        });
-      });
-      resizeObserver.observe(imgRef.value);
-    }
-  }
-)
-
-onUnmounted(() => {
-  if (resizeObserver && imgRef.value) {
-    resizeObserver.unobserve(imgRef.value);
-    resizeObserver = null;
-  }
-});
-
+watch(
+  () => imageSource.value,
+  (newImageSource: string) => {
+    imageUrl.value = newImageSource || fallbackImg;
+  },
+  { immediate: true }
+);
 
 const listOne = computed(() =>
-  items.value.filter((item: Item) => item.list === 1),
+  items.value.filter((item: Item) => item.list === 1)
 );
 const listTwo = computed(() =>
-  items.value.filter((item: Item) => item.list === 2),
+  items.value.filter((item: Item) => item.list === 2)
 );
 
 function startDrag({ event, item }: { event: DragEvent; item: Item }) {
@@ -197,70 +158,40 @@ function endDrag(item: Item) {
 
 function onDrop(evt: DragEvent, list: number, snapItem?: Item) {
   evt.preventDefault();
-  if (draggedItem.value) {
-    const itemID = evt.dataTransfer!.getData("text/plain");
-    const item = items.value.find((item: Item) => item.id === Number(itemID));
-    if (item && initialMousePosition.value) {
-      item.list = list;
-      const dropZone = evt.currentTarget as HTMLElement;
-      const rect = dropZone.getBoundingClientRect();
-      const { imgX: scaleAdjustmentsX = 0, imgY: scaleAdjustmentsY = 0 } =
-        snapItem && imagePosition?.value ? imagePosition.value : {};
-      item.position = {
-        x: snapItem
-          ? snapItem.position.x * scaleAdjustmentsX
-          : evt.clientX - rect.left - initialMousePosition.value.offsetX,
-        y: snapItem
-          ? snapItem.position.y * scaleAdjustmentsY
-          : evt.clientY - rect.top - initialMousePosition.value.offsetY,
-      };
-      item.initialPosition = {
-        x: snapItem?.position.x ?? 0,
-        y: snapItem?.position.y ?? 0,
-      };
+  if (!draggedItem.value) return;
+  const itemID = evt.dataTransfer!.getData("text/plain");
+  const item = items.value.find((item: Item) => {
+    return item.id === itemID;
+  });
 
-      item.dimensions = {
-        width: item.dimensions.width,
-        height: item.dimensions.height,
-      };
-    }
-  }
+  if (!item || !initialMousePosition.value) return;
+
+  item.list = list;
+  const dropZone = evt.currentTarget as HTMLElement;
+  const rect = dropZone.getBoundingClientRect();
+  item.position = {
+    x: snapItem
+      ? snapItem.position.x
+      : evt.clientX - rect.left - initialMousePosition.value.offsetX,
+    y: snapItem
+      ? snapItem.position.y
+      : evt.clientY - rect.top - initialMousePosition.value.offsetY,
+  };
+
+  item.dimensions = {
+    width: item.dimensions.width,
+    height: item.dimensions.height,
+  };
+  if (!snapItem) return;
+  snapItem && snapItem.label === item?.label
+    ? result.value?.push({ label: snapItem?.label, isCorrect: true })
+    : result.value?.push({ label: snapItem?.label, isCorrect: false });
 }
 
 function handleSubmit() {
   showResult.value = true;
 
-  if (listOne.value.length > 0) {
-    result.value = false;
-    return;
-  }
-
-  result.value = listTwo.value.every((item) => {
-    const matchingSnapItem = snapItems.value.find(
-      (snapItem) => snapItem.id === item.id,
-    );
-    return (
-      matchingSnapItem &&
-      item?.initialPosition?.x === matchingSnapItem.position.x &&
-      item?.initialPosition?.y === matchingSnapItem.position.y
-    );
-  });
-}
-
-function getItemStyle(item: Item, draggable: boolean = false) {
-  if (!imagePosition || !imagePosition.value) return {};
-  const style = {
-    top: !draggable
-      ? `${(item.position.y * imagePosition.value.imgY).toFixed(0)}px`
-      : `${item.position.y}px`,
-    left: !draggable
-      ? `${(item.position.x * imagePosition.value.imgX).toFixed(0)}px`
-      : `${item.position.x}px`,
-    width: `${item.dimensions.width * imagePosition.value.imgX}px`,
-    height: `${item.dimensions.height * imagePosition.value.imgY}px`,
-  };
-
-  return style;
+  return result.value;
 }
 </script>
 
