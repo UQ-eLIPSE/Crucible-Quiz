@@ -61,20 +61,17 @@ const selectionEnd = ref({ x: 0, y: 0 });
 const hintPosition = ref({ x: 0, y: 0 });
 const currCursorPos = ref({ x: 0, y: 0 });
 const selectionStyle = computed(() => {
-  const getMinAlignment = (a: number, b: number) => {
-    return `${Math.min(a, b)}px`;
-  };
-  const getDiffDimension = (a: number, b: number) => {
-    return `${Math.abs(a - b)}px`;
+  const getDimension = (a: number, b: number, isMin: boolean = false) => {
+    return `${isMin ? Math.min(a, b) : Math.abs(a - b)}px`;
   };
   return {
     border: "4px dashed rgb(254, 4, 4)",
     pointerEvents: "none",
     position: "absolute",
-    left: getMinAlignment(currCursorPos.value.x, selectionStart.value.x),
-    top: getMinAlignment(currCursorPos.value.y, selectionStart.value.y),
-    width: getDiffDimension(currCursorPos.value.x, selectionStart.value.x),
-    height: getDiffDimension(currCursorPos.value.y, selectionStart.value.y),
+    left: getDimension(currCursorPos.value.x, selectionStart.value.x, true),
+    top: getDimension(currCursorPos.value.y, selectionStart.value.y, true),
+    width: getDimension(currCursorPos.value.x, selectionStart.value.x),
+    height: getDimension(currCursorPos.value.y, selectionStart.value.y),
   } as StyleValue;
 });
 
