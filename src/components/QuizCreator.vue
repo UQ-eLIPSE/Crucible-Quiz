@@ -25,29 +25,51 @@
       />
       <QuizEdit
         :image-url="imageSrc"
+        :collect-position="collectPosition"
         @update-collect-position="handlePosition"
       />
-      <!-- todo: Handle Submit data to database -->
       <input type="submit" value="Save" />
     </form>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { QuizOption, DDquizFormData } from "@/type";
+import { ref, watch, PropType } from "vue";
+import { QuizOption, DDquizFormData, QUIZ_QUESTION_DRAG_DROP } from "@/type";
 import QuizEdit from "./QuizEdit.vue";
 import TextImage from "./TextImage.vue";
 import { handleSubmitData } from "../dataAccessLayer.ts";
 
 const quizType = ref("Image");
-const imageSrc = ref();
+const imageSrc = ref<string | undefined>();
 const collectPosition = ref<QuizOption[]>([]);
 const formdata = ref<DDquizFormData>({} as DDquizFormData);
 const imageFile = ref<File>();
 
+// Accept questions as prop
+const props = defineProps({
+  questions: {
+    type: Object as PropType<QUIZ_QUESTION_DRAG_DROP>,
+    required: false,
+  },
+});
+
 const emit = defineEmits(["save-items"]);
 
+// Watch the questions prop and auto-populate if present
+watch(
+  () => props.questions,
+  (newQuestions) => {
+    if (newQuestions) {
+      // Populate form with existing questions data
+      imageSrc.value = newQuestions.imgUrl;
+      collectPosition.value = newQuestions.optionsList;
+    }
+  },
+  { immediate: true }
+);
+
+// Handle form actions
 const handleTxtImageSrcUpdate = (src: string) => {
   imageSrc.value = src;
 };
@@ -68,40 +90,8 @@ const handleSubmit = () => {
     image: imageSrc.value,
     collectPosition: collectPosition.value,
   };
+  console.log(formdata.value);
   handleSubmitData(formdata.value); // might have to remove it later on
-  emit("save-items", formdata);
+  emit("save-items", formdata.value);
 };
 </script>
-
-<style scoped>
-.quiz-edit-container {
-  margin: auto;
-  width: 100%;
-  margin-bottom: 2em;
-}
-form {
-  position: relative;
-}
-input {
-  margin-bottom: 2em;
-  font-size: large;
-  box-shadow: 5px 5px 5px rgb(223, 222, 222) inset;
-}
-input[type="submit"] {
-  position: absolute;
-  right: 0;
-}
-textarea {
-  width: 100%;
-  resize: vertical;
-}
-
-button {
-  margin-top: 10px;
-}
-
-img {
-  margin-top: 20px;
-  max-width: 100%;
-}
-</style>

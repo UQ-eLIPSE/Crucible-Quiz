@@ -8,7 +8,7 @@
       ></div>
 
       <img
-        :src="imageUrl"
+        :src="localImageUrl"
         id="output"
         class="image-style"
         @click="handleClick"
@@ -20,15 +20,15 @@
         Click to finish the selection
       </div>
       <div
-        v-for="(item, index) in collectPosition"
+        v-for="(item, index) in localCollectPosition"
         :style="getItemStyle(item)"
         class="option-item-position"
         :key="item.id"
-        @click="() => collectPosition.splice(index, 1)"
+        @click="() => removePosition(index)"
       ></div>
     </div>
     <ul>
-      <li v-for="(item, index) in collectPosition" :key="index">
+      <li v-for="(item, index) in localCollectPosition" :key="index">
         {{ item.position }}
         <label :for="`option-label-${index}`"> option text: </label>
         <input
@@ -44,17 +44,27 @@
     </ul>
   </div>
 </template>
+
 <script setup lang="ts">
-import { ref, CSSProperties, computed, StyleValue } from "vue";
+import { ref, watch, CSSProperties, computed, StyleValue } from "vue";
 import { QuizOption } from "@/type";
-defineProps<{
+
+// Props
+const props = defineProps<{
   imageUrl?: string;
+  collectPosition?: QuizOption[];
 }>();
 
-const collectPosition = ref<QuizOption[]>([]);
+// Emit
 const emit = defineEmits<{
   (event: "update-collect-position", positions: QuizOption[]): void;
 }>();
+
+// Local reactive state
+const localImageUrl = ref<string>(props.imageUrl || ""); // Local image URL
+const localCollectPosition = ref<QuizOption[]>(
+  props.collectPosition || ([] as QuizOption[])
+);
 const isSelecting = ref(false);
 const selectionStart = ref({ x: 0, y: 0 });
 const selectionEnd = ref({ x: 0, y: 0 });
@@ -86,18 +96,35 @@ const handleMouseMove = (event: MouseEvent) => {
   };
 };
 
+// Watch the collectPosition prop and sync it with local state
+watch(
+  () => props.collectPosition,
+  (newPositions) => {
+    localCollectPosition.value = newPositions || [];
+  },
+  { immediate: true }
+);
+
+// Watch imageUrl prop and update localImageUrl when it changes
+watch(
+  () => props.imageUrl,
+  (newImageUrl) => {
+    localImageUrl.value = newImageUrl || "";
+  },
+  { immediate: true }
+);
+
+// Handle click to create new selection
 const handleClick = (event: MouseEvent) => {
   const img = event.currentTarget as HTMLImageElement;
   const rect = img.getBoundingClientRect();
   if (!isSelecting.value) {
-    // First click: start the selection
     selectionStart.value = {
       x: event.clientX - rect.left,
       y: event.clientY - rect.top,
     };
     isSelecting.value = true;
   } else {
-    // Second click: finish the selection
     selectionEnd.value = {
       x: event.clientX - rect.left,
       y: event.clientY - rect.top,
@@ -106,22 +133,20 @@ const handleClick = (event: MouseEvent) => {
   }
 };
 
+// Finalize the selection
 const finalizeSelection = () => {
   if (
     selectionEnd.value.x !== selectionStart.value.x &&
     selectionEnd.value.y !== selectionStart.value.y
   ) {
-    // Collect position and size of the selected area
-    collectPosition.value.push({
+    localCollectPosition.value.push({
       id: Date.now().toString(),
       position: {
         x: Math.min(selectionStart.value.x, selectionEnd.value.x),
         y: Math.min(selectionStart.value.y, selectionEnd.value.y),
       },
-      dimensions: {
-        width: Math.abs(selectionEnd.value.x - selectionStart.value.x),
-        height: Math.abs(selectionEnd.value.y - selectionStart.value.y),
-      },
+      width: Math.abs(selectionEnd.value.x - selectionStart.value.x),
+      height: Math.abs(selectionEnd.value.y - selectionStart.value.y),
       label: "*", // Placeholder label
     });
   }
@@ -132,8 +157,38 @@ const finalizeSelection = () => {
   selectionEnd.value = { x: 0, y: 0 };
 
   // Emit updated positions
-  emit("update-collect-position", collectPosition.value);
+  emit("update-collect-position", localCollectPosition.value);
 };
+
+// Handle removing a position
+const removePosition = (index: number) => {
+  localCollectPosition.value.splice(index, 1);
+  emit("update-collect-position", localCollectPosition.value);
+};
+
+// Function to compute the style for each item
+const getItemStyle = (item: {
+  position: { x: number; y: number };
+  width: number;
+  height: number;
+}): CSSProperties => {
+  return {
+    position: "absolute",
+    top: `${item.position.y}px`,
+    left: `${item.position.x}px`,
+    width: `${item.width}px`,
+    height: `${item.height}px`,
+    pointerEvents: "auto",
+  };
+};
+
+// Update label
+const updateLabel = (index: number, newLabel: string) => {
+  localCollectPosition.value[index].label = newLabel;
+  emit("update-collect-position", localCollectPosition.value);
+};
+
+// Hint style
 const hintStyle = computed<CSSProperties>(() => {
   return {
     position: "absolute",
@@ -146,25 +201,8 @@ const hintStyle = computed<CSSProperties>(() => {
     fontSize: "12px",
   };
 });
-// Function to compute style for each collected item
-const getItemStyle = (item: {
-  position: { x: number; y: number };
-  dimensions: { width: number; height: number };
-}): CSSProperties => {
-  return {
-    position: "absolute",
-    top: `${item.position.y}px`,
-    left: `${item.position.x}px`,
-    width: `${item.dimensions.width}px`,
-    height: `${item.dimensions.height}px`,
-    pointerEvents: "auto",
-  };
-};
-const updateLabel = (index: number, newLabel: string) => {
-  collectPosition.value[index].label = newLabel;
-  emit("update-collect-position", collectPosition.value);
-};
 </script>
+
 <style scoped>
 .quiz-edit-container {
   margin: auto;

@@ -104,7 +104,8 @@ watch(
         ...item,
         id: `snap${index}`,
         list: 2,
-        dimensions: { width: item.width, height: item.height },
+        width: item.width,
+        height: item.height,
       };
     });
     items.value = renderData.map((item, index) => {
@@ -112,10 +113,8 @@ watch(
         ...item,
         id: `${index}`,
         list: 1,
-        dimensions: {
-          width: item.width,
-          height: item.height,
-        },
+        width: item.width,
+        height: item.height,
         position: { x: iniValue[index].x, y: iniValue[index].y },
       };
     });
@@ -176,11 +175,6 @@ function onDrop(evt: DragEvent, list: number, snapItem?: Item) {
     y: snapItem
       ? snapItem.position.y
       : evt.clientY - rect.top - initialMousePosition.value.offsetY,
-  };
-
-  item.dimensions = {
-    width: item.dimensions.width,
-    height: item.dimensions.height,
   };
 }
 
