@@ -11,7 +11,8 @@ declare module "@vue/runtime-core" {
 export interface Item {
   id: string;
   label: string;
-  dimensions: { width: number; height: number };
+  width: number; 
+  height: number;
   position: { x: number; y: number };
   list: number;
 }
@@ -19,14 +20,15 @@ export interface Item {
 export interface QuizOption {
   id: string;
   label: string;
-  dimensions: { width: number; height: number };
+  width: number; 
+  height: number;
   position: { x: number; y: number };
   list?: number;
 }
 
 export interface DDquizFormData {
   imageFile?: File;
-  image: string;
+  image: string | undefined;
   collectPosition: QuizOption[];
 }
 
@@ -45,4 +47,17 @@ export interface OptionsDatabase {
   width: number;
   height: number;
   label: string;
+}
+
+export interface DRAG_DROP_LIST {
+  id: string;
+  position: { x: number; y: number };
+  width: number;
+  height: number;
+  label: string;
+}
+
+export interface QUIZ_QUESTION_DRAG_DROP {
+  imgUrl: string;
+  optionsList: DRAG_DROP_LIST[];
 }
