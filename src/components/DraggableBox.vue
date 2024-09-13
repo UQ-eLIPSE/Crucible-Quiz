@@ -39,7 +39,15 @@
       </div>
     </div>
 
-    <p v-if="showResult">{{ result }}</p>
+    <p
+      v-if="showResult"
+      :class="{
+        'text-correct': result,
+        'text-incorrect': !result,
+      }"
+    >
+      {{ score }}
+    </p>
     <button class="submit-button" @click="handleSubmit">Submit</button>
   </div>
 </template>
@@ -68,8 +76,10 @@ const draggedItem = ref<Item | null>(null);
 const initialMousePosition = ref<{ offsetX: number; offsetY: number } | null>(
   null
 );
+const emit = defineEmits(["submit-answer"]);
 const showResult = ref<boolean>(false);
-const result = ref<{ label: string; isCorrect: boolean }[]>([]);
+const result = ref<boolean>(false);
+const score = ref<string>("");
 
 const getImagePosition = () => {
   if (imgRef.value) {
@@ -172,16 +182,31 @@ function onDrop(evt: DragEvent, list: number, snapItem?: Item) {
     width: item.dimensions.width,
     height: item.dimensions.height,
   };
-  if (!snapItem) return;
-  snapItem && snapItem.label === item?.label
-    ? result.value?.push({ label: snapItem?.label, isCorrect: true })
-    : result.value?.push({ label: snapItem?.label, isCorrect: false });
 }
 
 function handleSubmit() {
   showResult.value = true;
 
-  return result.value;
+  const totalItems = snapItems.value.length;
+  let correctItems = 0;
+
+  listTwo.value.forEach((item) => {
+    const matchingSnapItem = snapItems.value.find(
+      (snapItem) => snapItem.id === `snap${item.id}`
+    );
+    if (
+      matchingSnapItem &&
+      item.position.x === matchingSnapItem.position.x &&
+      item.position.y === matchingSnapItem.position.y
+    ) {
+      correctItems += 1;
+    }
+  });
+
+  score.value = `${correctItems} out of ${totalItems} are correct`;
+
+  result.value = correctItems === totalItems;
+  emit("submit-answer", result.value);
 }
 </script>
 
@@ -249,5 +274,17 @@ img {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+}
+
+.text-correct {
+  background-color: lightgreen;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.text-incorrect {
+  background-color: red;
+  padding: 10px;
+  border-radius: 5px;
 }
 </style>
