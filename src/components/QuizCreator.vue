@@ -12,21 +12,10 @@
     <form action="" @submit.prevent="handleSubmit">
       <label for="drag-drop-image-upload" v-if="quizType == 'Image'">
         Upload:
-        <input
-          id="drag-drop-image-upload"
-          type="file"
-          accept="image/*"
-          @change="(event) => handleFileInput(event)"
-        />
+        <input id="drag-drop-image-upload" type="file" accept="image/*" @change="(event) => handleFileInput(event)" />
       </label>
-      <TextImage
-        v-if="quizType == 'Text'"
-        @update-textimage-src="handleTxtImageSrcUpdate"
-      />
-      <QuizEdit
-        :image-url="imageSrc"
-        @update-collect-position="handlePosition"
-      />
+      <TextImage v-if="quizType == 'Text'" @update-textimage-src="handleTxtImageSrcUpdate" />
+      <QuizEdit :image-url="imageSrc" @update-collect-position="handlePosition" />
       <!-- todo: Handle Submit data to database -->
       <input type="submit" value="Save" />
     </form>
@@ -39,6 +28,7 @@ import { QuizOption, DDquizFormData } from "@/type";
 import QuizEdit from "./QuizEdit.vue";
 import TextImage from "./TextImage.vue";
 import { handleSubmitData } from "../dataAccessLayer.ts";
+import { base64ToFile } from "../utils"
 
 const quizType = ref("Image");
 const imageSrc = ref();
@@ -49,6 +39,11 @@ const imageFile = ref<File>();
 const emit = defineEmits(["save-items"]);
 
 const handleTxtImageSrcUpdate = (src: string) => {
+  const fileName = 'image.jpeg'
+  const file = base64ToFile(src, fileName)
+  console.log("string to file")
+  console.log(file)
+  imageFile.value = file
   imageSrc.value = src;
 };
 
@@ -79,18 +74,22 @@ const handleSubmit = () => {
   width: 100%;
   margin-bottom: 2em;
 }
+
 form {
   position: relative;
 }
+
 input {
   margin-bottom: 2em;
   font-size: large;
   box-shadow: 5px 5px 5px rgb(223, 222, 222) inset;
 }
+
 input[type="submit"] {
   position: absolute;
   right: 0;
 }
+
 textarea {
   width: 100%;
   resize: vertical;
