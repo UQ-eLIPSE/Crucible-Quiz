@@ -88,7 +88,7 @@ const vt = ["onDragstart", "onDragend"], R = /* @__PURE__ */ F({
     height: 40,
     label: "testdata24"
   }
-], ft = (e) => (I("data-v-274e68db"), e = e(), E(), e), Xt = /* @__PURE__ */ ft(() => /* @__PURE__ */ s("h3", null, "Drag & Drop Quiz Render", -1)), bt = { class: "container-ddQuiz" }, wt = { class: "dropped-item-area" }, pt = { class: "drop-zone" }, it = ["src"], Ht = ["onDrop"], Vt = /* @__PURE__ */ F({
+], ft = (e) => (I("data-v-f5ff6c37"), e = e(), E(), e), Xt = /* @__PURE__ */ ft(() => /* @__PURE__ */ s("h3", null, "Drag & Drop Quiz Render", -1)), bt = { class: "container-ddQuiz" }, wt = { class: "dropped-item-area" }, pt = { class: "drop-zone" }, it = ["src"], Ht = ["onDrop"], Vt = /* @__PURE__ */ F({
   __name: "DraggableBox",
   props: {
     dragQuestion: {},
@@ -211,7 +211,7 @@ const vt = ["onDragstart", "onDragend"], R = /* @__PURE__ */ F({
             }, null, 8, ["item-list", "img-position"]),
             (H(!0), z(g, null, M(d.value, (X) => (H(), z("div", {
               key: X.id,
-              style: T(N(X)),
+              style: T([N(X), "background-color: rgba(255, 99, 71, 0.5)"]),
               class: "snap-position",
               onDrop: (V) => B(V, 2, X),
               onDragover: l[3] || (l[3] = y(() => {
@@ -240,7 +240,7 @@ const vt = ["onDragstart", "onDragend"], R = /* @__PURE__ */ F({
   for (const [a, u] of b)
     t[a] = u;
   return t;
-}, zt = /* @__PURE__ */ K(Vt, [["__scopeId", "data-v-274e68db"]]), Ot = { class: "edit-container" }, ht = { class: "image-container" }, Pt = ["src"], jt = ["onClick"], xt = ["for"], Dt = ["id", "value", "onInput"], Nt = /* @__PURE__ */ F({
+}, zt = /* @__PURE__ */ K(Vt, [["__scopeId", "data-v-f5ff6c37"]]), Ot = { class: "edit-container" }, ht = { class: "image-container" }, Pt = ["src"], jt = ["onClick"], xt = ["for"], Dt = ["id", "value", "onInput"], Nt = /* @__PURE__ */ F({
   __name: "QuizEdit",
   props: {
     imageUrl: {}
