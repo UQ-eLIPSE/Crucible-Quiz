@@ -41,8 +41,6 @@ const emit = defineEmits(["save-items"]);
 const handleTxtImageSrcUpdate = (src: string) => {
   const fileName = 'image.jpeg'
   const file = base64ToFile(src, fileName)
-  console.log("string to file")
-  console.log(file)
   imageFile.value = file
   imageSrc.value = src;
 };
