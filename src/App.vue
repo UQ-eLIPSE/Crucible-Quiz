@@ -26,9 +26,11 @@
 import { ref } from "vue";
 import DraggableBox from "./components/DraggableBox.vue";
 import QuizCreator from "./components/QuizCreator.vue";
-import { sampleDatabase } from "./dataAccessLayer";
-import { sampleQuizQuestion } from "./dataAccessLayer";
-import { imageSource } from "./dataAccessLayer";
+import {
+  sampleDatabase,
+  sampleQuizQuestion,
+  imageSource,
+} from "./dataAccessLayer";
 
 const showCreator = ref(false);
 const showDraggableBox = ref(false);
