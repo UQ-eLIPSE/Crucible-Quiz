@@ -39,6 +39,7 @@ import { QuizOption, DDquizFormData, QUIZ_QUESTION_DRAG_DROP } from "@/type";
 import QuizEdit from "./QuizEdit.vue";
 import TextImage from "./TextImage.vue";
 import { handleSubmitData } from "../dataAccessLayer.ts";
+import { base64ToFile } from "../utils";
 
 const quizType = ref("Image");
 const imageSrc = ref<string | undefined>();
@@ -71,6 +72,9 @@ watch(
 
 // Handle form actions
 const handleTxtImageSrcUpdate = (src: string) => {
+  const fileName = "image.jpeg";
+  const file = base64ToFile(src, fileName);
+  imageFile.value = file;
   imageSrc.value = src;
 };
 
@@ -95,3 +99,40 @@ const handleSubmit = () => {
   emit("save-items", formdata.value);
 };
 </script>
+
+<style scoped>
+.quiz-edit-container {
+  margin: auto;
+  width: 100%;
+  margin-bottom: 2em;
+}
+
+form {
+  position: relative;
+}
+
+input {
+  margin-bottom: 2em;
+  font-size: large;
+  box-shadow: 5px 5px 5px rgb(223, 222, 222) inset;
+}
+
+input[type="submit"] {
+  position: absolute;
+  right: 0;
+}
+
+textarea {
+  width: 100%;
+  resize: vertical;
+}
+
+button {
+  margin-top: 10px;
+}
+
+img {
+  margin-top: 20px;
+  max-width: 100%;
+}
+</style>

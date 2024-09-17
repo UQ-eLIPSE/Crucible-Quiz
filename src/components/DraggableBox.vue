@@ -2,18 +2,8 @@
   <h3>Drag & Drop Quiz Render</h3>
   <div class="container-ddQuiz">
     <!-- Initial D&D Quiz options -->
-    <div
-      class="drop-zone"
-      @drop="onDrop($event, 1)"
-      @dragover.prevent
-      @dragenter.prevent
-    >
-      <DragItems
-        :item-list="listOne"
-        :img-position="imagePosition"
-        @start-drag="startDrag"
-        @end-drag="endDrag"
-      />
+    <div class="drop-zone" @drop="onDrop($event, 1)" @dragover.prevent @dragenter.prevent>
+      <DragItems :item-list="listOne" :img-position="imagePosition" @start-drag="startDrag" @end-drag="endDrag" />
     </div>
     <!-- Drop Options in the picture Zone -->
 
@@ -21,31 +11,17 @@
       <div class="drop-zone">
         <img ref="imgRef" :src="imageUrl" alt="" @load="getImagePosition" />
 
-        <DragItems
-          :item-list="listTwo"
-          :img-position="imagePosition"
-          @start-drag="startDrag"
-          @end-drag="endDrag"
-        />
-        <div
-          v-for="ele in snapItems"
-          :key="ele.id"
-          :style="itemStyle(ele)"
-          class="snap-position"
-          @drop="onDrop($event, 2, ele)"
-          @dragover.prevent
-          @dragenter.prevent
-        ></div>
+        <DragItems :item-list="listTwo" :img-position="imagePosition" @start-drag="startDrag" @end-drag="endDrag" />
+        <div v-for="ele in snapItems" :key="ele.id"
+          :style="[itemStyle(ele), 'background-color: rgba(255, 99, 71, 0.5)']" class="snap-position"
+          @drop="onDrop($event, 2, ele)" @dragover.prevent @dragenter.prevent></div>
       </div>
     </div>
 
-    <p
-      v-if="showResult"
-      :class="{
-        'text-correct': result,
-        'text-incorrect': !result,
-      }"
-    >
+    <p v-if="showResult" :class="{
+      'text-correct': result,
+      'text-incorrect': !result,
+    }">
       {{ score }}
     </p>
     <button class="submit-button" @click="handleSubmit">Submit</button>
