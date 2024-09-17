@@ -1,4 +1,4 @@
-import { DDquizFormData } from "./type";
+import { DDquizFormData, QUIZ_QUESTION_DRAG_DROP } from "./type";
 
 export const handleSubmitData = (formData: DDquizFormData) => {
   const jsonData = JSON.stringify(formData, null, 2);
@@ -10,10 +10,12 @@ export const handleSubmitData = (formData: DDquizFormData) => {
   }
 };
 
+
 export const imageSource = "https://stluc.manta.uqcloud.net/elipse/public/CHUBS/VETS-TST/undefined/66de8da3bf6c10611cc15078.png";
 
 export const sampleDatabase = [
   {
+    id : "1",
     position: {
       x: 19,
       y: 19.88330078125,
@@ -23,6 +25,7 @@ export const sampleDatabase = [
     label: "testdata",
   },
   {
+    id : "2",
     position: {
       x: 190,
       y: 190.88330078125,
@@ -32,6 +35,7 @@ export const sampleDatabase = [
     label: "testdata2",
   },
   {
+    id : "3",
     position: {
       x: 100,
       y: 100.88330078125,
@@ -41,6 +45,7 @@ export const sampleDatabase = [
     label: "testdata3",
   },
   {
+    id : "4",
     position: {
       x: 140,
       y: 140.88330078125,
@@ -50,3 +55,8 @@ export const sampleDatabase = [
     label: "testdata24",
   },
 ];
+
+export const sampleQuizQuestion: QUIZ_QUESTION_DRAG_DROP = {
+  imgUrl: imageSource,
+  optionsList: sampleDatabase,
+}

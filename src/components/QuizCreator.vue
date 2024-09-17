@@ -12,36 +12,69 @@
     <form action="" @submit.prevent="handleSubmit">
       <label for="drag-drop-image-upload" v-if="quizType == 'Image'">
         Upload:
-        <input id="drag-drop-image-upload" type="file" accept="image/*" @change="(event) => handleFileInput(event)" />
+        <input
+          id="drag-drop-image-upload"
+          type="file"
+          accept="image/*"
+          @change="(event) => handleFileInput(event)"
+        />
       </label>
-      <TextImage v-if="quizType == 'Text'" @update-textimage-src="handleTxtImageSrcUpdate" />
-      <QuizEdit :image-url="imageSrc" @update-collect-position="handlePosition" />
-      <!-- todo: Handle Submit data to database -->
+      <TextImage
+        v-if="quizType == 'Text'"
+        @update-textimage-src="handleTxtImageSrcUpdate"
+      />
+      <QuizEdit
+        :image-url="imageSrc"
+        :collect-position="collectPosition"
+        @update-collect-position="handlePosition"
+      />
       <input type="submit" value="Save" />
     </form>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { QuizOption, DDquizFormData } from "@/type";
+import { ref, watch, PropType } from "vue";
+import { QuizOption, DDquizFormData, QUIZ_QUESTION_DRAG_DROP } from "@/type";
 import QuizEdit from "./QuizEdit.vue";
 import TextImage from "./TextImage.vue";
 import { handleSubmitData } from "../dataAccessLayer.ts";
-import { base64ToFile } from "../utils"
+import { base64ToFile } from "../utils";
 
 const quizType = ref("Image");
-const imageSrc = ref();
+const imageSrc = ref<string | undefined>();
 const collectPosition = ref<QuizOption[]>([]);
 const formdata = ref<DDquizFormData>({} as DDquizFormData);
 const imageFile = ref<File>();
 
+// Accept questions as prop
+const props = defineProps({
+  questions: {
+    type: Object as PropType<QUIZ_QUESTION_DRAG_DROP>,
+    required: false,
+  },
+});
+
 const emit = defineEmits(["save-items"]);
 
+// Watch the questions prop and auto-populate if present
+watch(
+  () => props.questions,
+  (newQuestions) => {
+    if (newQuestions) {
+      // Populate form with existing questions data
+      imageSrc.value = newQuestions.imgUrl;
+      collectPosition.value = newQuestions.optionsList;
+    }
+  },
+  { immediate: true }
+);
+
+// Handle form actions
 const handleTxtImageSrcUpdate = (src: string) => {
-  const fileName = 'image.jpeg'
-  const file = base64ToFile(src, fileName)
-  imageFile.value = file
+  const fileName = "image.jpeg";
+  const file = base64ToFile(src, fileName);
+  imageFile.value = file;
   imageSrc.value = src;
 };
 
@@ -61,8 +94,9 @@ const handleSubmit = () => {
     image: imageSrc.value,
     collectPosition: collectPosition.value,
   };
+  console.log(formdata.value);
   handleSubmitData(formdata.value); // might have to remove it later on
-  emit("save-items", formdata);
+  emit("save-items", formdata.value);
 };
 </script>
 

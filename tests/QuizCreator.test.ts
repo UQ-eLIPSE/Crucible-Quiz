@@ -58,6 +58,6 @@ describe("QuizEdit", () => {
     expect(labelInput.exists()).toBe(true);
 
     await labelInput.setValue("horse");
-    expect(wrapper.vm.collectPosition[0].label).toBe("horse");
+    expect(wrapper.vm.localCollectPosition[0].label).toBe("horse");
   });
 });

@@ -30,8 +30,8 @@ export function getItemStyle(item: Item) {
   return {
     top: item.position.y + "px",
     left: item.position.x + "px",
-    width: item.dimensions.width + "px",
-    height: item.dimensions.height + "px",
+    width: item.width + "px",
+    height: item.height + "px",
   };
 }
 

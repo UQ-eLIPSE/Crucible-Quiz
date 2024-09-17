@@ -10,7 +10,7 @@
     </div>
     <hr />
     <div v-if="showCreator" class="create-ddQuiz-container">
-      <QuizCreator />
+      <QuizCreator :questions="sampleQuizQuestion" />
     </div>
     <hr />
     <div v-if="showDraggableBox" class="ddQuiz-container">
@@ -26,8 +26,11 @@
 import { ref } from "vue";
 import DraggableBox from "./components/DraggableBox.vue";
 import QuizCreator from "./components/QuizCreator.vue";
-import { sampleDatabase } from "./dataAccessLayer";
-import { imageSource } from "./dataAccessLayer";
+import {
+  sampleDatabase,
+  sampleQuizQuestion,
+  imageSource,
+} from "./dataAccessLayer";
 
 const showCreator = ref(false);
 const showDraggableBox = ref(false);
