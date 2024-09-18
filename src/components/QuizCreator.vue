@@ -76,12 +76,14 @@ const handleTxtImageSrcUpdate = (src: string) => {
   const file = base64ToFile(src, fileName);
   imageFile.value = file;
   imageSrc.value = src;
+  collectPosition.value = [];
 };
 
 const handleFileInput = (e: Event) => {
   const file = (e.target as HTMLInputElement).files;
   imageSrc.value = file ? URL.createObjectURL(file[0]) : undefined;
   imageFile.value = file ? file[0] : undefined;
+  collectPosition.value = [];
 };
 
 const handlePosition = (newPositions: QuizOption[]) => {
