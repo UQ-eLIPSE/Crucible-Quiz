@@ -42,7 +42,7 @@ import { handleSubmitData } from "../dataAccessLayer.ts";
 import { base64ToFile } from "../utils";
 
 const quizType = ref("Image");
-const imageSrc = ref<string | undefined>();
+const imageSrc = ref<string>("");
 const collectPosition = ref<QuizOption[]>([]);
 const formdata = ref<DDquizFormData>({} as DDquizFormData);
 const imageFile = ref<File>();
@@ -76,12 +76,14 @@ const handleTxtImageSrcUpdate = (src: string) => {
   const file = base64ToFile(src, fileName);
   imageFile.value = file;
   imageSrc.value = src;
+  collectPosition.value = []; // clear all the labels once uploading a new image
 };
 
 const handleFileInput = (e: Event) => {
   const file = (e.target as HTMLInputElement).files;
-  imageSrc.value = file ? URL.createObjectURL(file[0]) : undefined;
+  imageSrc.value = file ? URL.createObjectURL(file[0]) : "";
   imageFile.value = file ? file[0] : undefined;
+  collectPosition.value = []; // clear all the labels once uploading a new image
 };
 
 const handlePosition = (newPositions: QuizOption[]) => {

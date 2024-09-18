@@ -28,7 +28,7 @@ export interface QuizOption {
 
 export interface DDquizFormData {
   imageFile?: File;
-  image: string | undefined;
+  image: string ;
   collectPosition: QuizOption[];
 }
 
