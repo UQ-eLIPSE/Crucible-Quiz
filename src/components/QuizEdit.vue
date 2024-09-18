@@ -109,6 +109,7 @@ watch(
 watch(
   () => props.imageUrl,
   (newImageUrl) => {
+    console.log(newImageUrl);
     localImageUrl.value = newImageUrl || "";
   },
   { immediate: true }

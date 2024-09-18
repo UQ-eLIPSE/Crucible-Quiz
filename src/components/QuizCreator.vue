@@ -42,7 +42,7 @@ import { handleSubmitData } from "../dataAccessLayer.ts";
 import { base64ToFile } from "../utils";
 
 const quizType = ref("Image");
-const imageSrc = ref<string | undefined>();
+const imageSrc = ref<string | undefined>("");
 const collectPosition = ref<QuizOption[]>([]);
 const formdata = ref<DDquizFormData>({} as DDquizFormData);
 const imageFile = ref<File>();
