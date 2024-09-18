@@ -1,27 +1,50 @@
 <template>
-  <h3>Drag & Drop Quiz Render</h3>
   <div class="container-ddQuiz">
-    <!-- Initial D&D Quiz options -->
-    <div class="drop-zone" @drop="onDrop($event, 1)" @dragover.prevent @dragenter.prevent>
-      <DragItems :item-list="listOne" :img-position="imagePosition" @start-drag="startDrag" @end-drag="endDrag" />
-    </div>
     <!-- Drop Options in the picture Zone -->
-
     <div class="dropped-item-area">
       <div class="drop-zone">
         <img ref="imgRef" :src="imageUrl" alt="" @load="getImagePosition" />
-
-        <DragItems :item-list="listTwo" :img-position="imagePosition" @start-drag="startDrag" @end-drag="endDrag" />
-        <div v-for="ele in snapItems" :key="ele.id"
-          :style="[itemStyle(ele), 'background-color: rgba(255, 99, 71, 0.5)']" class="snap-position"
-          @drop="onDrop($event, 2, ele)" @dragover.prevent @dragenter.prevent></div>
+        <DragItems
+          :item-list="listTwo"
+          :img-position="imagePosition"
+          @start-drag="startDrag"
+          @end-drag="endDrag"
+        />
+        <div
+          v-for="ele in snapItems"
+          :key="ele.id"
+          :style="[itemStyle(ele), 'background-color: rgba(255, 99, 71, 0.5)']"
+          class="snap-position"
+          @drop="onDrop($event, 2, ele)"
+          @dragover.prevent
+          @dragenter.prevent
+        ></div>
       </div>
     </div>
 
-    <p v-if="showResult" :class="{
-      'text-correct': result,
-      'text-incorrect': !result,
-    }">
+    <!-- Now the drop-zone below the image -->
+    <div
+      class="drop-zone adjustable-drop-zone"
+      :style="{ width: imageWidth + 'px', height: height + 'px' }"
+      @drop="onDrop($event, 1)"
+      @dragover.prevent
+      @dragenter.prevent
+    >
+      <DragItems
+        :item-list="listOne"
+        :img-position="imagePosition"
+        @start-drag="startDrag"
+        @end-drag="endDrag"
+      />
+    </div>
+
+    <p
+      v-if="showResult"
+      :class="{
+        'text-correct': result,
+        'text-incorrect': !result,
+      }"
+    >
       {{ score }}
     </p>
     <button class="submit-button" @click="handleSubmit">Submit</button>
@@ -52,10 +75,13 @@ const draggedItem = ref<Item | null>(null);
 const initialMousePosition = ref<{ offsetX: number; offsetY: number } | null>(
   null
 );
+const options = ref<OptionsDatabase[]>([]);
 const emit = defineEmits(["submit-answer"]);
 const showResult = ref<boolean>(false);
 const result = ref<boolean>(false);
 const score = ref<string>("");
+const imageWidth = ref<number>(300);
+const height = ref<number>(30);
 
 const getImagePosition = () => {
   if (imgRef.value) {
@@ -64,34 +90,40 @@ const getImagePosition = () => {
       imgX: rect.x + window.scrollX,
       imgY: rect.y + window.scrollY,
     };
-  }
-};
-const itemStyle = (ele: Item) => {
-  return getItemStyle(ele);
-};
-// This is the updating of reactive props received from main
-watch(
-  () => dragQuestion.value,
-  (newVal: OptionsDatabase[] | undefined) => {
-    const renderData = newVal === undefined ? sampleDatabase : newVal;
-    const iniValue = getInitialVal(renderData, 300);
-    snapItems.value = renderData.map((item, index) => {
-      return {
-        ...item,
-        id: `snap${index}`,
-        list: 2,
-        width: item.width,
-        height: item.height,
-      };
-    });
-    items.value = renderData.map((item, index) => {
+    imageWidth.value = rect.width;
+    const { positions, totalHeight } = getInitialVal(
+      options.value,
+      imageWidth.value
+    );
+    height.value = totalHeight;
+    items.value = options.value.map((item, index) => {
       return {
         ...item,
         id: `${index}`,
         list: 1,
         width: item.width,
         height: item.height,
-        position: { x: iniValue[index].x, y: iniValue[index].y },
+        position: { x: positions[index].x, y: positions[index].y },
+      };
+    });
+  }
+};
+const itemStyle = (ele: Item) => {
+  return getItemStyle(ele);
+};
+
+watch(
+  () => dragQuestion.value,
+  (newVal: OptionsDatabase[] | undefined) => {
+    console.log("hello");
+    options.value = newVal === undefined ? sampleDatabase : newVal;
+    snapItems.value = options.value.map((item, index) => {
+      return {
+        ...item,
+        id: `snap${index}`,
+        list: 2,
+        width: item.width,
+        height: item.height,
       };
     });
   },
@@ -101,6 +133,12 @@ watch(
   () => imageSource.value,
   (newImageSource: string) => {
     imageUrl.value = newImageSource || fallbackImg;
+    console.log("hey", imageWidth.value);
+    if (imgRef.value) {
+      const rect = imgRef.value.getBoundingClientRect();
+      imageWidth.value = rect.width;
+      console.log("hey", imageWidth.value);
+    }
   },
   { immediate: true }
 );
@@ -187,20 +225,34 @@ function handleSubmit() {
   margin: auto;
   width: 100%;
   gap: 10px;
+  background-color: white;
 }
 
 .drop-zone {
   background-color: #dfdfdf;
   margin: auto;
-  min-height: 300px;
-  min-width: 300px;
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.adjustable-drop-zone {
+  margin-top: 10px;
+  min-width: fit-content;
+  background-color: #dfdfdf;
+  border: 1px solid #ccc;
+}
+
+.drop-zone img {
+  position: relative;
+  max-width: 100%;
+  height: auto;
 }
 
 .dropped-item-area {
   display: flex;
   flex-wrap: wrap;
-
   width: fit-content;
   color: #6c6868;
 }
@@ -222,12 +274,6 @@ td {
 
 tr {
   width: 100%;
-}
-
-img {
-  position: relative;
-  max-width: 100%;
-  height: auto;
 }
 
 .snap-position {

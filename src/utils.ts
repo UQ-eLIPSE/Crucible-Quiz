@@ -8,23 +8,28 @@ export const getInitialVal = (
   let currentX = 2;
   let currentY = 2;
   let rowHeight = 0;
+  let totalHeight = 0;
 
-  return items.map((item, index) => {
+  const positions = items.map((item, index) => {
     if (currentX + item.width > dropZoneWidth) {
       currentX = 0;
-      currentY += rowHeight + 2;
+      currentY += rowHeight + 2; 
       rowHeight = 0;
     }
 
     rowHeight = Math.max(rowHeight, item.height);
 
     const position = { id: index, x: currentX, y: currentY };
-
-    currentX += item.width + 2;
+    currentX += item.width + 2; 
 
     return position;
   });
+
+  totalHeight = currentY + rowHeight + 10;
+
+  return { positions, totalHeight };
 };
+
 
 export function getItemStyle(item: Item) {
   return {

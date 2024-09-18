@@ -50,9 +50,6 @@ const showDraggableBox = ref(false);
 button {
   color: rgb(211, 205, 205);
 }
-.ddQuiz-container {
-  border: 2px solid grey;
-}
 .create-ddQuiz-container {
   display: flex;
   flex-direction: column;
