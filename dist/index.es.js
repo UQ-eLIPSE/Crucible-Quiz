@@ -1,4 +1,4 @@
-import { defineComponent as M, openBlock as V, createElementBlock as z, Fragment as Z, renderList as K, normalizeStyle as T, toDisplayString as S, toRefs as rt, ref as v, watch as m, computed as J, createElementVNode as f, createVNode as q, withModifiers as y, normalizeClass as $, createCommentVNode as A, withDirectives as B, vShow as ut, createTextVNode as tt, vModelText as dt, vModelRadio as I, createBlock as lt, pushScopeId as at, popScopeId as st } from "vue";
+import { defineComponent as L, openBlock as V, createElementBlock as z, Fragment as F, renderList as K, normalizeStyle as T, toDisplayString as S, toRefs as rt, ref as v, watch as M, computed as J, createElementVNode as f, createVNode as q, withModifiers as y, normalizeClass as $, createCommentVNode as A, withDirectives as B, vShow as ut, createTextVNode as tt, vModelText as dt, vModelRadio as I, createBlock as lt, pushScopeId as at, popScopeId as st } from "vue";
 const vt = (t, o) => {
   let e = 2, d = 2, l = 0, a = 0;
   const r = t.map((n, b) => {
@@ -34,7 +34,7 @@ function Xt(t, o) {
   const e = t.split(",")[0].split(":")[1].split(";")[0], d = ft(t, e);
   return new File([d], o, { type: e });
 }
-const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
+const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ L({
   __name: "DragItems",
   props: {
     itemList: {},
@@ -43,7 +43,7 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
   emits: ["start-drag", "end-drag"],
   setup(t, { emit: o }) {
     const e = o, d = (l) => et(l);
-    return (l, a) => (V(!0), z(Z, null, K(l.itemList, (r) => (V(), z("div", {
+    return (l, a) => (V(!0), z(F, null, K(l.itemList, (r) => (V(), z("div", {
       key: r.id,
       class: "drag-el",
       style: T(d(r)),
@@ -100,7 +100,7 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
     height: 40,
     label: "testdata24"
   }
-], wt = { class: "container-ddQuiz" }, Ht = { class: "dropped-item-area" }, Vt = { class: "drop-zone" }, zt = ["src"], Ot = ["onDrop"], ht = /* @__PURE__ */ M({
+], wt = { class: "container-ddQuiz" }, Ht = { class: "dropped-item-area" }, Vt = { class: "drop-zone" }, zt = ["src"], Ot = ["onDrop"], ht = /* @__PURE__ */ L({
   __name: "DraggableBox",
   props: {
     dragQuestion: {},
@@ -110,16 +110,16 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
   setup(t, { emit: o }) {
     const e = t, { dragQuestion: d, imageSource: l } = rt(e), a = v(_), r = v([]), n = v([]), b = v(null), O = v(null), H = v(null), P = v(
       null
-    ), x = v([]), p = o, i = v(!1), h = v(!1), G = v(""), F = v(300), U = v(30), u = () => {
+    ), x = v([]), p = o, i = v(!1), h = v(!1), Z = v(""), m = v(300), U = v(30), u = () => {
       if (b.value) {
         const c = b.value.getBoundingClientRect();
         O.value = {
           imgX: c.x + window.scrollX,
           imgY: c.y + window.scrollY
-        }, F.value = c.width;
+        }, m.value = c.width;
         const s = ot([...x.value]), { positions: X, totalHeight: g } = vt(
           s,
-          F.value
+          m.value
         );
         U.value = g, r.value = s.map((N, C) => ({
           ...N,
@@ -131,7 +131,7 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
         }));
       }
     }, D = (c) => et(c);
-    m(
+    M(
       () => d.value,
       (c) => {
         x.value = c === void 0 ? pt : c, console.log(x.value), n.value = x.value.map((s, X) => ({
@@ -144,7 +144,7 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
         }));
       },
       { immediate: !0 }
-    ), m(
+    ), M(
       () => l.value,
       (c) => {
         a.value = c || _;
@@ -187,71 +187,73 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
           (N) => N.id === `snap${X.id}`
         );
         g && X.position.x === g.position.x && X.position.y === g.position.y && (s += 1);
-      }), G.value = `${s} out of ${c} are correct`, h.value = s === c, p("submit-answer", h.value);
+      }), s === c ? Z.value = "Well Done!" : Z.value = "Try Again!", h.value = s === c, p("submit-answer", h.value);
     }
-    return (c, s) => (V(), z("div", wt, [
-      f("div", Ht, [
-        f("div", Vt, [
-          f("img", {
-            ref_key: "imgRef",
-            ref: b,
-            src: a.value,
-            alt: "",
-            onLoad: u
-          }, null, 40, zt),
+    return (c, s) => (V(), z(F, null, [
+      f("div", wt, [
+        f("div", Ht, [
+          f("div", Vt, [
+            f("img", {
+              ref_key: "imgRef",
+              ref: b,
+              src: a.value,
+              alt: "",
+              onLoad: u
+            }, null, 40, zt),
+            q(E, {
+              "item-list": j.value,
+              "img-position": O.value,
+              onStartDrag: W,
+              onEndDrag: R
+            }, null, 8, ["item-list", "img-position"]),
+            (V(!0), z(F, null, K(n.value, (X) => (V(), z("div", {
+              key: X.id,
+              style: T([D(X)]),
+              class: "snap-position",
+              onDrop: (g) => Q(g, 2, X),
+              onDragover: s[0] || (s[0] = y(() => {
+              }, ["prevent"])),
+              onDragenter: s[1] || (s[1] = y(() => {
+              }, ["prevent"]))
+            }, S(X.label), 45, Ot))), 128))
+          ])
+        ]),
+        f("div", {
+          class: "drop-zone adjustable-drop-zone",
+          style: T({ width: m.value + "px", height: U.value + "px" }),
+          onDrop: s[2] || (s[2] = (X) => Q(X, 1)),
+          onDragover: s[3] || (s[3] = y(() => {
+          }, ["prevent"])),
+          onDragenter: s[4] || (s[4] = y(() => {
+          }, ["prevent"]))
+        }, [
           q(E, {
-            "item-list": j.value,
+            "item-list": w.value,
             "img-position": O.value,
             onStartDrag: W,
             onEndDrag: R
-          }, null, 8, ["item-list", "img-position"]),
-          (V(!0), z(Z, null, K(n.value, (X) => (V(), z("div", {
-            key: X.id,
-            style: T([D(X)]),
-            class: "snap-position",
-            onDrop: (g) => Q(g, 2, X),
-            onDragover: s[0] || (s[0] = y(() => {
-            }, ["prevent"])),
-            onDragenter: s[1] || (s[1] = y(() => {
-            }, ["prevent"]))
-          }, S(X.label), 45, Ot))), 128))
-        ])
+          }, null, 8, ["item-list", "img-position"])
+        ], 36)
       ]),
-      f("div", {
-        class: "drop-zone adjustable-drop-zone",
-        style: T({ width: F.value + "px", height: U.value + "px" }),
-        onDrop: s[2] || (s[2] = (X) => Q(X, 1)),
-        onDragover: s[3] || (s[3] = y(() => {
-        }, ["prevent"])),
-        onDragenter: s[4] || (s[4] = y(() => {
-        }, ["prevent"]))
-      }, [
-        q(E, {
-          "item-list": w.value,
-          "img-position": O.value,
-          onStartDrag: W,
-          onEndDrag: R
-        }, null, 8, ["item-list", "img-position"])
-      ], 36),
       i.value ? (V(), z("p", {
         key: 0,
         class: $({
           "text-correct": h.value,
           "text-incorrect": !h.value
         })
-      }, S(G.value), 3)) : A("", !0),
+      }, S(Z.value), 3)) : A("", !0),
       f("button", {
         class: "submit-button",
         onClick: nt
       }, "Submit")
-    ]));
+    ], 64));
   }
 }), Y = (t, o) => {
   const e = t.__vccOpts || t;
   for (const [d, l] of o)
     e[d] = l;
   return e;
-}, Pt = /* @__PURE__ */ Y(ht, [["__scopeId", "data-v-01cbe773"]]), jt = { class: "edit-container" }, xt = { class: "image-container" }, Dt = ["src"], Nt = ["onClick"], gt = ["for"], yt = ["id", "value", "onInput"], Tt = /* @__PURE__ */ M({
+}, Pt = /* @__PURE__ */ Y(ht, [["__scopeId", "data-v-1694e855"]]), jt = { class: "edit-container" }, xt = { class: "image-container" }, Dt = ["src"], Nt = ["onClick"], gt = ["for"], yt = ["id", "value", "onInput"], Tt = /* @__PURE__ */ L({
   __name: "QuizEdit",
   props: {
     imageUrl: {},
@@ -279,13 +281,13 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
         y: u.clientY - w
       };
     };
-    m(
+    M(
       () => e.collectPosition,
       (u) => {
         a.value = u || [];
       },
       { immediate: !0 }
-    ), m(
+    ), M(
       () => e.imageUrl,
       (u) => {
         l.value = u || "";
@@ -315,14 +317,14 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
       }), r.value = !1, n.value = { x: 0, y: 0 }, b.value = { x: 0, y: 0 }, d("update-collect-position", a.value);
     }, h = (u) => {
       a.value.splice(u, 1), d("update-collect-position", a.value);
-    }, G = (u) => ({
+    }, Z = (u) => ({
       position: "absolute",
       top: `${u.position.y}px`,
       left: `${u.position.x}px`,
       width: `${u.width}px`,
       height: `${u.height}px`,
       pointerEvents: "auto"
-    }), F = (u, D) => {
+    }), m = (u, D) => {
       a.value[u].label = D, d("update-collect-position", a.value);
     }, U = J(() => ({
       position: "absolute",
@@ -354,15 +356,15 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
           style: T(U.value),
           class: "hint-style"
         }, " Click to finish the selection ", 4)) : A("", !0),
-        (V(!0), z(Z, null, K(a.value, (w, j) => (V(), z("div", {
-          style: T(G(w)),
+        (V(!0), z(F, null, K(a.value, (w, j) => (V(), z("div", {
+          style: T(Z(w)),
           class: "option-item-position",
           key: w.id,
           onClick: () => h(j)
         }, null, 12, Nt))), 128))
       ]),
       f("ul", null, [
-        (V(!0), z(Z, null, K(a.value, (w, j) => (V(), z("li", { key: j }, [
+        (V(!0), z(F, null, K(a.value, (w, j) => (V(), z("li", { key: j }, [
           tt(S(w.position) + " ", 1),
           f("label", {
             for: `option-label-${j}`
@@ -371,13 +373,13 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
             id: `option-label-${j}`,
             type: "text",
             value: w.label,
-            onInput: (W) => F(j, W.target.value)
+            onInput: (W) => m(j, W.target.value)
           }, null, 40, yt)
         ]))), 128))
       ])
     ]));
   }
-}), Ft = /* @__PURE__ */ Y(Tt, [["__scopeId", "data-v-aed38f2a"]]), Zt = { class: "text-image-container" }, mt = /* @__PURE__ */ M({
+}), Ft = /* @__PURE__ */ Y(Tt, [["__scopeId", "data-v-aed38f2a"]]), Zt = { class: "text-image-container" }, mt = /* @__PURE__ */ L({
   __name: "TextImage",
   emits: ["updateTextimageSrc"],
   setup(t, { emit: o }) {
@@ -409,13 +411,13 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
       }, "Convert")
     ]));
   }
-}), Mt = /* @__PURE__ */ Y(mt, [["__scopeId", "data-v-1d742a2f"]]), L = (t) => (at("data-v-8309fba7"), t = t(), st(), t), Lt = /* @__PURE__ */ L(() => /* @__PURE__ */ f("h3", null, "Drag & Drop Question Form", -1)), Gt = { class: "quiz-edit-container" }, Ut = /* @__PURE__ */ L(() => /* @__PURE__ */ f("p", null, "Choose Question Type", -1)), Wt = /* @__PURE__ */ L(() => /* @__PURE__ */ f("label", { for: "image-dd-quiz" }, "Image D&D Question", -1)), Kt = /* @__PURE__ */ L(() => /* @__PURE__ */ f("label", { for: "text-dd-quiz" }, "Text D&D Question", -1)), St = {
+}), Mt = /* @__PURE__ */ Y(mt, [["__scopeId", "data-v-1d742a2f"]]), G = (t) => (at("data-v-8309fba7"), t = t(), st(), t), Lt = /* @__PURE__ */ G(() => /* @__PURE__ */ f("h3", null, "Drag & Drop Question Form", -1)), Gt = { class: "quiz-edit-container" }, Ut = /* @__PURE__ */ G(() => /* @__PURE__ */ f("p", null, "Choose Question Type", -1)), Wt = /* @__PURE__ */ G(() => /* @__PURE__ */ f("label", { for: "image-dd-quiz" }, "Image D&D Question", -1)), Kt = /* @__PURE__ */ G(() => /* @__PURE__ */ f("label", { for: "text-dd-quiz" }, "Text D&D Question", -1)), St = {
   key: 0,
   for: "drag-drop-image-upload"
-}, Jt = /* @__PURE__ */ L(() => /* @__PURE__ */ f("input", {
+}, Jt = /* @__PURE__ */ G(() => /* @__PURE__ */ f("input", {
   type: "submit",
   value: "Save"
-}, null, -1)), At = /* @__PURE__ */ M({
+}, null, -1)), At = /* @__PURE__ */ L({
   __name: "QuizCreator",
   props: {
     questions: {
@@ -426,7 +428,7 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
   emits: ["save-items"],
   setup(t, { emit: o }) {
     const e = v("Image"), d = v(""), l = v([]), a = v({}), r = v(), n = t, b = o;
-    m(
+    M(
       () => n.questions,
       (p) => {
         p && (d.value = p.imgUrl, l.value = p.optionsList);
@@ -448,7 +450,7 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
         collectPosition: l.value
       }, console.log(a.value), it(a.value), b("save-items", a.value);
     };
-    return (p, i) => (V(), z(Z, null, [
+    return (p, i) => (V(), z(F, null, [
       Lt,
       f("div", Gt, [
         f("div", null, [
