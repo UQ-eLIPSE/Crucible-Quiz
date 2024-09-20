@@ -248,12 +248,14 @@ function handleSubmit() {
   position: relative;
   max-width: 100%;
   height: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .dropped-item-area {
   display: flex;
   flex-wrap: wrap;
-  width: fit-content;
   color: #6c6868;
 }
 
