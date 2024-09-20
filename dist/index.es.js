@@ -246,7 +246,7 @@ const ft = ["onDragstart", "onDragend"], I = /* @__PURE__ */ L({
   for (const [d, l] of i)
     e[d] = l;
   return e;
-}, Ot = /* @__PURE__ */ B(zt, [["__scopeId", "data-v-f2242020"]]), ht = { class: "edit-container" }, Pt = { class: "image-container" }, jt = ["src"], xt = ["onClick"], Dt = ["for"], gt = ["id", "value", "onInput"], yt = /* @__PURE__ */ L({
+}, Ot = /* @__PURE__ */ B(zt, [["__scopeId", "data-v-c2e7c8e8"]]), ht = { class: "edit-container" }, Pt = { class: "image-container" }, jt = ["src"], xt = ["onClick"], Dt = ["for"], gt = ["id", "value", "onInput"], yt = /* @__PURE__ */ L({
   __name: "QuizEdit",
   props: {
     imageUrl: {},
