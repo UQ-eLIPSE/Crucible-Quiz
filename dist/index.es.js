@@ -1,4 +1,4 @@
-import { defineComponent as L, openBlock as V, createElementBlock as z, Fragment as F, renderList as K, normalizeStyle as T, toDisplayString as S, toRefs as rt, ref as v, watch as M, computed as J, createElementVNode as f, createVNode as q, withModifiers as y, normalizeClass as $, createCommentVNode as A, withDirectives as B, vShow as ut, createTextVNode as tt, vModelText as dt, vModelRadio as I, createBlock as lt, pushScopeId as at, popScopeId as st } from "vue";
+import { defineComponent as L, openBlock as V, createElementBlock as z, Fragment as m, renderList as K, normalizeStyle as T, toDisplayString as S, toRefs as rt, ref as v, watch as M, computed as J, createElementVNode as f, createVNode as q, withModifiers as y, normalizeClass as $, createCommentVNode as A, withDirectives as B, vShow as ut, createTextVNode as tt, vModelText as dt, vModelRadio as I, createBlock as lt, pushScopeId as at, popScopeId as st } from "vue";
 const vt = (t, o) => {
   let e = 2, d = 2, l = 0, a = 0;
   const r = t.map((n, b) => {
@@ -43,7 +43,7 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ L({
   emits: ["start-drag", "end-drag"],
   setup(t, { emit: o }) {
     const e = o, d = (l) => et(l);
-    return (l, a) => (V(!0), z(F, null, K(l.itemList, (r) => (V(), z("div", {
+    return (l, a) => (V(!0), z(m, null, K(l.itemList, (r) => (V(), z("div", {
       key: r.id,
       class: "drag-el",
       style: T(d(r)),
@@ -100,7 +100,7 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ L({
     height: 40,
     label: "testdata24"
   }
-], wt = { class: "container-ddQuiz" }, Ht = { class: "dropped-item-area" }, Vt = { class: "drop-zone" }, zt = ["src"], Ot = ["onDrop"], ht = /* @__PURE__ */ L({
+], wt = { class: "container-ddQuiz" }, Ht = { class: "dropped-item-area" }, Vt = { class: "drop-zone" }, zt = ["src"], Ot = ["onDrop"], ht = { class: "result-text" }, Pt = /* @__PURE__ */ L({
   __name: "DraggableBox",
   props: {
     dragQuestion: {},
@@ -110,16 +110,16 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ L({
   setup(t, { emit: o }) {
     const e = t, { dragQuestion: d, imageSource: l } = rt(e), a = v(_), r = v([]), n = v([]), b = v(null), O = v(null), H = v(null), P = v(
       null
-    ), x = v([]), p = o, i = v(!1), h = v(!1), Z = v(""), m = v(300), U = v(30), u = () => {
+    ), x = v([]), p = o, i = v(!1), h = v(!1), F = v(""), Z = v(300), U = v(30), u = () => {
       if (b.value) {
         const c = b.value.getBoundingClientRect();
         O.value = {
           imgX: c.x + window.scrollX,
           imgY: c.y + window.scrollY
-        }, m.value = c.width;
+        }, Z.value = c.width;
         const s = ot([...x.value]), { positions: X, totalHeight: g } = vt(
           s,
-          m.value
+          Z.value
         );
         U.value = g, r.value = s.map((N, C) => ({
           ...N,
@@ -187,73 +187,73 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ L({
           (N) => N.id === `snap${X.id}`
         );
         g && X.position.x === g.position.x && X.position.y === g.position.y && (s += 1);
-      }), s === c ? Z.value = "Well Done!" : Z.value = "Try Again!", h.value = s === c, p("submit-answer", h.value);
+      }), s === c ? F.value = "Well Done!" : F.value = "Try Again!", h.value = s === c, p("submit-answer", h.value);
     }
-    return (c, s) => (V(), z(F, null, [
-      f("div", wt, [
-        f("div", Ht, [
-          f("div", Vt, [
-            f("img", {
-              ref_key: "imgRef",
-              ref: b,
-              src: a.value,
-              alt: "",
-              onLoad: u
-            }, null, 40, zt),
-            q(E, {
-              "item-list": j.value,
-              "img-position": O.value,
-              onStartDrag: W,
-              onEndDrag: R
-            }, null, 8, ["item-list", "img-position"]),
-            (V(!0), z(F, null, K(n.value, (X) => (V(), z("div", {
-              key: X.id,
-              style: T([D(X)]),
-              class: "snap-position",
-              onDrop: (g) => Q(g, 2, X),
-              onDragover: s[0] || (s[0] = y(() => {
-              }, ["prevent"])),
-              onDragenter: s[1] || (s[1] = y(() => {
-              }, ["prevent"]))
-            }, S(X.label), 45, Ot))), 128))
-          ])
-        ]),
-        f("div", {
-          class: "drop-zone adjustable-drop-zone",
-          style: T({ width: m.value + "px", height: U.value + "px" }),
-          onDrop: s[2] || (s[2] = (X) => Q(X, 1)),
-          onDragover: s[3] || (s[3] = y(() => {
-          }, ["prevent"])),
-          onDragenter: s[4] || (s[4] = y(() => {
-          }, ["prevent"]))
-        }, [
+    return (c, s) => (V(), z("div", wt, [
+      f("div", Ht, [
+        f("div", Vt, [
+          f("img", {
+            ref_key: "imgRef",
+            ref: b,
+            src: a.value,
+            alt: "",
+            onLoad: u
+          }, null, 40, zt),
           q(E, {
-            "item-list": w.value,
+            "item-list": j.value,
             "img-position": O.value,
             onStartDrag: W,
             onEndDrag: R
-          }, null, 8, ["item-list", "img-position"])
-        ], 36)
+          }, null, 8, ["item-list", "img-position"]),
+          (V(!0), z(m, null, K(n.value, (X) => (V(), z("div", {
+            key: X.id,
+            style: T([D(X)]),
+            class: "snap-position",
+            onDrop: (g) => Q(g, 2, X),
+            onDragover: s[0] || (s[0] = y(() => {
+            }, ["prevent"])),
+            onDragenter: s[1] || (s[1] = y(() => {
+            }, ["prevent"]))
+          }, S(X.label), 45, Ot))), 128))
+        ])
       ]),
-      i.value ? (V(), z("p", {
-        key: 0,
-        class: $({
-          "text-correct": h.value,
-          "text-incorrect": !h.value
-        })
-      }, S(Z.value), 3)) : A("", !0),
+      f("div", {
+        class: "drop-zone adjustable-drop-zone",
+        style: T({ width: Z.value + "px", height: U.value + "px" }),
+        onDrop: s[2] || (s[2] = (X) => Q(X, 1)),
+        onDragover: s[3] || (s[3] = y(() => {
+        }, ["prevent"])),
+        onDragenter: s[4] || (s[4] = y(() => {
+        }, ["prevent"]))
+      }, [
+        q(E, {
+          "item-list": w.value,
+          "img-position": O.value,
+          onStartDrag: W,
+          onEndDrag: R
+        }, null, 8, ["item-list", "img-position"])
+      ], 36),
+      f("div", ht, [
+        i.value ? (V(), z("p", {
+          key: 0,
+          class: $({
+            "text-correct": h.value,
+            "text-incorrect": !h.value
+          })
+        }, S(F.value), 3)) : A("", !0)
+      ]),
       f("button", {
         class: "submit-button",
         onClick: nt
       }, "Submit")
-    ], 64));
+    ]));
   }
 }), Y = (t, o) => {
   const e = t.__vccOpts || t;
   for (const [d, l] of o)
     e[d] = l;
   return e;
-}, Pt = /* @__PURE__ */ Y(ht, [["__scopeId", "data-v-1694e855"]]), jt = { class: "edit-container" }, xt = { class: "image-container" }, Dt = ["src"], Nt = ["onClick"], gt = ["for"], yt = ["id", "value", "onInput"], Tt = /* @__PURE__ */ L({
+}, jt = /* @__PURE__ */ Y(Pt, [["__scopeId", "data-v-470a11cc"]]), xt = { class: "edit-container" }, Dt = { class: "image-container" }, Nt = ["src"], gt = ["onClick"], yt = ["for"], Tt = ["id", "value", "onInput"], Ft = /* @__PURE__ */ L({
   __name: "QuizEdit",
   props: {
     imageUrl: {},
@@ -317,14 +317,14 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ L({
       }), r.value = !1, n.value = { x: 0, y: 0 }, b.value = { x: 0, y: 0 }, d("update-collect-position", a.value);
     }, h = (u) => {
       a.value.splice(u, 1), d("update-collect-position", a.value);
-    }, Z = (u) => ({
+    }, F = (u) => ({
       position: "absolute",
       top: `${u.position.y}px`,
       left: `${u.position.x}px`,
       width: `${u.width}px`,
       height: `${u.height}px`,
       pointerEvents: "auto"
-    }), m = (u, D) => {
+    }), Z = (u, D) => {
       a.value[u].label = D, d("update-collect-position", a.value);
     }, U = J(() => ({
       position: "absolute",
@@ -336,8 +336,8 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ L({
       borderRadius: "3px",
       fontSize: "12px"
     }));
-    return (u, D) => (V(), z("div", jt, [
-      f("div", xt, [
+    return (u, D) => (V(), z("div", xt, [
+      f("div", Dt, [
         B(f("div", {
           style: T(P.value),
           class: "selection-rectangle"
@@ -350,36 +350,36 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ L({
           class: $(["image-style", { "cursor-crosshair": r.value }]),
           onClick: p,
           onMousemove: x
-        }, null, 42, Dt),
+        }, null, 42, Nt),
         r.value ? (V(), z("div", {
           key: 0,
           style: T(U.value),
           class: "hint-style"
         }, " Click to finish the selection ", 4)) : A("", !0),
-        (V(!0), z(F, null, K(a.value, (w, j) => (V(), z("div", {
-          style: T(Z(w)),
+        (V(!0), z(m, null, K(a.value, (w, j) => (V(), z("div", {
+          style: T(F(w)),
           class: "option-item-position",
           key: w.id,
           onClick: () => h(j)
-        }, null, 12, Nt))), 128))
+        }, null, 12, gt))), 128))
       ]),
       f("ul", null, [
-        (V(!0), z(F, null, K(a.value, (w, j) => (V(), z("li", { key: j }, [
+        (V(!0), z(m, null, K(a.value, (w, j) => (V(), z("li", { key: j }, [
           tt(S(w.position) + " ", 1),
           f("label", {
             for: `option-label-${j}`
-          }, " option text: ", 8, gt),
+          }, " option text: ", 8, yt),
           f("input", {
             id: `option-label-${j}`,
             type: "text",
             value: w.label,
-            onInput: (W) => m(j, W.target.value)
-          }, null, 40, yt)
+            onInput: (W) => Z(j, W.target.value)
+          }, null, 40, Tt)
         ]))), 128))
       ])
     ]));
   }
-}), Ft = /* @__PURE__ */ Y(Tt, [["__scopeId", "data-v-aed38f2a"]]), Zt = { class: "text-image-container" }, mt = /* @__PURE__ */ L({
+}), Zt = /* @__PURE__ */ Y(Ft, [["__scopeId", "data-v-aed38f2a"]]), mt = { class: "text-image-container" }, Mt = /* @__PURE__ */ L({
   __name: "TextImage",
   emits: ["updateTextimageSrc"],
   setup(t, { emit: o }) {
@@ -397,7 +397,7 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ L({
         n.fillText(p, O, O + i * b);
       }), l.value = r.toDataURL("image/png"), e("updateTextimageSrc", l.value);
     };
-    return (r, n) => (V(), z("div", Zt, [
+    return (r, n) => (V(), z("div", mt, [
       B(f("textarea", {
         "onUpdate:modelValue": n[0] || (n[0] = (b) => d.value = b),
         placeholder: "Enter question text body here...",
@@ -411,13 +411,13 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ L({
       }, "Convert")
     ]));
   }
-}), Mt = /* @__PURE__ */ Y(mt, [["__scopeId", "data-v-1d742a2f"]]), G = (t) => (at("data-v-8309fba7"), t = t(), st(), t), Lt = /* @__PURE__ */ G(() => /* @__PURE__ */ f("h3", null, "Drag & Drop Question Form", -1)), Gt = { class: "quiz-edit-container" }, Ut = /* @__PURE__ */ G(() => /* @__PURE__ */ f("p", null, "Choose Question Type", -1)), Wt = /* @__PURE__ */ G(() => /* @__PURE__ */ f("label", { for: "image-dd-quiz" }, "Image D&D Question", -1)), Kt = /* @__PURE__ */ G(() => /* @__PURE__ */ f("label", { for: "text-dd-quiz" }, "Text D&D Question", -1)), St = {
+}), Lt = /* @__PURE__ */ Y(Mt, [["__scopeId", "data-v-1d742a2f"]]), G = (t) => (at("data-v-8309fba7"), t = t(), st(), t), Gt = /* @__PURE__ */ G(() => /* @__PURE__ */ f("h3", null, "Drag & Drop Question Form", -1)), Ut = { class: "quiz-edit-container" }, Wt = /* @__PURE__ */ G(() => /* @__PURE__ */ f("p", null, "Choose Question Type", -1)), Kt = /* @__PURE__ */ G(() => /* @__PURE__ */ f("label", { for: "image-dd-quiz" }, "Image D&D Question", -1)), St = /* @__PURE__ */ G(() => /* @__PURE__ */ f("label", { for: "text-dd-quiz" }, "Text D&D Question", -1)), Jt = {
   key: 0,
   for: "drag-drop-image-upload"
-}, Jt = /* @__PURE__ */ G(() => /* @__PURE__ */ f("input", {
+}, At = /* @__PURE__ */ G(() => /* @__PURE__ */ f("input", {
   type: "submit",
   value: "Save"
-}, null, -1)), At = /* @__PURE__ */ L({
+}, null, -1)), Bt = /* @__PURE__ */ L({
   __name: "QuizCreator",
   props: {
     questions: {
@@ -450,11 +450,11 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ L({
         collectPosition: l.value
       }, console.log(a.value), it(a.value), b("save-items", a.value);
     };
-    return (p, i) => (V(), z(F, null, [
-      Lt,
-      f("div", Gt, [
+    return (p, i) => (V(), z(m, null, [
+      Gt,
+      f("div", Ut, [
         f("div", null, [
-          Ut,
+          Wt,
           B(f("input", {
             type: "radio",
             id: "image-dd-quiz",
@@ -463,7 +463,7 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ L({
           }, null, 512), [
             [I, e.value]
           ]),
-          Wt,
+          Kt,
           B(f("input", {
             type: "radio",
             id: "text-dd-quiz",
@@ -472,13 +472,13 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ L({
           }, null, 512), [
             [I, e.value]
           ]),
-          Kt
+          St
         ]),
         f("form", {
           action: "",
           onSubmit: y(x, ["prevent"])
         }, [
-          e.value == "Image" ? (V(), z("label", St, [
+          e.value == "Image" ? (V(), z("label", Jt, [
             tt(" Upload: "),
             f("input", {
               id: "drag-drop-image-upload",
@@ -487,26 +487,26 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ L({
               onChange: i[2] || (i[2] = (h) => H(h))
             }, null, 32)
           ])) : A("", !0),
-          e.value == "Text" ? (V(), lt(Mt, {
+          e.value == "Text" ? (V(), lt(Lt, {
             key: 1,
             onUpdateTextimageSrc: O
           })) : A("", !0),
-          q(Ft, {
+          q(Zt, {
             "image-url": d.value,
             "collect-position": l.value,
             onUpdateCollectPosition: P
           }, null, 8, ["image-url", "collect-position"]),
-          Jt
+          At
         ], 32)
       ])
     ], 64));
   }
-}), Bt = /* @__PURE__ */ Y(At, [["__scopeId", "data-v-8309fba7"]]);
-function Ct(t) {
-  t.component("DraggableBox", Pt), t.component("QuizCreator", Bt);
+}), Yt = /* @__PURE__ */ Y(Bt, [["__scopeId", "data-v-8309fba7"]]);
+function qt(t) {
+  t.component("DraggableBox", jt), t.component("QuizCreator", Yt);
 }
 export {
-  Pt as DraggableBox,
-  Bt as QuizCreator,
-  Ct as quizPlugin
+  jt as DraggableBox,
+  Yt as QuizCreator,
+  qt as quizPlugin
 };
