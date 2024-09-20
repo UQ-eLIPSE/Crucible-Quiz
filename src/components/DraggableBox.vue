@@ -298,7 +298,7 @@ tr {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  width: 20%;
+  width: 100px;
 }
 
 .text-correct,

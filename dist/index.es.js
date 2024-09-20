@@ -253,7 +253,7 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ L({
   for (const [d, l] of o)
     e[d] = l;
   return e;
-}, jt = /* @__PURE__ */ Y(Pt, [["__scopeId", "data-v-470a11cc"]]), xt = { class: "edit-container" }, Dt = { class: "image-container" }, Nt = ["src"], gt = ["onClick"], yt = ["for"], Tt = ["id", "value", "onInput"], Ft = /* @__PURE__ */ L({
+}, jt = /* @__PURE__ */ Y(Pt, [["__scopeId", "data-v-dd5ee7b4"]]), xt = { class: "edit-container" }, Dt = { class: "image-container" }, Nt = ["src"], gt = ["onClick"], yt = ["for"], Tt = ["id", "value", "onInput"], Ft = /* @__PURE__ */ L({
   __name: "QuizEdit",
   props: {
     imageUrl: {},
