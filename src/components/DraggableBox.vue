@@ -39,18 +39,17 @@
         @end-drag="endDrag"
       />
     </div>
-
-    <p
-      v-if="showResult"
-      :class="{
-        'text-correct': result,
-        'text-incorrect': !result,
-      }"
-    >
-      {{ score }}
-    </p>
-    <button class="submit-button" @click="handleSubmit">Submit</button>
   </div>
+  <p
+    v-if="showResult"
+    :class="{
+      'text-correct': result,
+      'text-incorrect': !result,
+    }"
+  >
+    {{ score }}
+  </p>
+  <button class="submit-button" @click="handleSubmit">Submit</button>
 </template>
 
 <script setup lang="ts">
@@ -209,7 +208,11 @@ function handleSubmit() {
     }
   });
 
-  score.value = `${correctItems} out of ${totalItems} are correct`;
+  if (correctItems === totalItems) {
+    score.value = "Well Done!";
+  } else {
+    score.value = "Try Again!";
+  }
 
   result.value = correctItems === totalItems;
   emit("submit-answer", result.value);
@@ -284,7 +287,8 @@ tr {
 }
 
 .submit-button {
-  background-color: #4caf50;
+  background-color: #49075e;
+  margin-top: 5px;
   color: white;
   padding: 10px 20px;
   font-size: 16px;
@@ -294,15 +298,18 @@ tr {
   transition: background-color 0.3s ease;
 }
 
-.text-correct {
+.text-correct,
+.text-incorrect {
   background-color: lightgreen;
   padding: 10px;
   border-radius: 5px;
+  width: 50%;
+  text-align: center;
+  margin: 0 auto;
+  margin-top: 5px;
 }
 
 .text-incorrect {
-  background-color: red;
-  padding: 10px;
-  border-radius: 5px;
+  background-color: lightcoral;
 }
 </style>
