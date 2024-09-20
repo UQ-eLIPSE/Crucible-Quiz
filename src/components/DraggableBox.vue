@@ -39,17 +39,19 @@
         @end-drag="endDrag"
       />
     </div>
+    <div class="result-text">
+      <p
+        v-if="showResult"
+        :class="{
+          'text-correct': result,
+          'text-incorrect': !result,
+        }"
+      >
+        {{ score }}
+      </p>
+    </div>
+    <button class="submit-button" @click="handleSubmit">Submit</button>
   </div>
-  <p
-    v-if="showResult"
-    :class="{
-      'text-correct': result,
-      'text-incorrect': !result,
-    }"
-  >
-    {{ score }}
-  </p>
-  <button class="submit-button" @click="handleSubmit">Submit</button>
 </template>
 
 <script setup lang="ts">
@@ -296,6 +298,7 @@ tr {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  width: 20%;
 }
 
 .text-correct,
@@ -303,7 +306,7 @@ tr {
   background-color: lightgreen;
   padding: 10px;
   border-radius: 5px;
-  width: 50%;
+  width: 20%;
   text-align: center;
   margin: 0 auto;
   margin-top: 5px;
@@ -311,5 +314,12 @@ tr {
 
 .text-incorrect {
   background-color: lightcoral;
+}
+
+.result-text {
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
