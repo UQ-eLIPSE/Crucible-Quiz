@@ -12,8 +12,8 @@ describe("DraggableBox.vue", () => {
       {
         id: "3",
         label: "Item A",
-        width: 1, 
-        height: 1 ,
+        width: 1,
+        height: 1,
         position: { x: 0, y: 0 },
         list: 1,
       },
@@ -21,7 +21,7 @@ describe("DraggableBox.vue", () => {
         id: "1",
         label: "Item B",
         width: 1,
-        height: 1 ,
+        height: 1,
         position: { x: 100, y: 0 },
         list: 1,
       },
@@ -29,7 +29,7 @@ describe("DraggableBox.vue", () => {
         id: "2",
         label: "Item C",
         width: 1,
-        height: 1 ,
+        height: 1,
         position: { x: 200, y: 0 },
         list: 1,
       },
@@ -40,7 +40,7 @@ describe("DraggableBox.vue", () => {
         id: "snap3",
         label: "Item A",
         width: 1,
-        height: 1 ,
+        height: 1,
         position: { x: 0, y: 0 },
         list: 2,
       },
@@ -48,7 +48,7 @@ describe("DraggableBox.vue", () => {
         id: "snap1",
         label: "Item B",
         width: 1,
-        height: 1 ,
+        height: 1,
         position: { x: 100, y: 0 },
         list: 2,
       },
@@ -56,7 +56,7 @@ describe("DraggableBox.vue", () => {
         id: "snap2",
         label: "Item C",
         width: 1,
-        height: 1 ,
+        height: 1,
         position: { x: 200, y: 0 },
         list: 2,
       },
@@ -67,14 +67,13 @@ describe("DraggableBox.vue", () => {
   });
 
   it("it should increase drag-el in drop zone if drag one box to this drop zone and show the correct name of this box", async () => {
-    const dropZone1 = wrapper.findAll(".drop-zone")[0];
-    const dropZone2 = wrapper.findAll(".drop-zone")[1];
+    const dropZone1 = wrapper.findAll(".drop-zone")[0]; // this is targeted zone, where item dropped in
+    const dropZone2 = wrapper.findAll(".drop-zone")[1]; // this is options zone, where item picked up from
     const dropsnap = wrapper.findAll(".snap-position")[0];
     const dragEl = wrapper.findAll(".drag-el")[0];
 
     // Get initial state of dropZone1
-    const initialDropZone2Items = dropZone2.findAll(".drag-el");
-    const initialDropZone1Items = dropZone1.findAll(".drag-el");
+
     let dataTransferMock = {
       data: {},
       setData: function (key, value) {
@@ -106,12 +105,10 @@ describe("DraggableBox.vue", () => {
     const itemsInDropZone2 = dropZone2.findAll(".drag-el");
     const itemsInDropZone1 = dropZone1.findAll(".drag-el");
 
-    expect(itemsInDropZone2.length).toBeGreaterThan(
-      initialDropZone2Items.length
-    );
-    expect(itemsInDropZone1.length).toBeLessThan(initialDropZone1Items.length);
-    expect(itemsInDropZone2.some((item) => item.text() === dragEl.text())).toBe(
-      true
+    expect(itemsInDropZone2.length).toBeGreaterThan(itemsInDropZone1.length);
+    expect(itemsInDropZone1.length).toBeLessThan(itemsInDropZone2.length);
+    expect(itemsInDropZone1.some((item) => item.text() === dragEl.text())).toBe(
+      true,
     );
   });
 });

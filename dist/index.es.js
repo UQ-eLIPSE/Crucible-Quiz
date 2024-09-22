@@ -110,31 +110,31 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
   setup(t, { emit: o }) {
     const e = t, { dragQuestion: d, imageSource: l } = rt(e), a = v(_), r = v([]), n = v([]), b = v(null), O = v(null), H = v(null), P = v(
       null
-    ), x = v([]), p = o, i = v(!1), h = v(!1), G = v(""), F = v(300), U = v(30), u = () => {
+    ), N = v([]), p = o, i = v(!1), h = v(!1), G = v(""), F = v(300), U = v(30), u = () => {
       if (b.value) {
         const c = b.value.getBoundingClientRect();
         O.value = {
           imgX: c.x + window.scrollX,
           imgY: c.y + window.scrollY
         }, F.value = c.width;
-        const s = ot([...x.value]), { positions: X, totalHeight: g } = vt(
+        const s = ot([...N.value]), { positions: X, totalHeight: g } = vt(
           s,
           F.value
         );
-        U.value = g, r.value = s.map((N, C) => ({
-          ...N,
-          id: `${N.id}`,
+        U.value = g, r.value = s.map((D, C) => ({
+          ...D,
+          id: `${D.id}`,
           list: 1,
-          width: N.width,
-          height: N.height,
+          width: D.width,
+          height: D.height,
           position: { x: X[C].x, y: X[C].y }
         }));
       }
-    }, D = (c) => et(c);
+    }, x = (c) => et(c);
     m(
       () => d.value,
       (c) => {
-        x.value = c === void 0 ? pt : c, console.log(x.value), n.value = x.value.map((s, X) => ({
+        N.value = c === void 0 ? pt : c, n.value = N.value.map((s, X) => ({
           ...s,
           id: `snap${s.id}`,
           label: String.fromCharCode(65 + X),
@@ -169,11 +169,11 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
     }
     function Q(c, s, X) {
       if (c.preventDefault(), !H.value) return;
-      const g = c.dataTransfer.getData("text/plain"), N = r.value.find((ct) => ct.id === g);
-      if (!N || !P.value) return;
-      N.list = s;
+      const g = c.dataTransfer.getData("text/plain"), D = r.value.find((ct) => ct.id === g);
+      if (!D || !P.value) return;
+      D.list = s;
       const k = c.currentTarget.getBoundingClientRect();
-      N.position = {
+      D.position = {
         x: X ? X.position.x : c.clientX - k.left - P.value.offsetX,
         y: X ? X.position.y : c.clientY - k.top - P.value.offsetY
       };
@@ -184,7 +184,7 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
       let s = 0;
       j.value.forEach((X) => {
         const g = n.value.find(
-          (N) => N.id === `snap${X.id}`
+          (D) => D.id === `snap${X.id}`
         );
         g && X.position.x === g.position.x && X.position.y === g.position.y && (s += 1);
       }), G.value = `${s} out of ${c} are correct`, h.value = s === c, p("submit-answer", h.value);
@@ -207,7 +207,7 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
           }, null, 8, ["item-list", "img-position"]),
           (V(!0), z(Z, null, K(n.value, (X) => (V(), z("div", {
             key: X.id,
-            style: T([D(X)]),
+            style: T([x(X)]),
             class: "snap-position",
             onDrop: (g) => Q(g, 2, X),
             onDragover: s[0] || (s[0] = y(() => {
@@ -251,7 +251,7 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
   for (const [d, l] of o)
     e[d] = l;
   return e;
-}, Pt = /* @__PURE__ */ Y(ht, [["__scopeId", "data-v-01cbe773"]]), jt = { class: "edit-container" }, xt = { class: "image-container" }, Dt = ["src"], Nt = ["onClick"], gt = ["for"], yt = ["id", "value", "onInput"], Tt = /* @__PURE__ */ M({
+}, Pt = /* @__PURE__ */ Y(ht, [["__scopeId", "data-v-079d749b"]]), jt = { class: "edit-container" }, xt = { class: "image-container" }, Dt = ["src"], Nt = ["onClick"], gt = ["for"], yt = ["id", "value", "onInput"], Tt = /* @__PURE__ */ M({
   __name: "QuizEdit",
   props: {
     imageUrl: {},
@@ -262,7 +262,7 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
     const e = t, d = o, l = v(e.imageUrl || ""), a = v(
       e.collectPosition || []
     ), r = v(!1), n = v({ x: 0, y: 0 }), b = v({ x: 0, y: 0 }), O = v({ x: 0, y: 0 }), H = v({ x: 0, y: 0 }), P = J(() => {
-      const u = (D, w, j = !1) => `${j ? Math.min(D, w) : Math.abs(D - w)}px`;
+      const u = (x, w, j = !1) => `${j ? Math.min(x, w) : Math.abs(x - w)}px`;
       return {
         border: "4px dashed rgb(254, 4, 4)",
         pointerEvents: "none",
@@ -272,10 +272,10 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
         width: u(H.value.x, n.value.x),
         height: u(H.value.y, n.value.y)
       };
-    }), x = (u) => {
-      const { left: D, top: w } = u.target.getBoundingClientRect();
+    }), N = (u) => {
+      const { left: x, top: w } = u.target.getBoundingClientRect();
       H.value = {
-        x: u.clientX - D,
+        x: u.clientX - x,
         y: u.clientY - w
       };
     };
@@ -322,8 +322,8 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
       width: `${u.width}px`,
       height: `${u.height}px`,
       pointerEvents: "auto"
-    }), F = (u, D) => {
-      a.value[u].label = D, d("update-collect-position", a.value);
+    }), F = (u, x) => {
+      a.value[u].label = x, d("update-collect-position", a.value);
     }, U = J(() => ({
       position: "absolute",
       top: `${O.value.y}px`,
@@ -334,7 +334,7 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
       borderRadius: "3px",
       fontSize: "12px"
     }));
-    return (u, D) => (V(), z("div", jt, [
+    return (u, x) => (V(), z("div", jt, [
       f("div", xt, [
         B(f("div", {
           style: T(P.value),
@@ -347,7 +347,7 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
           id: "output",
           class: $(["image-style", { "cursor-crosshair": r.value }]),
           onClick: p,
-          onMousemove: x
+          onMousemove: N
         }, null, 42, Dt),
         r.value ? (V(), z("div", {
           key: 0,
@@ -390,8 +390,8 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
       const H = d.value.split(`
 `), P = Math.max(
         ...H.map((p) => n.measureText(p).width)
-      ), x = H.length * b + O * 2;
-      r.width = Math.max(P, 800), r.height = Math.max(x, 200), n.font = `${b}px verdana`, n.fillStyle = "black", n.textAlign = "left", n.textBaseline = "top", n.clearRect(0, 0, r.width, r.height), H.forEach((p, i) => {
+      ), N = H.length * b + O * 2;
+      r.width = Math.max(P, 800), r.height = Math.max(N, 200), n.font = `${b}px verdana`, n.fillStyle = "black", n.textAlign = "left", n.textBaseline = "top", n.clearRect(0, 0, r.width, r.height), H.forEach((p, i) => {
         n.fillText(p, O, O + i * b);
       }), l.value = r.toDataURL("image/png"), e("updateTextimageSrc", l.value);
     };
@@ -441,7 +441,7 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
       d.value = i ? URL.createObjectURL(i[0]) : "", r.value = i ? i[0] : void 0, l.value = [];
     }, P = (p) => {
       l.value = p;
-    }, x = () => {
+    }, N = () => {
       a.value = {
         imageFile: r.value,
         image: d.value,
@@ -474,7 +474,7 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
         ]),
         f("form", {
           action: "",
-          onSubmit: y(x, ["prevent"])
+          onSubmit: y(N, ["prevent"])
         }, [
           e.value == "Image" ? (V(), z("label", St, [
             tt(" Upload: "),

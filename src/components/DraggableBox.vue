@@ -4,49 +4,24 @@
     <div class="dropped-item-area">
       <div class="drop-zone">
         <img ref="imgRef" :src="imageUrl" alt="" @load="getImagePosition" />
-        <DragItems
-          :item-list="listTwo"
-          :img-position="imagePosition"
-          @start-drag="startDrag"
-          @end-drag="endDrag"
-        />
-        <div
-          v-for="ele in snapItems"
-          :key="ele.id"
-          :style="[itemStyle(ele)]"
-          class="snap-position"
-          @drop="onDrop($event, 2, ele)"
-          @dragover.prevent
-          @dragenter.prevent
-        >
+        <DragItems :item-list="listTwo" :img-position="imagePosition" @start-drag="startDrag" @end-drag="endDrag" />
+        <div v-for="ele in snapItems" :key="ele.id" :style="[itemStyle(ele)]" class="snap-position"
+          @drop="onDrop($event, 2, ele)" @dragover.prevent @dragenter.prevent>
           {{ ele.label }}
         </div>
       </div>
     </div>
 
     <!-- Now the drop-zone below the image -->
-    <div
-      class="drop-zone adjustable-drop-zone"
-      :style="{ width: imageWidth + 'px', height: height + 'px' }"
-      @drop="onDrop($event, 1)"
-      @dragover.prevent
-      @dragenter.prevent
-    >
-      <DragItems
-        :item-list="listOne"
-        :img-position="imagePosition"
-        @start-drag="startDrag"
-        @end-drag="endDrag"
-      />
+    <div class="drop-zone adjustable-drop-zone" :style="{ width: imageWidth + 'px', height: height + 'px' }"
+      @drop="onDrop($event, 1)" @dragover.prevent @dragenter.prevent>
+      <DragItems :item-list="listOne" :img-position="imagePosition" @start-drag="startDrag" @end-drag="endDrag" />
     </div>
 
-    <p
-      v-if="showResult"
-      :class="{
-        'text-correct': result,
-        'text-incorrect': !result,
-      }"
-    >
+    <p v-if="showResult" :class="{
+          'text-correct': result,
+          'text-incorrect': !result,
+        }">
       {{ score }}
     </p>
     <button class="submit-button" @click="handleSubmit">Submit</button>
@@ -119,7 +94,6 @@ watch(
   () => dragQuestion.value,
   (newVal: OptionsDatabase[] | undefined) => {
     options.value = newVal === undefined ? sampleDatabase : newVal;
-    console.log(options.value);
     snapItems.value = options.value.map((item, index) => {
       return {
         ...item,
