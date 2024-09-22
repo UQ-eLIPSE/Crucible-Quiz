@@ -4,47 +4,23 @@
     <div class="dropped-item-area">
       <div class="drop-zone">
         <img ref="imgRef" :src="imageUrl" alt="" @load="getImagePosition" />
-        <DragItems
-          :item-list="listTwo"
-          :img-position="imagePosition"
-          @start-drag="startDrag"
-          @end-drag="endDrag"
-        />
-        <div
-          v-for="ele in snapItems"
-          :key="ele.id"
-          :style="[itemStyle(ele), 'background-color: rgba(255, 99, 71, 0.5)']"
-          class="snap-position"
-          @drop="onDrop($event, 2, ele)"
-          @dragover.prevent
-          @dragenter.prevent
-        ></div>
+        <DragItems :item-list="listTwo" :img-position="imagePosition" @start-drag="startDrag" @end-drag="endDrag" />
+        <div v-for="ele in snapItems" :key="ele.id"
+          :style="[itemStyle(ele), 'background-color: rgba(255, 99, 71, 0.5)']" class="snap-position"
+          @drop="onDrop($event, 2, ele)" @dragover.prevent @dragenter.prevent></div>
       </div>
     </div>
 
     <!-- Now the drop-zone below the image -->
-    <div
-      class="drop-zone adjustable-drop-zone"
-      :style="{ width: imageWidth + 'px', height: height + 'px' }"
-      @drop="onDrop($event, 1)"
-      @dragover.prevent
-      @dragenter.prevent
-    >
-      <DragItems
-        :item-list="listOne"
-        :img-position="imagePosition"
-        @start-drag="startDrag"
-        @end-drag="endDrag"
-      />
+    <div class="drop-zone adjustable-drop-zone" :style="{ width: imageWidth + 'px', height: height + 'px' }"
+      @drop="onDrop($event, 1)" @dragover.prevent @dragenter.prevent>
+      <DragItems :item-list="listOne" :img-position="imagePosition" @start-drag="startDrag" @end-drag="endDrag" />
     </div>
 
-    <p
-      v-if="showResult"
-      :class="{
-        'text-correct': result,
-        'text-incorrect': !result,
-      }"
-    >
+    <p v-if="showResult" :class="{
+          'text-correct': result,
+          'text-incorrect': !result,
+        }">
       {{ score }}
     </p>
     <button class="submit-button" @click="handleSubmit">Submit</button>
@@ -115,7 +91,6 @@ const itemStyle = (ele: Item) => {
 watch(
   () => dragQuestion.value,
   (newVal: OptionsDatabase[] | undefined) => {
-    console.log("hello");
     options.value = newVal === undefined ? sampleDatabase : newVal;
     snapItems.value = options.value.map((item, index) => {
       return {
@@ -133,11 +108,9 @@ watch(
   () => imageSource.value,
   (newImageSource: string) => {
     imageUrl.value = newImageSource || fallbackImg;
-    console.log("hey", imageWidth.value);
     if (imgRef.value) {
       const rect = imgRef.value.getBoundingClientRect();
       imageWidth.value = rect.width;
-      console.log("hey", imageWidth.value);
     }
   },
   { immediate: true }

@@ -1,12 +1,12 @@
-import { defineComponent as L, openBlock as V, createElementBlock as z, Fragment as Z, renderList as K, normalizeStyle as F, toDisplayString as C, toRefs as ct, ref as v, watch as m, computed as S, createElementVNode as f, createVNode as Y, withModifiers as T, normalizeClass as _, createCommentVNode as J, withDirectives as A, vShow as rt, createTextVNode as $, vModelText as ut, vModelRadio as k, createBlock as dt, pushScopeId as lt, popScopeId as at } from "vue";
+import { defineComponent as L, openBlock as V, createElementBlock as z, Fragment as Z, renderList as K, normalizeStyle as F, toDisplayString as C, toRefs as ct, ref as v, watch as m, computed as S, createElementVNode as f, createVNode as Y, withModifiers as T, normalizeClass as _, createCommentVNode as J, withDirectives as A, vShow as rt, createTextVNode as $, vModelText as ut, vModelRadio as k, createBlock as dt, pushScopeId as at, popScopeId as lt } from "vue";
 const st = (c, i) => {
-  let e = 2, d = 2, l = 0, a = 0;
+  let e = 2, d = 2, a = 0, l = 0;
   const r = c.map((t, o) => {
-    e + t.width > i && (e = 0, d += l + 2, l = 0), l = Math.max(l, t.height);
+    e + t.width > i && (e = 0, d += a + 2, a = 0), a = Math.max(a, t.height);
     const O = { id: o, x: e, y: d };
     return e += t.width + 2, O;
   });
-  return a = d + l + 10, { positions: r, totalHeight: a };
+  return l = d + a + 10, { positions: r, totalHeight: l };
 };
 function tt(c) {
   return {
@@ -18,10 +18,10 @@ function tt(c) {
 }
 function vt(c, i) {
   const e = atob(c.split(",")[1]), d = new Array(e.length);
-  for (let a = 0; a < e.length; a++)
-    d[a] = e.charCodeAt(a);
-  const l = new Uint8Array(d);
-  return new Blob([l], { type: i });
+  for (let l = 0; l < e.length; l++)
+    d[l] = e.charCodeAt(l);
+  const a = new Uint8Array(d);
+  return new Blob([a], { type: i });
 }
 function ot(c, i) {
   const e = c.split(",")[0].split(":")[1].split(";")[0], d = vt(c, e);
@@ -35,8 +35,8 @@ const ft = ["onDragstart", "onDragend"], I = /* @__PURE__ */ L({
   },
   emits: ["start-drag", "end-drag"],
   setup(c, { emit: i }) {
-    const e = i, d = (l) => tt(l);
-    return (l, a) => (V(!0), z(Z, null, K(l.itemList, (r) => (V(), z("div", {
+    const e = i, d = (a) => tt(a);
+    return (a, l) => (V(!0), z(Z, null, K(a.itemList, (r) => (V(), z("div", {
       key: r.id,
       class: "drag-el",
       style: F(d(r)),
@@ -101,33 +101,33 @@ const ft = ["onDragstart", "onDragend"], I = /* @__PURE__ */ L({
   },
   emits: ["submit-answer"],
   setup(c, { emit: i }) {
-    const e = c, { dragQuestion: d, imageSource: l } = ct(e), a = v(E), r = v([]), t = v([]), o = v(null), O = v(null), H = v(null), P = v(
+    const e = c, { dragQuestion: d, imageSource: a } = ct(e), l = v(E), r = v([]), t = v([]), o = v(null), O = v(null), H = v(null), P = v(
       null
-    ), D = v([]), p = i, b = v(!1), h = v(!1), G = v(""), N = v(300), U = v(30), u = () => {
+    ), D = v([]), p = i, b = v(!1), h = v(!1), G = v(""), y = v(300), U = v(30), u = () => {
       if (o.value) {
         const n = o.value.getBoundingClientRect();
         O.value = {
           imgX: n.x + window.scrollX,
           imgY: n.y + window.scrollY
-        }, N.value = n.width;
+        }, y.value = n.width;
         const { positions: s, totalHeight: X } = st(
           D.value,
-          N.value
+          y.value
         );
-        U.value = X, r.value = D.value.map((x, y) => ({
+        U.value = X, r.value = D.value.map((x, g) => ({
           ...x,
-          id: `${y}`,
+          id: `${g}`,
           list: 1,
           width: x.width,
           height: x.height,
-          position: { x: s[y].x, y: s[y].y }
+          position: { x: s[g].x, y: s[g].y }
         }));
       }
-    }, g = (n) => tt(n);
+    }, N = (n) => tt(n);
     m(
       () => d.value,
       (n) => {
-        console.log("hello"), D.value = n === void 0 ? bt : n, t.value = D.value.map((s, X) => ({
+        D.value = n === void 0 ? bt : n, t.value = D.value.map((s, X) => ({
           ...s,
           id: `snap${X}`,
           list: 2,
@@ -137,11 +137,11 @@ const ft = ["onDragstart", "onDragend"], I = /* @__PURE__ */ L({
       },
       { immediate: !0 }
     ), m(
-      () => l.value,
+      () => a.value,
       (n) => {
-        if (a.value = n || E, console.log("hey", N.value), o.value) {
+        if (l.value = n || E, o.value) {
           const s = o.value.getBoundingClientRect();
-          N.value = s.width, console.log("hey", N.value);
+          y.value = s.width;
         }
       },
       { immediate: !0 }
@@ -164,11 +164,11 @@ const ft = ["onDragstart", "onDragend"], I = /* @__PURE__ */ L({
     }
     function R(n, s, X) {
       if (n.preventDefault(), !H.value) return;
-      const x = n.dataTransfer.getData("text/plain"), y = r.value.find((nt) => nt.id === x);
-      if (!y || !P.value) return;
-      y.list = s;
+      const x = n.dataTransfer.getData("text/plain"), g = r.value.find((nt) => nt.id === x);
+      if (!g || !P.value) return;
+      g.list = s;
       const Q = n.currentTarget.getBoundingClientRect();
-      y.position = {
+      g.position = {
         x: X ? X.position.x : n.clientX - Q.left - P.value.offsetX,
         y: X ? X.position.y : n.clientY - Q.top - P.value.offsetY
       };
@@ -179,7 +179,7 @@ const ft = ["onDragstart", "onDragend"], I = /* @__PURE__ */ L({
       let s = 0;
       j.value.forEach((X) => {
         const x = t.value.find(
-          (y) => y.id === `snap${X.id}`
+          (g) => g.id === `snap${X.id}`
         );
         x && X.position.x === x.position.x && X.position.y === x.position.y && (s += 1);
       }), G.value = `${s} out of ${n} are correct`, h.value = s === n, p("submit-answer", h.value);
@@ -190,7 +190,7 @@ const ft = ["onDragstart", "onDragend"], I = /* @__PURE__ */ L({
           f("img", {
             ref_key: "imgRef",
             ref: o,
-            src: a.value,
+            src: l.value,
             alt: "",
             onLoad: u
           }, null, 40, Ht),
@@ -202,7 +202,7 @@ const ft = ["onDragstart", "onDragend"], I = /* @__PURE__ */ L({
           }, null, 8, ["item-list", "img-position"]),
           (V(!0), z(Z, null, K(t.value, (X) => (V(), z("div", {
             key: X.id,
-            style: F([g(X), "background-color: rgba(255, 99, 71, 0.5)"]),
+            style: F([N(X), "background-color: rgba(255, 99, 71, 0.5)"]),
             class: "snap-position",
             onDrop: (x) => R(x, 2, X),
             onDragover: s[0] || (s[0] = T(() => {
@@ -214,7 +214,7 @@ const ft = ["onDragstart", "onDragend"], I = /* @__PURE__ */ L({
       ]),
       f("div", {
         class: "drop-zone adjustable-drop-zone",
-        style: F({ width: N.value + "px", height: U.value + "px" }),
+        style: F({ width: y.value + "px", height: U.value + "px" }),
         onDrop: s[2] || (s[2] = (X) => R(X, 1)),
         onDragover: s[3] || (s[3] = T(() => {
         }, ["prevent"])),
@@ -243,10 +243,10 @@ const ft = ["onDragstart", "onDragend"], I = /* @__PURE__ */ L({
   }
 }), B = (c, i) => {
   const e = c.__vccOpts || c;
-  for (const [d, l] of i)
-    e[d] = l;
+  for (const [d, a] of i)
+    e[d] = a;
   return e;
-}, Ot = /* @__PURE__ */ B(zt, [["__scopeId", "data-v-c2e7c8e8"]]), ht = { class: "edit-container" }, Pt = { class: "image-container" }, jt = ["src"], xt = ["onClick"], Dt = ["for"], gt = ["id", "value", "onInput"], yt = /* @__PURE__ */ L({
+}, Ot = /* @__PURE__ */ B(zt, [["__scopeId", "data-v-ceef2e3e"]]), ht = { class: "edit-container" }, Pt = { class: "image-container" }, jt = ["src"], xt = ["onClick"], Dt = ["for"], Nt = ["id", "value", "onInput"], gt = /* @__PURE__ */ L({
   __name: "QuizEdit",
   props: {
     imageUrl: {},
@@ -254,10 +254,10 @@ const ft = ["onDragstart", "onDragend"], I = /* @__PURE__ */ L({
   },
   emits: ["update-collect-position"],
   setup(c, { emit: i }) {
-    const e = c, d = i, l = v(e.imageUrl || ""), a = v(
+    const e = c, d = i, a = v(e.imageUrl || ""), l = v(
       e.collectPosition || []
     ), r = v(!1), t = v({ x: 0, y: 0 }), o = v({ x: 0, y: 0 }), O = v({ x: 0, y: 0 }), H = v({ x: 0, y: 0 }), P = S(() => {
-      const u = (g, w, j = !1) => `${j ? Math.min(g, w) : Math.abs(g - w)}px`;
+      const u = (N, w, j = !1) => `${j ? Math.min(N, w) : Math.abs(N - w)}px`;
       return {
         border: "4px dashed rgb(254, 4, 4)",
         pointerEvents: "none",
@@ -268,22 +268,22 @@ const ft = ["onDragstart", "onDragend"], I = /* @__PURE__ */ L({
         height: u(H.value.y, t.value.y)
       };
     }), D = (u) => {
-      const { left: g, top: w } = u.target.getBoundingClientRect();
+      const { left: N, top: w } = u.target.getBoundingClientRect();
       H.value = {
-        x: u.clientX - g,
+        x: u.clientX - N,
         y: u.clientY - w
       };
     };
     m(
       () => e.collectPosition,
       (u) => {
-        a.value = u || [];
+        l.value = u || [];
       },
       { immediate: !0 }
     ), m(
       () => e.imageUrl,
       (u) => {
-        l.value = u || "";
+        a.value = u || "";
       },
       { immediate: !0 }
     );
@@ -297,7 +297,7 @@ const ft = ["onDragstart", "onDragend"], I = /* @__PURE__ */ L({
         y: u.clientY - w.top
       }, r.value = !0);
     }, b = () => {
-      o.value.x !== t.value.x && o.value.y !== t.value.y && a.value.push({
+      o.value.x !== t.value.x && o.value.y !== t.value.y && l.value.push({
         id: Date.now().toString(),
         position: {
           x: Math.min(t.value.x, o.value.x),
@@ -307,9 +307,9 @@ const ft = ["onDragstart", "onDragend"], I = /* @__PURE__ */ L({
         height: Math.abs(o.value.y - t.value.y),
         label: "*"
         // Placeholder label
-      }), r.value = !1, t.value = { x: 0, y: 0 }, o.value = { x: 0, y: 0 }, d("update-collect-position", a.value);
+      }), r.value = !1, t.value = { x: 0, y: 0 }, o.value = { x: 0, y: 0 }, d("update-collect-position", l.value);
     }, h = (u) => {
-      a.value.splice(u, 1), d("update-collect-position", a.value);
+      l.value.splice(u, 1), d("update-collect-position", l.value);
     }, G = (u) => ({
       position: "absolute",
       top: `${u.position.y}px`,
@@ -317,8 +317,8 @@ const ft = ["onDragstart", "onDragend"], I = /* @__PURE__ */ L({
       width: `${u.width}px`,
       height: `${u.height}px`,
       pointerEvents: "auto"
-    }), N = (u, g) => {
-      a.value[u].label = g, d("update-collect-position", a.value);
+    }), y = (u, N) => {
+      l.value[u].label = N, d("update-collect-position", l.value);
     }, U = S(() => ({
       position: "absolute",
       top: `${O.value.y}px`,
@@ -329,7 +329,7 @@ const ft = ["onDragstart", "onDragend"], I = /* @__PURE__ */ L({
       borderRadius: "3px",
       fontSize: "12px"
     }));
-    return (u, g) => (V(), z("div", ht, [
+    return (u, N) => (V(), z("div", ht, [
       f("div", Pt, [
         A(f("div", {
           style: F(P.value),
@@ -338,7 +338,7 @@ const ft = ["onDragstart", "onDragend"], I = /* @__PURE__ */ L({
           [rt, r.value]
         ]),
         f("img", {
-          src: l.value,
+          src: a.value,
           id: "output",
           class: _(["image-style", { "cursor-crosshair": r.value }]),
           onClick: p,
@@ -349,7 +349,7 @@ const ft = ["onDragstart", "onDragend"], I = /* @__PURE__ */ L({
           style: F(U.value),
           class: "hint-style"
         }, " Click to finish the selection ", 4)) : J("", !0),
-        (V(!0), z(Z, null, K(a.value, (w, j) => (V(), z("div", {
+        (V(!0), z(Z, null, K(l.value, (w, j) => (V(), z("div", {
           style: F(G(w)),
           class: "option-item-position",
           key: w.id,
@@ -357,7 +357,7 @@ const ft = ["onDragstart", "onDragend"], I = /* @__PURE__ */ L({
         }, null, 12, xt))), 128))
       ]),
       f("ul", null, [
-        (V(!0), z(Z, null, K(a.value, (w, j) => (V(), z("li", { key: j }, [
+        (V(!0), z(Z, null, K(l.value, (w, j) => (V(), z("li", { key: j }, [
           $(C(w.position) + " ", 1),
           f("label", {
             for: `option-label-${j}`
@@ -366,17 +366,17 @@ const ft = ["onDragstart", "onDragend"], I = /* @__PURE__ */ L({
             id: `option-label-${j}`,
             type: "text",
             value: w.label,
-            onInput: (W) => N(j, W.target.value)
-          }, null, 40, gt)
+            onInput: (W) => y(j, W.target.value)
+          }, null, 40, Nt)
         ]))), 128))
       ])
     ]));
   }
-}), Nt = /* @__PURE__ */ B(yt, [["__scopeId", "data-v-aed38f2a"]]), Tt = { class: "text-image-container" }, Ft = /* @__PURE__ */ L({
+}), yt = /* @__PURE__ */ B(gt, [["__scopeId", "data-v-aed38f2a"]]), Tt = { class: "text-image-container" }, Ft = /* @__PURE__ */ L({
   __name: "TextImage",
   emits: ["updateTextimageSrc"],
   setup(c, { emit: i }) {
-    const e = i, d = v(""), l = v(""), a = () => {
+    const e = i, d = v(""), a = v(""), l = () => {
       const r = document.createElement("canvas"), t = r.getContext("2d"), o = 20, O = 5;
       if (!t) {
         console.error("Failed to get 2D context from canvas.");
@@ -388,7 +388,7 @@ const ft = ["onDragstart", "onDragend"], I = /* @__PURE__ */ L({
       ), D = H.length * o + O * 2;
       r.width = Math.max(P, 800), r.height = Math.max(D, 200), t.font = `${o}px verdana`, t.fillStyle = "black", t.textAlign = "left", t.textBaseline = "top", t.clearRect(0, 0, r.width, r.height), H.forEach((p, b) => {
         t.fillText(p, O, O + b * o);
-      }), l.value = r.toDataURL("image/png"), e("updateTextimageSrc", l.value);
+      }), a.value = r.toDataURL("image/png"), e("updateTextimageSrc", a.value);
     };
     return (r, t) => (V(), z("div", Tt, [
       A(f("textarea", {
@@ -400,11 +400,11 @@ const ft = ["onDragstart", "onDragend"], I = /* @__PURE__ */ L({
         [ut, d.value]
       ]),
       f("button", {
-        onClick: T(a, ["prevent"])
+        onClick: T(l, ["prevent"])
       }, "Convert")
     ]));
   }
-}), Zt = /* @__PURE__ */ B(Ft, [["__scopeId", "data-v-1d742a2f"]]), M = (c) => (lt("data-v-8309fba7"), c = c(), at(), c), mt = /* @__PURE__ */ M(() => /* @__PURE__ */ f("h3", null, "Drag & Drop Question Form", -1)), Lt = { class: "quiz-edit-container" }, Mt = /* @__PURE__ */ M(() => /* @__PURE__ */ f("p", null, "Choose Question Type", -1)), Gt = /* @__PURE__ */ M(() => /* @__PURE__ */ f("label", { for: "image-dd-quiz" }, "Image D&D Question", -1)), Ut = /* @__PURE__ */ M(() => /* @__PURE__ */ f("label", { for: "text-dd-quiz" }, "Text D&D Question", -1)), Wt = {
+}), Zt = /* @__PURE__ */ B(Ft, [["__scopeId", "data-v-1d742a2f"]]), M = (c) => (at("data-v-8309fba7"), c = c(), lt(), c), mt = /* @__PURE__ */ M(() => /* @__PURE__ */ f("h3", null, "Drag & Drop Question Form", -1)), Lt = { class: "quiz-edit-container" }, Mt = /* @__PURE__ */ M(() => /* @__PURE__ */ f("p", null, "Choose Question Type", -1)), Gt = /* @__PURE__ */ M(() => /* @__PURE__ */ f("label", { for: "image-dd-quiz" }, "Image D&D Question", -1)), Ut = /* @__PURE__ */ M(() => /* @__PURE__ */ f("label", { for: "text-dd-quiz" }, "Text D&D Question", -1)), Wt = {
   key: 0,
   for: "drag-drop-image-upload"
 }, Kt = /* @__PURE__ */ M(() => /* @__PURE__ */ f("input", {
@@ -420,28 +420,28 @@ const ft = ["onDragstart", "onDragend"], I = /* @__PURE__ */ L({
   },
   emits: ["save-items"],
   setup(c, { emit: i }) {
-    const e = v("Image"), d = v(""), l = v([]), a = v({}), r = v(), t = c, o = i;
+    const e = v("Image"), d = v(""), a = v([]), l = v({}), r = v(), t = c, o = i;
     m(
       () => t.questions,
       (p) => {
-        p && (d.value = p.imgUrl, l.value = p.optionsList);
+        p && (d.value = p.imgUrl, a.value = p.optionsList);
       },
       { immediate: !0 }
     );
     const O = (p) => {
       const h = ot(p, "image.jpeg");
-      r.value = h, d.value = p, l.value = [];
+      r.value = h, d.value = p, a.value = [];
     }, H = (p) => {
       const b = p.target.files;
-      d.value = b ? URL.createObjectURL(b[0]) : "", r.value = b ? b[0] : void 0, l.value = [];
+      d.value = b ? URL.createObjectURL(b[0]) : "", r.value = b ? b[0] : void 0, a.value = [];
     }, P = (p) => {
-      l.value = p;
+      a.value = p;
     }, D = () => {
-      a.value = {
+      l.value = {
         imageFile: r.value,
         image: d.value,
-        collectPosition: l.value
-      }, console.log(a.value), Xt(a.value), o("save-items", a.value);
+        collectPosition: a.value
+      }, console.log(l.value), Xt(l.value), o("save-items", l.value);
     };
     return (p, b) => (V(), z(Z, null, [
       mt,
@@ -484,9 +484,9 @@ const ft = ["onDragstart", "onDragend"], I = /* @__PURE__ */ L({
             key: 1,
             onUpdateTextimageSrc: O
           })) : J("", !0),
-          Y(Nt, {
+          Y(yt, {
             "image-url": d.value,
-            "collect-position": l.value,
+            "collect-position": a.value,
             onUpdateCollectPosition: P
           }, null, 8, ["image-url", "collect-position"]),
           Kt
