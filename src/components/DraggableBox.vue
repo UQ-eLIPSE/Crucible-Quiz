@@ -17,13 +17,14 @@
       @drop="onDrop($event, 1)" @dragover.prevent @dragenter.prevent>
       <DragItems :item-list="listOne" :img-position="imagePosition" @start-drag="startDrag" @end-drag="endDrag" />
     </div>
-
-    <p v-if="showResult" :class="{
+    <div class="result-text">
+      <p v-if="showResult" :class="{
           'text-correct': result,
           'text-incorrect': !result,
         }">
-      {{ score }}
-    </p>
+        {{ score }}
+      </p>
+    </div>
     <button class="submit-button" @click="handleSubmit">Submit</button>
   </div>
 </template>
@@ -183,7 +184,11 @@ function handleSubmit() {
     }
   });
 
-  score.value = `${correctItems} out of ${totalItems} are correct`;
+  if (correctItems === totalItems) {
+    score.value = "Well Done!";
+  } else {
+    score.value = "Try Again!";
+  }
 
   result.value = correctItems === totalItems;
   emit("submit-answer", result.value);
@@ -258,7 +263,9 @@ tr {
 }
 
 .submit-button {
-  background-color: #4caf50;
+  background-color: #49075e;
+  margin: auto;
+  margin-top: 5px;
   color: white;
   padding: 10px 20px;
   font-size: 16px;
@@ -266,17 +273,28 @@ tr {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  width: 100px;
 }
 
-.text-correct {
+.text-correct,
+.text-incorrect {
   background-color: lightgreen;
   padding: 10px;
   border-radius: 5px;
+  width: 20%;
+  text-align: center;
+  margin: 0 auto;
+  margin-top: 5px;
 }
 
 .text-incorrect {
-  background-color: red;
-  padding: 10px;
-  border-radius: 5px;
+  background-color: lightcoral;
+}
+
+.result-text {
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
