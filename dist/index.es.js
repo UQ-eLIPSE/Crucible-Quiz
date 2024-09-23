@@ -6,7 +6,7 @@ const vt = (t, o) => {
     const O = { id: b, x: e, y: d };
     return e += n.width + 2, O;
   });
-  return a = d + l + 10, { positions: r, totalHeight: a };
+  return l = d + a + 10, { positions: r, totalHeight: l };
 };
 function ot(t) {
   for (let o = t.length - 1; o > 0; o--) {
@@ -23,12 +23,21 @@ function et(t) {
     height: t.height + "px"
   };
 }
+<<<<<<< HEAD
 function ft(t, o) {
   const e = atob(t.split(",")[1]), d = new Array(e.length);
   for (let a = 0; a < e.length; a++)
     d[a] = e.charCodeAt(a);
   const l = new Uint8Array(d);
   return new Blob([l], { type: o });
+=======
+function vt(c, i) {
+  const e = atob(c.split(",")[1]), d = new Array(e.length);
+  for (let l = 0; l < e.length; l++)
+    d[l] = e.charCodeAt(l);
+  const a = new Uint8Array(d);
+  return new Blob([a], { type: i });
+>>>>>>> main
 }
 function Xt(t, o) {
   const e = t.split(",")[0].split(":")[1].split(";")[0], d = ft(t, e);
@@ -41,9 +50,15 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
     imgPosition: {}
   },
   emits: ["start-drag", "end-drag"],
+<<<<<<< HEAD
   setup(t, { emit: o }) {
     const e = o, d = (l) => et(l);
     return (l, a) => (V(!0), z(Z, null, K(l.itemList, (r) => (V(), z("div", {
+=======
+  setup(c, { emit: i }) {
+    const e = i, d = (a) => tt(a);
+    return (a, l) => (V(!0), z(Z, null, K(a.itemList, (r) => (V(), z("div", {
+>>>>>>> main
       key: r.id,
       class: "drag-el",
       style: T(d(r)),
@@ -145,9 +160,18 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
       },
       { immediate: !0 }
     ), m(
+<<<<<<< HEAD
       () => l.value,
       (c) => {
         a.value = c || _;
+=======
+      () => a.value,
+      (n) => {
+        if (l.value = n || E, o.value) {
+          const s = o.value.getBoundingClientRect();
+          y.value = s.width;
+        }
+>>>>>>> main
       },
       { immediate: !0 }
     );
@@ -282,13 +306,13 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
     m(
       () => e.collectPosition,
       (u) => {
-        a.value = u || [];
+        l.value = u || [];
       },
       { immediate: !0 }
     ), m(
       () => e.imageUrl,
       (u) => {
-        l.value = u || "";
+        a.value = u || "";
       },
       { immediate: !0 }
     );
@@ -314,7 +338,7 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
         // Placeholder label
       }), r.value = !1, n.value = { x: 0, y: 0 }, b.value = { x: 0, y: 0 }, d("update-collect-position", a.value);
     }, h = (u) => {
-      a.value.splice(u, 1), d("update-collect-position", a.value);
+      l.value.splice(u, 1), d("update-collect-position", l.value);
     }, G = (u) => ({
       position: "absolute",
       top: `${u.position.y}px`,
@@ -343,7 +367,7 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
           [ut, r.value]
         ]),
         f("img", {
-          src: l.value,
+          src: a.value,
           id: "output",
           class: $(["image-style", { "cursor-crosshair": r.value }]),
           onClick: p,
@@ -429,7 +453,7 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
     m(
       () => n.questions,
       (p) => {
-        p && (d.value = p.imgUrl, l.value = p.optionsList);
+        p && (d.value = p.imgUrl, a.value = p.optionsList);
       },
       { immediate: !0 }
     );
@@ -491,7 +515,7 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ M({
           })) : A("", !0),
           q(Ft, {
             "image-url": d.value,
-            "collect-position": l.value,
+            "collect-position": a.value,
             onUpdateCollectPosition: P
           }, null, 8, ["image-url", "collect-position"]),
           Jt
