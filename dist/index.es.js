@@ -110,21 +110,13 @@ const bt = ["onDragstart", "onDragend"], E = /* @__PURE__ */ L({
   setup(t, { emit: o }) {
     const e = t, { dragQuestion: d, imageSource: l } = rt(e), a = v(_), r = v([]), n = v([]), b = v(null), O = v(null), H = v(null), P = v(
       null
-<<<<<<< HEAD
     ), N = v([]), p = o, i = v(!1), h = v(!1), F = v(""), Z = v(300), U = v(30), u = () => {
-=======
-    ), N = v([]), p = o, i = v(!1), h = v(!1), G = v(""), F = v(300), U = v(30), u = () => {
->>>>>>> main
       if (b.value) {
         const c = b.value.getBoundingClientRect();
         O.value = {
           imgX: c.x + window.scrollX,
           imgY: c.y + window.scrollY
-<<<<<<< HEAD
         }, Z.value = c.width;
-=======
-        }, F.value = c.width;
->>>>>>> main
         const s = ot([...N.value]), { positions: X, totalHeight: g } = vt(
           s,
           Z.value
