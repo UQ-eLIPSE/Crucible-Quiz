@@ -37,5 +37,8 @@ const itemStyle = (ele: Item) => {
   position: absolute;
   cursor: grab;
   z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

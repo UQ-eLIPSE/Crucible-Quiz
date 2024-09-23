@@ -5,9 +5,10 @@
       <div class="drop-zone">
         <img ref="imgRef" :src="imageUrl" alt="" @load="getImagePosition" />
         <DragItems :item-list="listTwo" :img-position="imagePosition" @start-drag="startDrag" @end-drag="endDrag" />
-        <div v-for="ele in snapItems" :key="ele.id"
-          :style="[itemStyle(ele), 'background-color: rgba(255, 99, 71, 0.5)']" class="snap-position"
-          @drop="onDrop($event, 2, ele)" @dragover.prevent @dragenter.prevent></div>
+        <div v-for="ele in snapItems" :key="ele.id" :style="[itemStyle(ele)]" class="snap-position"
+          @drop="onDrop($event, 2, ele)" @dragover.prevent @dragenter.prevent>
+          {{ ele.label }}
+        </div>
       </div>
     </div>
 
@@ -33,7 +34,7 @@ import DragItems from "./DragItems.vue";
 import { Item, OptionsDatabase } from "../type";
 import fallbackImg from "../assets/TestDD.png";
 import { sampleDatabase } from "@/dataAccessLayer";
-import { getItemStyle, getInitialVal } from "@/utils";
+import { getItemStyle, getInitialVal, shuffleArray } from "@/utils";
 
 // here define the reactive props received from main
 const props = defineProps<{
@@ -67,15 +68,16 @@ const getImagePosition = () => {
       imgY: rect.y + window.scrollY,
     };
     imageWidth.value = rect.width;
+    const shuffledOptions = shuffleArray([...options.value]);
     const { positions, totalHeight } = getInitialVal(
-      options.value,
+      shuffledOptions,
       imageWidth.value
     );
     height.value = totalHeight;
-    items.value = options.value.map((item, index) => {
+    items.value = shuffledOptions.map((item, index) => {
       return {
         ...item,
-        id: `${index}`,
+        id: `${item.id}`,
         list: 1,
         width: item.width,
         height: item.height,
@@ -95,7 +97,8 @@ watch(
     snapItems.value = options.value.map((item, index) => {
       return {
         ...item,
-        id: `snap${index}`,
+        id: `snap${item.id}`,
+        label: String.fromCharCode(65 + index),
         list: 2,
         width: item.width,
         height: item.height,
@@ -108,10 +111,6 @@ watch(
   () => imageSource.value,
   (newImageSource: string) => {
     imageUrl.value = newImageSource || fallbackImg;
-    if (imgRef.value) {
-      const rect = imgRef.value.getBoundingClientRect();
-      imageWidth.value = rect.width;
-    }
   },
   { immediate: true }
 );
@@ -253,7 +252,9 @@ tr {
 
 .snap-position {
   position: absolute;
-  border: 1px dashed rgb(254, 4, 4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .submit-button {

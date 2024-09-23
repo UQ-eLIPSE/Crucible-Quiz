@@ -40,6 +40,7 @@ export interface ItemStyle {
 }
 
 export interface OptionsDatabase {
+  id: string;
   position: {
     x: number;
     y: number;
